@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1 MyCat 简介MyCat 是基于 Java 语言开发的数据库中间件，用于对数据库进行分库分表。  1.1 切分垂直切分将一个库中的数据存储到多个库 水平切分按照一张表中的数据分别存放在多个库中 1.2 逻辑库Schema ,逻辑上存在，物理上不存在 1.3 逻辑表table ，逻辑上存在，物理上不存在 1.4 默认端口   应用 端口号    tomcat 8080    6379   ng">
+<meta name="keywords" content="MyCat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20190612 MyCat">
+<meta property="og:url" content="http://zwer.xyz/2019/06/12/20190612 MyCat/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="1 MyCat 简介MyCat 是基于 Java 语言开发的数据库中间件，用于对数据库进行分库分表。  1.1 切分垂直切分将一个库中的数据存储到多个库 水平切分按照一张表中的数据分别存放在多个库中 1.2 逻辑库Schema ,逻辑上存在，物理上不存在 1.3 逻辑表table ，逻辑上存在，物理上不存在 1.4 默认端口   应用 端口号    tomcat 8080    6379   ng">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190612153644.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190612154847.png">
+<meta property="og:updated_time" content="2019-09-08T11:45:40.718Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20190612 MyCat">
+<meta name="twitter:description" content="1 MyCat 简介MyCat 是基于 Java 语言开发的数据库中间件，用于对数据库进行分库分表。  1.1 切分垂直切分将一个库中的数据存储到多个库 水平切分按照一张表中的数据分别存放在多个库中 1.2 逻辑库Schema ,逻辑上存在，物理上不存在 1.3 逻辑表table ，逻辑上存在，物理上不存在 1.4 默认端口   应用 端口号    tomcat 8080    6379   ng">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20190612153644.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/06/12/20190612 MyCat/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20190612 MyCat | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/06/12/20190612 MyCat/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20190612 MyCat
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-06-12 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-12T00:00:00+08:00">2019-06-12</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-09-08 19:45:40" itemprop="dateModified" datetime="2019-09-08T19:45:40+08:00">2019-09-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="1-MyCat-简介"><a href="#1-MyCat-简介" class="headerlink" title="1 MyCat 简介"></a>1 MyCat 简介</h2><p>MyCat 是基于 Java 语言开发的数据库中间件，用于对数据库进行分库分表。</p>
+<p><img src="http://img.zwer.xyz/blog/20190612153644.png" alt></p>
+<h3 id="1-1-切分"><a href="#1-1-切分" class="headerlink" title="1.1 切分"></a>1.1 切分</h3><h4 id="垂直切分"><a href="#垂直切分" class="headerlink" title="垂直切分"></a>垂直切分</h4><p>将一个库中的数据存储到多个库</p>
+<h4 id="水平切分"><a href="#水平切分" class="headerlink" title="水平切分"></a>水平切分</h4><p>按照一张表中的数据分别存放在多个库中</p>
+<h3 id="1-2-逻辑库"><a href="#1-2-逻辑库" class="headerlink" title="1.2 逻辑库"></a>1.2 逻辑库</h3><p>Schema ,逻辑上存在，物理上不存在</p>
+<h3 id="1-3-逻辑表"><a href="#1-3-逻辑表" class="headerlink" title="1.3 逻辑表"></a>1.3 逻辑表</h3><p>table ，逻辑上存在，物理上不存在</p>
+<h3 id="1-4-默认端口"><a href="#1-4-默认端口" class="headerlink" title="1.4 默认端口"></a>1.4 默认端口</h3><table>
+<thead>
+<tr>
+<th>应用</th>
+<th>端口号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tomcat</td>
+<td>8080</td>
+</tr>
+<tr>
+<td></td>
+<td>6379</td>
+</tr>
+<tr>
+<td>nginx</td>
+<td>80</td>
+</tr>
+<tr>
+<td>http</td>
+<td>80</td>
+</tr>
+<tr>
+<td>oracle</td>
+<td>1521</td>
+</tr>
+<tr>
+<td>mycat</td>
+<td>8066</td>
+</tr>
+</tbody></table>
+<h3 id="1-5-数据主机"><a href="#1-5-数据主机" class="headerlink" title="1.5 数据主机"></a>1.5 数据主机</h3><p>dataHost 物理MySQL 存放的主机的位置</p>
+<h3 id="1-6-数据节点"><a href="#1-6-数据节点" class="headerlink" title="1.6 数据节点"></a>1.6 数据节点</h3><p>dataNode 配置物理的 database 。数据保存的物理节点</p>
+<h3 id="1-7-分片规则"><a href="#1-7-分片规则" class="headerlink" title="1.7 分片规则"></a>1.7 分片规则</h3><p>根据 哈希算法，crc32算法</p>
+<h2 id="2-MyCat-的使用"><a href="#2-MyCat-的使用" class="headerlink" title="2  MyCat 的使用"></a>2  MyCat 的使用</h2><h4 id="2-1-读写分离"><a href="#2-1-读写分离" class="headerlink" title="2.1 读写分离"></a>2.1 读写分离</h4><h4 id="2-2-主从备份概念"><a href="#2-2-主从备份概念" class="headerlink" title="2.2 主从备份概念"></a>2.2 主从备份概念</h4><p> Master 节点中有添加或更新时， Slave 节点每隔一段时间会读取 Master 节点中 Binary log 日志文件中 SQL 语句，然后 Slave 节点上执行 SQL 语句。</p>
+<p><img src="http://img.zwer.xyz/blog/20190612154847.png" alt></p>
+<h2 id="3-安装-MyCat"><a href="#3-安装-MyCat" class="headerlink" title="3 安装 MyCat"></a>3 安装 MyCat</h2><p>上传 Mycat 压缩包</p>
+<p>解压 MyCat 压缩包并复制到  /usr/local 目录下</p>
+<h3 id="3-1-MyCat-目录"><a href="#3-1-MyCat-目录" class="headerlink" title="3.1 MyCat 目录"></a>3.1 MyCat 目录</h3><table>
+<thead>
+<tr>
+<th>目录名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bin</td>
+<td>启动 命令</td>
+</tr>
+<tr>
+<td>conf</td>
+<td>配置文件</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>存放日志文件</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-MyCat-命令"><a href="#3-2-MyCat-命令" class="headerlink" title="3.2 MyCat 命令"></a>3.2 MyCat 命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 进入 MyCat 的 bin 目录下</span></span><br><span class="line">./mycat start   #启动</span><br><span class="line">./mycat stop    #停止</span><br><span class="line">./mycat status  #查看当前状态</span><br><span class="line">./mycat restart #重启</span><br></pre></td></tr></table></figure>
+
+<p>注意：开放 mycat 的端口 8066 或者 关闭防火墙</p>
+<h2 id="4-配置主从模式"><a href="#4-配置主从模式" class="headerlink" title="4 配置主从模式"></a>4 配置主从模式</h2><h3 id="4-1-配置-master-节点"><a href="#4-1-配置-master-节点" class="headerlink" title="4.1 配置 master  节点"></a>4.1 配置 master  节点</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">修改 /etc/my.cnf 文件</span></span><br><span class="line">vim /etc/my.cnf</span><br><span class="line"><span class="meta">#</span><span class="bash">为 master节点设置 server_id 和 开启 log_bin</span></span><br><span class="line"><span class="meta">#</span><span class="bash">注意 master 节点的 server_id 的值为数字且值小于 slave 节点的 server_id 的值</span></span><br><span class="line">log_bin=master_log</span><br><span class="line">server_id=1</span><br><span class="line"><span class="meta">#</span><span class="bash">重启 mysql 服务</span></span><br><span class="line">service mysqld restart</span><br><span class="line"><span class="meta">#</span><span class="bash">查看配置是否成功</span></span><br><span class="line"><span class="meta">#</span><span class="bash">切换到 /var/lib/mysql 目录,使用 ls 命名查看</span></span><br><span class="line"></span><br><span class="line">--------------------------------------------------------------------</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">登录 mysql 客户端  mysql -uusername  -ppassword</span></span><br><span class="line">mysql -uroot  -p123</span><br><span class="line"><span class="meta">#</span><span class="bash">授权</span></span><br><span class="line"><span class="meta">#</span><span class="bash">为 slave 节点分配登录用户</span></span><br><span class="line">grant all privileges </span><br><span class="line">on *.* to 'myslave'@'192.168.170.104' </span><br><span class="line">identified by 'myslave' with grant option;</span><br><span class="line"><span class="meta">#</span><span class="bash">刷新</span></span><br><span class="line">flush privileges;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">查看授权是否成功</span></span><br><span class="line">use mysql;</span><br><span class="line">select host,user from user;</span><br><span class="line">+-----------------------+---------+</span><br><span class="line">| host                  | user    |</span><br><span class="line">+-----------------------+---------+</span><br><span class="line">| %                     | root    |</span><br><span class="line">| 127.0.0.1             | root    |</span><br><span class="line">| 192.168.170.104       | myslave |</span><br><span class="line">| ::1                   | root    |</span><br><span class="line">| localhost             |         |</span><br><span class="line">| localhost             | root    |</span><br><span class="line">| localhost.localdomain |         |</span><br><span class="line">| localhost.localdomain | root    |</span><br><span class="line"><span class="meta">#</span><span class="bash">显示主节点信息</span></span><br><span class="line">show master status;</span><br><span class="line">+-------------------+----------+--------------+------------------+-------------------+</span><br><span class="line">| File              | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |</span><br><span class="line">+-------------------+----------+--------------+------------------+-------------------+</span><br><span class="line">| master_log.000001 |      429 |              |                  |                   |</span><br><span class="line">+-------------------+----------+--------------+------------------+-------------------+</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-配置-slave-节点"><a href="#4-2-配置-slave-节点" class="headerlink" title="4.2  配置 slave 节点"></a>4.2  配置 slave 节点</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">修改 /etc/my.cnf 文件</span></span><br><span class="line">vim /etc/my.cnf</span><br><span class="line"><span class="meta">#</span><span class="bash">注意 slave 节点的 server_id 的值必须大于 master 节点的 server_id 的值</span></span><br><span class="line">server_id=2</span><br><span class="line"><span class="meta">#</span><span class="bash">重启 mysql 服务</span></span><br><span class="line">service mysqld restart</span><br><span class="line"><span class="meta">#</span><span class="bash">登录 msyql 客户端</span></span><br><span class="line">mysql -uroot -p123</span><br><span class="line"><span class="meta">#</span><span class="bash">先关闭 slave</span></span><br><span class="line">stop slave</span><br><span class="line"><span class="meta">#</span><span class="bash">配置 slave 节点访问 master 节点信息</span></span><br><span class="line">change master to master_host='192.168.170.4',master_user='myslave',master_password='myslave',master_log_file='master_log.000001';</span><br><span class="line"><span class="meta">#</span><span class="bash">开启 slave </span></span><br><span class="line">start slave </span><br><span class="line"><span class="meta">#</span><span class="bash">查看 slave 相关配置信息</span></span><br><span class="line">show slave status \G</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-配置读写分离"><a href="#5-配置读写分离" class="headerlink" title="5 配置读写分离"></a>5 配置读写分离</h2><h4 id="5-1-schema-xml"><a href="#5-1-schema-xml" class="headerlink" title="5.1 schema.xml"></a>5.1 schema.xml</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE mycat:schema SYSTEM "schema.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mycat:schema</span> <span class="attr">xmlns:mycat</span>=<span class="string">"http://io.mycat/"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">schema</span> <span class="attr">name</span>=<span class="string">"hello"</span> <span class="attr">checkSQLschema</span>=<span class="string">"false"</span> <span class="attr">sqlMaxLimit</span>=<span class="string">"100"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">table</span> <span class="attr">name</span>=<span class="string">"test"</span> <span class="attr">dataNode</span>=<span class="string">"dn1"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;/<span class="name">schema</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dataNode</span> <span class="attr">name</span>=<span class="string">"dn1"</span> <span class="attr">dataHost</span>=<span class="string">"localhost1"</span> <span class="attr">database</span>=<span class="string">"demo1"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dataHost</span> <span class="attr">name</span>=<span class="string">"localhost1"</span> <span class="attr">maxCon</span>=<span class="string">"1000"</span> <span class="attr">minCon</span>=<span class="string">"10"</span> <span class="attr">balance</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">writeType</span>=<span class="string">"0"</span> <span class="attr">dbType</span>=<span class="string">"mysql"</span> <span class="attr">dbDriver</span>=<span class="string">"native"</span> <span class="attr">switchType</span>=<span class="string">"1"</span>  <span class="attr">slaveThreshold</span>=<span class="string">"100"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">heartbeat</span>&gt;</span>select user()<span class="tag">&lt;/<span class="name">heartbeat</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- can have multi write hosts --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">writeHost</span> <span class="attr">host</span>=<span class="string">"hostM1"</span> <span class="attr">url</span>=<span class="string">"192.168.170.4:3306"</span> <span class="attr">user</span>=<span class="string">"root"</span></span></span><br><span class="line"><span class="tag">                   <span class="attr">password</span>=<span class="string">"123"</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- can have multi read hosts --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">readHost</span> <span class="attr">host</span>=<span class="string">"hostS2"</span> <span class="attr">url</span>=<span class="string">"192.168.170.104:3306"</span> <span class="attr">user</span>=<span class="string">"root"</span> <span class="attr">password</span>=<span class="string">"123"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">writeHost</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dataHost</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mycat:schema</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-2-server-xml"><a href="#5-2-server-xml" class="headerlink" title="5.2 server.xml"></a>5.2 server.xml</h4><p>将 property 标签中 name 属性为schema  设置 schema.xml 配置对应的名字</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- - - Licensed under the Apache License, Version 2.0 (the "License"); </span></span><br><span class="line"><span class="comment">	- you may not use this file except in compliance with the License. - You </span></span><br><span class="line"><span class="comment">	may obtain a copy of the License at - - http://www.apache.org/licenses/LICENSE-2.0 </span></span><br><span class="line"><span class="comment">	- - Unless required by applicable law or agreed to in writing, software - </span></span><br><span class="line"><span class="comment">	distributed under the License is distributed on an "AS IS" BASIS, - WITHOUT </span></span><br><span class="line"><span class="comment">	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. - See the </span></span><br><span class="line"><span class="comment">	License for the specific language governing permissions and - limitations </span></span><br><span class="line"><span class="comment">	under the License. --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE mycat:server SYSTEM "server.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mycat:server</span> <span class="attr">xmlns:mycat</span>=<span class="string">"http://io.mycat/"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">system</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useSqlStat"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span>  <span class="comment">&lt;!-- 1为开启实时统计、0为关闭 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useGlobleTableCheck"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span>  <span class="comment">&lt;!-- 1为开启全加班一致性检测、0为关闭 --&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"sequnceHandlerType"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">      <span class="comment">&lt;!--  &lt;property name="useCompression"&gt;1&lt;/property&gt;--&gt;</span> <span class="comment">&lt;!--1为开启mysql压缩协议--&gt;</span></span><br><span class="line">        <span class="comment">&lt;!--  &lt;property name="fakeMySQLVersion"&gt;5.6.20&lt;/property&gt;--&gt;</span> <span class="comment">&lt;!--设置模拟的MySQL版本号--&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- &lt;property name="processorBufferChunk"&gt;40960&lt;/property&gt; --&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">	&lt;property name="processors"&gt;1&lt;/property&gt; </span></span><br><span class="line"><span class="comment">	&lt;property name="processorExecutor"&gt;32&lt;/property&gt; </span></span><br><span class="line"><span class="comment">	 --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--默认为type 0: DirectByteBufferPool | type 1 ByteBufferArena--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"processorBufferPoolType"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--默认是65535 64K 用于sql解析时最大文本长度 --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--&lt;property name="maxStringLiteralLength"&gt;65535&lt;/property&gt;--&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--&lt;property name="sequnceHandlerType"&gt;0&lt;/property&gt;--&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--&lt;property name="backSocketNoDelay"&gt;1&lt;/property&gt;--&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--&lt;property name="frontSocketNoDelay"&gt;1&lt;/property&gt;--&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--&lt;property name="processorExecutor"&gt;16&lt;/property&gt;--&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">			&lt;property name="serverPort"&gt;8066&lt;/property&gt; &lt;property name="managerPort"&gt;9066&lt;/property&gt; </span></span><br><span class="line"><span class="comment">			&lt;property name="idleTimeout"&gt;300000&lt;/property&gt; &lt;property name="bindIp"&gt;0.0.0.0&lt;/property&gt; </span></span><br><span class="line"><span class="comment">			&lt;property name="frontWriteQueueSize"&gt;4096&lt;/property&gt; &lt;property name="processors"&gt;32&lt;/property&gt; --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--分布式事务开关，0为不过滤分布式事务，1为过滤分布式事务（如果分布式事务内只涉及全局表，则不过滤），2为不过滤分布式事务,但是记录分布式事务日志--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"handleDistributedTransactions"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		</span><br><span class="line">			<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">			off heap for merge/order/group/limit      1开启   0关闭</span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useOffHeapForMerge"</span>&gt;</span>1<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">			单位为m</span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"memoryPageSize"</span>&gt;</span>1m<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">			单位为k</span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"spillsFileBufferSize"</span>&gt;</span>1k<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useStreamOutput"</span>&gt;</span>0<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">		<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">			单位为m</span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"systemReserveMemorySize"</span>&gt;</span>384m<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">		<span class="comment">&lt;!--是否采用zookeeper协调切换  --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"useZKSwitch"</span>&gt;</span>true<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;/<span class="name">system</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">&lt;!-- 全局SQL防火墙设置 --&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">	&lt;firewall&gt; </span></span><br><span class="line"><span class="comment">	   &lt;whitehost&gt;</span></span><br><span class="line"><span class="comment">	      &lt;host host="127.0.0.1" user="mycat"/&gt;</span></span><br><span class="line"><span class="comment">	      &lt;host host="127.0.0.2" user="mycat"/&gt;</span></span><br><span class="line"><span class="comment">	   &lt;/whitehost&gt;</span></span><br><span class="line"><span class="comment">       &lt;blacklist check="false"&gt;</span></span><br><span class="line"><span class="comment">       &lt;/blacklist&gt;</span></span><br><span class="line"><span class="comment">	&lt;/firewall&gt;</span></span><br><span class="line"><span class="comment">	--&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;<span class="name">user</span> <span class="attr">name</span>=<span class="string">"root"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span>&gt;</span>123<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"schemas"</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">&lt;!-- 表级 DML 权限设置 --&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 		</span></span><br><span class="line"><span class="comment">		&lt;privileges check="false"&gt;</span></span><br><span class="line"><span class="comment">			&lt;schema name="TESTDB" dml="0110" &gt;</span></span><br><span class="line"><span class="comment">				&lt;table name="tb01" dml="0000"&gt;&lt;/table&gt;</span></span><br><span class="line"><span class="comment">				&lt;table name="tb02" dml="1111"&gt;&lt;/table&gt;</span></span><br><span class="line"><span class="comment">			&lt;/schema&gt;</span></span><br><span class="line"><span class="comment">		&lt;/privileges&gt;		</span></span><br><span class="line"><span class="comment">		 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">user</span> <span class="attr">name</span>=<span class="string">"user"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span>&gt;</span>user<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"schemas"</span>&gt;</span>hello<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"readOnly"</span>&gt;</span>true<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">user</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mycat:server</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-3-负载均衡"><a href="#5-3-负载均衡" class="headerlink" title="5.3 负载均衡"></a>5.3 负载均衡</h4><table>
+<thead>
+<tr>
+<th>balance 的值</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>不开启读写分离</td>
+</tr>
+<tr>
+<td>1</td>
+<td>表示使用 select 语句开头的 SQL 都使用 readHost  和 不执行操作的 writeHost （stand by writeHost ）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>表示所有读操作随机分发给 writeHost 和 readHost</td>
+</tr>
+<tr>
+<td>3</td>
+<td>表示所有读操作随机分发给 writeHost 下的 readHost，即 writeHost 不负载读压力</td>
+</tr>
+</tbody></table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dataHost</span> <span class="attr">name</span>=<span class="string">"localhost1"</span> <span class="attr">maxCon</span>=<span class="string">"1000"</span> <span class="attr">minCon</span>=<span class="string">"10"</span> <span class="attr">balance</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">writeType</span>=<span class="string">"0"</span> <span class="attr">dbType</span>=<span class="string">"mysql"</span> <span class="attr">dbDriver</span>=<span class="string">"native"</span> <span class="attr">switchType</span>=<span class="string">"1"</span>  <span class="attr">slaveThreshold</span>=<span class="string">"100"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="6-配置分片"><a href="#6-配置分片" class="headerlink" title="6  配置分片"></a>6  配置分片</h2><p>需求： 实现数据分库存储</p>
+<p>使用三个数据库</p>
+<h4 id="1-修改-schema-xml-文件"><a href="#1-修改-schema-xml-文件" class="headerlink" title="1 修改 schema.xml 文件"></a>1 修改 schema.xml 文件</h4><p>添加 dataNode 标签</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE mycat:schema SYSTEM "schema.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mycat:schema</span> <span class="attr">xmlns:mycat</span>=<span class="string">"http://io.mycat/"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="tag">&lt;<span class="name">schema</span> <span class="attr">name</span>=<span class="string">"hello"</span> <span class="attr">checkSQLschema</span>=<span class="string">"false"</span> <span class="attr">sqlMaxLimit</span>=<span class="string">"100"</span>&gt;</span></span><br><span class="line">		</span><br><span class="line">		<span class="tag">&lt;<span class="name">table</span> <span class="attr">name</span>=<span class="string">"tb_users"</span> <span class="attr">dataNode</span>=<span class="string">"dn1,dn2,dn3"</span> <span class="attr">rule</span>=<span class="string">"crc32slot"</span> /&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="tag">&lt;/<span class="name">schema</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dataNode</span> <span class="attr">name</span>=<span class="string">"dn1"</span> <span class="attr">dataHost</span>=<span class="string">"localhost1"</span> <span class="attr">database</span>=<span class="string">"demo1"</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dataNode</span> <span class="attr">name</span>=<span class="string">"dn2"</span> <span class="attr">dataHost</span>=<span class="string">"localhost1"</span> <span class="attr">database</span>=<span class="string">"demo2"</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dataNode</span> <span class="attr">name</span>=<span class="string">"dn3"</span> <span class="attr">dataHost</span>=<span class="string">"localhost1"</span> <span class="attr">database</span>=<span class="string">"demo3"</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dataHost</span> <span class="attr">name</span>=<span class="string">"localhost1"</span> <span class="attr">maxCon</span>=<span class="string">"1000"</span> <span class="attr">minCon</span>=<span class="string">"10"</span> <span class="attr">balance</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">			  <span class="attr">writeType</span>=<span class="string">"0"</span> <span class="attr">dbType</span>=<span class="string">"mysql"</span> <span class="attr">dbDriver</span>=<span class="string">"native"</span> <span class="attr">switchType</span>=<span class="string">"1"</span>  <span class="attr">slaveThreshold</span>=<span class="string">"100"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">heartbeat</span>&gt;</span>select user()<span class="tag">&lt;/<span class="name">heartbeat</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- can have multi write hosts --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">writeHost</span> <span class="attr">host</span>=<span class="string">"hostM1"</span> <span class="attr">url</span>=<span class="string">"192.168.170.4:3306"</span> <span class="attr">user</span>=<span class="string">"root"</span></span></span><br><span class="line"><span class="tag">				   <span class="attr">password</span>=<span class="string">"123"</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- can have multi read hosts --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">readHost</span> <span class="attr">host</span>=<span class="string">"hostS2"</span> <span class="attr">url</span>=<span class="string">"192.168.170.104:3306"</span> <span class="attr">user</span>=<span class="string">"root"</span> <span class="attr">password</span>=<span class="string">"123"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">writeHost</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dataHost</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mycat:schema</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-修改-rule-xml-文件"><a href="#2-修改-rule-xml-文件" class="headerlink" title="2 修改 rule.xml 文件"></a>2 修改 rule.xml 文件</h4><p>首先要删除 conf 目录下默认的分片数据库的配置文件 ruledata 目录及其子文件（因为默认数据分片分库只有两个个节点），然后重启 MyCat 服务。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">function</span> <span class="attr">name</span>=<span class="string">"crc32slot"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"io.mycat.route.function.PartitionByCRC32PreSlot"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"count"</span>&gt;</span>3<span class="tag">&lt;/<span class="name">property</span>&gt;</span><span class="comment">&lt;!-- 要分片的数据库节点数量，必须指定，否则没法分片 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">function</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="3-建库建表"><a href="#3-建库建表" class="headerlink" title="3 建库建表"></a>3 建库建表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#建库</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> demo1 <span class="keyword">default</span> <span class="built_in">character</span> <span class="keyword">set</span> utf8; </span><br><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> demo2 <span class="keyword">default</span> <span class="built_in">character</span> <span class="keyword">set</span> utf8; <span class="keyword">create</span> <span class="keyword">database</span> demo3 <span class="keyword">default</span> <span class="built_in">character</span> <span class="keyword">set</span> utf8; </span><br><span class="line"></span><br><span class="line"><span class="comment">#建表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`t_users`</span> ( </span><br><span class="line">  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>, </span><br><span class="line">  <span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">30</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>, </span><br><span class="line">  PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>) </span><br><span class="line">) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-注意："><a href="#4-注意：" class="headerlink" title="4  注意："></a>4  注意：</h4><p>1）   使用 MyCat 实现分库时，先在 MyCat 中定义逻辑库与逻辑表，然后在 MyCat 的链接中执行创建表的命令必须要在 MyCat 中运行。因为 MyCat 在创建表时，会在表中添加一个新的列，列名为_slot。 </p>
+<p>2）   使用 MyCat 插入数据时，语句中必须要指定所有的列。即便是一个完全项插入也不允许省略列名。 </p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/MyCat/" rel="tag"># MyCat</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/06/10/20190610 HttpClient/" rel="next" title="20190610 HttpClient">
+                  <i class="fa fa-chevron-left"></i> 20190610 HttpClient
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/06/19/20190701 cms/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-MyCat-简介"><span class="nav-number">1.</span> <span class="nav-text">1 MyCat 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-切分"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 切分</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#垂直切分"><span class="nav-number">1.1.1.</span> <span class="nav-text">垂直切分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#水平切分"><span class="nav-number">1.1.2.</span> <span class="nav-text">水平切分</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-逻辑库"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 逻辑库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-逻辑表"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 逻辑表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-默认端口"><span class="nav-number">1.4.</span> <span class="nav-text">1.4 默认端口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-数据主机"><span class="nav-number">1.5.</span> <span class="nav-text">1.5 数据主机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-数据节点"><span class="nav-number">1.6.</span> <span class="nav-text">1.6 数据节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-分片规则"><span class="nav-number">1.7.</span> <span class="nav-text">1.7 分片规则</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-MyCat-的使用"><span class="nav-number">2.</span> <span class="nav-text">2  MyCat 的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-读写分离"><span class="nav-number">2.0.1.</span> <span class="nav-text">2.1 读写分离</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-主从备份概念"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.2 主从备份概念</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-安装-MyCat"><span class="nav-number">3.</span> <span class="nav-text">3 安装 MyCat</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-MyCat-目录"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 MyCat 目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-MyCat-命令"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 MyCat 命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-配置主从模式"><span class="nav-number">4.</span> <span class="nav-text">4 配置主从模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-配置-master-节点"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 配置 master  节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-配置-slave-节点"><span class="nav-number">4.2.</span> <span class="nav-text">4.2  配置 slave 节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-配置读写分离"><span class="nav-number">5.</span> <span class="nav-text">5 配置读写分离</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-schema-xml"><span class="nav-number">5.0.1.</span> <span class="nav-text">5.1 schema.xml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-server-xml"><span class="nav-number">5.0.2.</span> <span class="nav-text">5.2 server.xml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-负载均衡"><span class="nav-number">5.0.3.</span> <span class="nav-text">5.3 负载均衡</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-配置分片"><span class="nav-number">6.</span> <span class="nav-text">6  配置分片</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-修改-schema-xml-文件"><span class="nav-number">6.0.1.</span> <span class="nav-text">1 修改 schema.xml 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-修改-rule-xml-文件"><span class="nav-number">6.0.2.</span> <span class="nav-text">2 修改 rule.xml 文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-建库建表"><span class="nav-number">6.0.3.</span> <span class="nav-text">3 建库建表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-注意："><span class="nav-number">6.0.4.</span> <span class="nav-text">4  注意：</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1 数据库相关概念1.1 数据库基本概念• 数据 • 描述事物的符号 • 多种表现形式：文本，图形，音频，视频 • 数据库（Database, DB） • 粮库 车库 • 存放数据的仓库 存放在计算机中，按照一定格式存放 可为用户共享 • 数据库管理系统（Database Management System, DBMS） • 如何科学的组织和存储数据，如何高效的获取和维护数据，靠数据库管理系统完成">
+<meta name="keywords" content="数据库,Oracle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20181123 Oracle 数据库的使用">
+<meta property="og:url" content="http://zwer.xyz/2018/11/23/数据库/20181123 Oracle 数据库的使用/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="1 数据库相关概念1.1 数据库基本概念• 数据 • 描述事物的符号 • 多种表现形式：文本，图形，音频，视频 • 数据库（Database, DB） • 粮库 车库 • 存放数据的仓库 存放在计算机中，按照一定格式存放 可为用户共享 • 数据库管理系统（Database Management System, DBMS） • 如何科学的组织和存储数据，如何高效的获取和维护数据，靠数据库管理系统完成">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxls6d0ebpj303o029jrp.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsa4y2tcj30e90fcweo.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsaqlgk1j30e6048aaa.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsbm3dsvj30nw06hjrb.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlscfm8qyj30p00dyabl.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsd3mqaxj308d042jr6.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlr5r8ag0j30g405z76e.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlrgs1lenj30lh0btwez.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlrmet58aj30mp0comxr.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlr8g68doj30ip096die.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlra2zgluj30ip06q3zw.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlrbu93umj30hl07lmyz.jpg">
+<meta property="og:updated_time" content="2019-02-24T03:28:27.671Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20181123 Oracle 数据库的使用">
+<meta name="twitter:description" content="1 数据库相关概念1.1 数据库基本概念• 数据 • 描述事物的符号 • 多种表现形式：文本，图形，音频，视频 • 数据库（Database, DB） • 粮库 车库 • 存放数据的仓库 存放在计算机中，按照一定格式存放 可为用户共享 • 数据库管理系统（Database Management System, DBMS） • 如何科学的组织和存储数据，如何高效的获取和维护数据，靠数据库管理系统完成">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxls6d0ebpj303o029jrp.jpg">
+  <link rel="canonical" href="http://zwer.xyz/2018/11/23/数据库/20181123 Oracle 数据库的使用/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20181123 Oracle 数据库的使用 | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2018/11/23/数据库/20181123 Oracle 数据库的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20181123 Oracle 数据库的使用
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2018-11-23 00:00:00" itemprop="dateCreated datePublished" datetime="2018-11-23T00:00:00+08:00">2018-11-23</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-02-24 11:28:27" itemprop="dateModified" datetime="2019-02-24T11:28:27+08:00">2019-02-24</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/Oracle/" itemprop="url" rel="index"><span itemprop="name">Oracle</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/Oracle/数据库/" itemprop="url" rel="index"><span itemprop="name">数据库</span></a></span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Java/Oracle/数据库/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1-数据库相关概念"><a href="#1-数据库相关概念" class="headerlink" title="1 数据库相关概念"></a>1 数据库相关概念</h3><h4 id="1-1-数据库基本概念"><a href="#1-1-数据库基本概念" class="headerlink" title="1.1 数据库基本概念"></a>1.1 数据库基本概念</h4><p>• <strong>数据</strong></p>
+<p>• 描述事物的符号</p>
+<p>• 多种表现形式：文本，图形，音频，视频</p>
+<p>• <strong>数据库（Database, DB）</strong></p>
+<p>• 粮库 车库</p>
+<p>• 存放数据的仓库 存放在计算机中，按照一定格式存放 可为用户共享</p>
+<p>• <strong>数据库管理系统</strong>（Database Management System, DBMS）</p>
+<p>• 如何科学的组织和存储数据，如何高效的获取和维护数据，靠数据库管理系统完成• Oracle MySQL SQL Server DB2 FoxPro，Access</p>
+<p> • <strong>数据库应用程序</strong>（DBAS）</p>
+<p>• 在数据库管理系统基础上，使用数据库管理系统的语法，开发直接面对最终用户的应用程序</p>
+<p>• 学生管理系统、人事管理系统、图书管理系统SSXXTT  数据库相关概念 C• 数据库管理员（ Database Administrator, DBA ）</p>
+<p>• 数据库管理系统的操作者</p>
+<p>• 最终用户</p>
+<p>• 数据库应用程序的使用者</p>
+<p>• 数据库系统（ Database System, DBS ）</p>
+<p>• 数据库+数据库管理系统+数据库应用程序+数据库管理员+最终用户</p>
+<h4 id="1-2-数据库结构"><a href="#1-2-数据库结构" class="headerlink" title="1.2 数据库结构"></a>1.2 数据库结构</h4><h5 id="1-2-1-树形结构"><a href="#1-2-1-树形结构" class="headerlink" title="1.2.1 树形结构"></a>1.2.1 树形结构</h5><h5 id="1-2-2-网状"><a href="#1-2-2-网状" class="headerlink" title="1.2.2  网状"></a>1.2.2  网状</h5><h5 id="1-2-3-关系型数据"><a href="#1-2-3-关系型数据" class="headerlink" title="1.2.3 关系型数据"></a>1.2.3 <strong>关系型数据</strong></h5><ul>
+<li>采用关系（二维表）结构储存与管理数据</li>
+<li>采用结构化查询语言（SQL）作为客户端程数据库服务器间沟通的桥梁</li>
+</ul>
+<h5 id="1-2-4-对象数据库"><a href="#1-2-4-对象数据库" class="headerlink" title="1.2.4 对象数据库"></a>1.2.4 <strong>对象数据库</strong></h5><p>• 把面向对象的方法和数据库技术结合起来可以使数据库系统的分析、设计最大程度地与人们对客观世<br>界的认识相一致</p>
+<h5 id="1-2-5-NOSQL数据库"><a href="#1-2-5-NOSQL数据库" class="headerlink" title="1.2.5 NOSQL数据库**"></a>1.2.5 NOSQL数据库**</h5><p>• Not Only SQL数据库 泛指非关系数据库。如MongoDB<br>• 关系数据库在超大规模和高并发的web2.0纯动态网站已经显得力不从心，暴露了很多难以克服的问题。<br>NoSQL数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题</p>
+<h4 id="1-3-关系型数据"><a href="#1-3-关系型数据" class="headerlink" title="1.3 关系型数据"></a>1.3 关系型数据</h4><p><code>Oracel</code> 商业大型数据库</p>
+<p><code>Mysql</code> 是 小型开源数据库</p>
+<h3 id="2-oracle-入门"><a href="#2-oracle-入门" class="headerlink" title="2 oracle 入门"></a>2 oracle 入门</h3><h4 id="2-1-Oracle-公司"><a href="#2-1-Oracle-公司" class="headerlink" title="2.1 Oracle 公司"></a>2.1 Oracle 公司</h4><p>Oracle（甲骨文）公司<br>• 1977年，三人合伙创办（Software Development Laboratories，SDL）<br>• 1979年，更名为Relational Software Inc.，RSI • 1983年，为了突出核心产品 ，RSI更名为Oracle<br>• 2002年04月26日，启用“甲骨文”作为中文注册商标<br>• 2009年4月20日，甲骨文公司收购SUN。<br>• 2013年，甲骨文超越 IBM ，成为继Microsoft 后全球第二大软件公司</p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxls6d0ebpj303o029jrp.jpg" alt></p>
+<h4 id="2-2-Oracle-数据库"><a href="#2-2-Oracle-数据库" class="headerlink" title="2.2 Oracle 数据库"></a>2.2 Oracle 数据库</h4><p>a  使用 Oracle 11g(grid)</p>
+<p>b 安装前准备</p>
+<p> 环境要求 </p>
+<ul>
+<li><p>修改计算机名，不要存放中文和特殊符号   Oracle数据库会使用主机名</p>
+</li>
+<li><p>注意安装路径，不要有中文和特殊符号</p>
+</li>
+<li><p>修改 windows 的登录名，不要哟中文和特殊符号</p>
+</li>
+<li><p>安装前关闭防火墙，关闭杀毒软件</p>
+</li>
+<li><p>安装时尽量不做其他操作</p>
+</li>
+</ul>
+<h4 id="2-3-Oracle-安装"><a href="#2-3-Oracle-安装" class="headerlink" title="2.3 Oracle 安装"></a>2.3 Oracle 安装</h4><p>• 概念介绍</p>
+<p>• 全局数据库名 </p>
+<p>• 唯一标识Oracle数据库的名称</p>
+<p>• 数据库实例名SID </p>
+<p>• 和操作系统交互，Oracle数据库的一个引用</p>
+<p>• 每个启动的数据库都对应一个数据库实例，由这个实例来访问和控制数据库</p>
+<p>• 为了运行数据库，Oracle系统所运行的所有进程和分配的内存结构的组合体</p>
+<p>• 两者名称通常相同</p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsa4y2tcj30e90fcweo.jpg" alt></p>
+<h3 id="3-Oracle-目录结构和系统"><a href="#3-Oracle-目录结构和系统" class="headerlink" title="3  Oracle 目录结构和系统"></a>3  Oracle 目录结构和系统</h3><h4 id="3-1-目录"><a href="#3-1-目录" class="headerlink" title="3.1 目录"></a>3.1 目录</h4><p>a) D:\Software\oracle\oradata\orcl, 是用于存放 Oracl数据文件的目录</p>
+<p>b) D:\Software\oracle\product\11.2.0\dbhome_1,  数据库安装位置</p>
+<p>c) D:\Software\oracle\product\11.2.0\dbhome_1\jdbc\lib, 存放 jdbc 数据库连接的驱动位置</p>
+<p>d) D:\Software\oracle\product\11.2.0\dbhome_1\jdk, Oracle 内置的 java 开发工具集</p>
+<p>e) D:\Software\oracle\product\11.2.0\dbhome_1\NETWORK\ADMIN,存放 Oracle 的配置信息(监听配置和本地网络服务名配置）</p>
+<h4 id="3-2-Oracle-系统用户"><a href="#3-2-Oracle-系统用户" class="headerlink" title="3.2 Oracle 系统用户"></a>3.2 Oracle 系统用户</h4><p>a) Oracle 数据库是基于用户的, 使用数据库时, 必须先登录要操作的用户.</p>
+<p>b) Oracle 安装完成后, 自带一些用户, 被称之为系统用户</p>
+<p>c) SYS, 是 Oracle 中权限最高的账户, 理解为超级管理员</p>
+<p>d) SYSTEM, 是管理员(DBA), 权限比 SYS 少, 普通管理员</p>
+<p>e) SCOTT, 是 Oracle 提供的一个测试用户, 其中自带了四张测试用表格, 可以供用户学习使用. SCOTT 用户的密码通常是 tiger(老虎)</p>
+<h4 id="3-3-服务介绍"><a href="#3-3-服务介绍" class="headerlink" title="3.3  服务介绍"></a>3.3  服务介绍</h4><p>a) OracleServiceORCL, 数据库的实例服务, 是 Oracle 的核心服务,Oracle 要使用, 必须开启这个服务.</p>
+<p>b) OracleOraDb11g_home1TNSListener, 数据库监听服务, 用来监听Oracle 数据</p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsaqlgk1j30e6048aaa.jpg" alt></p>
+<h4 id="3-6-练习表介绍-C"><a href="#3-6-练习表介绍-C" class="headerlink" title="3.6 练习表介绍 C"></a>3.6 练习表介绍 C</h4><p>• 用户</p>
+<p>• scott </p>
+<p>• 数据库表</p>
+<p>​    • Dept 部门表</p>
+<p>• Emp 员工表</p>
+<p>• Salgrade 工资等级表</p>
+<p>• Bonus 奖金表</p>
+<p>• 表和表之间的关系</p>
+<p>• 员工属于某个部门</p>
+<h3 id="4-Oracle-客户端"><a href="#4-Oracle-客户端" class="headerlink" title="4 Oracle 客户端"></a>4 Oracle 客户端</h3><h4 id="4-1-SQL-Plus"><a href="#4-1-SQL-Plus" class="headerlink" title="4.1 SQL Plus"></a>4.1 SQL Plus</h4><p>是一个命令行客户端，oracle 自带</p>
+<p>使用效果不好</p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsbm3dsvj30nw06hjrb.jpg" alt></p>
+<h4 id="4-2-PLSQL-Developer"><a href="#4-2-PLSQL-Developer" class="headerlink" title="4.2 PLSQL  Developer"></a>4.2 PLSQL  Developer</h4><p>图形界面，显示效果好</p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlscfm8qyj30p00dyabl.jpg" alt></p>
+<h3 id="5-Oracle常用命令及练习表"><a href="#5-Oracle常用命令及练习表" class="headerlink" title="5 Oracle常用命令及练习表"></a>5 Oracle常用命令及练习表</h3><h4 id="5-1-查看用户的所有表"><a href="#5-1-查看用户的所有表" class="headerlink" title="5.1 查看用户的所有表"></a>5.1 查看用户的所有表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> 表名;</span><br></pre></td></tr></table></figure>
+
+<p>举个栗子：select * from EMP</p>
+<h4 id="5-2-查看表结构"><a href="#5-2-查看表结构" class="headerlink" title="5.2 查看表结构"></a>5.2 查看表结构</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">desc 表名</span><br></pre></td></tr></table></figure>
+
+<p>举个栗子：<code>desc EMP</code></p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlsd3mqaxj308d042jr6.jpg" alt></p>
+<h4 id="5-3-查询表数据"><a href="#5-3-查询表数据" class="headerlink" title="5.3 查询表数据"></a>5.3 查询表数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from 表名</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-4-显示当前用户"><a href="#5-4-显示当前用户" class="headerlink" title="5.4 显示当前用户"></a>5.4 显示当前用户</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show user</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-5-退出"><a href="#5-5-退出" class="headerlink" title="5.5 退出"></a>5.5 退出</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-6-常用表"><a href="#5-6-常用表" class="headerlink" title="5.6 常用表"></a>5.6 常用表</h4><h3 id="6-Oracle-连接配置"><a href="#6-Oracle-连接配置" class="headerlink" title="6  Oracle 连接配置"></a>6  Oracle 连接配置</h3><h4 id="6-1-配置监听器和本地网络服务名-A"><a href="#6-1-配置监听器和本地网络服务名-A" class="headerlink" title="6.1  配置监听器和本地网络服务名 A"></a>6.1  配置监听器和本地网络服务名 A</h4><p>Oracle采用服务器/客户端访问方式</p>
+<p>• 服务器端使用监听器对客户端的访问进行监听<br>• 客户端访问服务器端时必须明确四个参数，包括<br>• 访问协议   TCP<br>• 服务器IP地址:服务器监听端口   1521<br>• 服务器端的哪个数据库实例  orcl</p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlr5r8ag0j30g405z76e.jpg" alt></p>
+<p>Oracle产品安装完成后，服务器和客户端都需要进行网络配置才能实现网络连接</p>
+<p>• 服务器端配置监听器，客户端配置本地网络服务名（包括四个连接参数）<br>• 在安装Oracle服务器软件时自动配置一个监听器，并且自动创建了和数据库实例名相<br>同的本地网络服务名<br>• listener.ora和tnsnames.ora分别用来存储监听器和本地网络服务名的信息<br>• Oracle中的 Net Manager工具和Net Configuration Assistant都能用来配置监听器和网络服务名</p>
+<h5 id="6-1-1-配置-listener-ora-文件"><a href="#6-1-1-配置-listener-ora-文件" class="headerlink" title="6.1.1 配置 listener.ora 文件"></a>6.1.1 配置 listener.ora 文件</h5><p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlrgs1lenj30lh0btwez.jpg" alt></p>
+<h5 id="6-1-2-配置-tnsnames-ora-文件"><a href="#6-1-2-配置-tnsnames-ora-文件" class="headerlink" title="6.1.2 配置  tnsnames.ora 文件"></a>6.1.2 配置  tnsnames.ora 文件</h5><p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlrmet58aj30mp0comxr.jpg" alt></p>
+<h4 id="6-2-使用-Oracle-数据库-可能出现的问题"><a href="#6-2-使用-Oracle-数据库-可能出现的问题" class="headerlink" title="6.2  使用 Oracle 数据库 可能出现的问题"></a>6.2  使用 Oracle 数据库 可能出现的问题</h4><p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlr8g68doj30ip096die.jpg" alt></p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlra2zgluj30ip06q3zw.jpg" alt></p>
+<p>​                原因：监听服务没有开启</p>
+<p><img src="https://ws1.sinaimg.cn/large/0075WAZ9gy1fxlrbu93umj30hl07lmyz.jpg" alt></p>
+<p>​            原因：    1.  监听服务刚启动，还没有反应过来</p>
+<p>​                       2.  配置信息可能读取不到，需要重新配置</p>
+<p>​          </p>
+<h4 id="6-3-创建用户和授予权限-B"><a href="#6-3-创建用户和授予权限-B" class="headerlink" title="6.3 创建用户和授予权限 B"></a>6.3 创建用户和授予权限 B</h4><p>• <strong>创建用户</strong></p>
+<p>• CREATE USER bjsxt IDENTIFIED BY bjsxt; </p>
+<p>• <strong>分配权限或角色</strong></p>
+<p>• GRANT CONNECT,RESOURCE TO bjsxt; </p>
+<p>• <strong>取消权限或角色</strong></p>
+<p>• REVOKE RESOURCE FROM bjsxt;</p>
+<p> • 权限指执行特定类型SQL 命令或访问其他对象的权利</p>
+<p>• 角色是具有名称的一组权限的组合</p>
+<p>• <strong>常用系统预定义角色</strong></p>
+<p>• CONNECT：临时用户</p>
+<p>• RESOURCE：更为可靠和正式的用户</p>
+<p>• DBA：数据库管理员角色，拥有管理数据库的最高权限</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/数据库/" rel="tag"># 数据库</a>
+            
+              <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2018/11/19/Java/20181119 服务器项目/" rel="next" title="20181119 服务器项目">
+                  <i class="fa fa-chevron-left"></i> 20181119 服务器项目
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2018/11/28/数据库/20181128 SQL 语言/" rel="prev" title="20181128 SQL 语言">
+                  20181128 SQL 语言 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-数据库相关概念"><span class="nav-number">1.</span> <span class="nav-text">1 数据库相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-数据库基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 数据库基本概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-数据库结构"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 数据库结构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-1-树形结构"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.2.1 树形结构</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-2-网状"><span class="nav-number">1.2.2.</span> <span class="nav-text">1.2.2  网状</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-3-关系型数据"><span class="nav-number">1.2.3.</span> <span class="nav-text">1.2.3 关系型数据</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-4-对象数据库"><span class="nav-number">1.2.4.</span> <span class="nav-text">1.2.4 对象数据库</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-5-NOSQL数据库"><span class="nav-number">1.2.5.</span> <span class="nav-text">1.2.5 NOSQL数据库**</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-3-关系型数据"><span class="nav-number">1.3.</span> <span class="nav-text">1.3 关系型数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-oracle-入门"><span class="nav-number">2.</span> <span class="nav-text">2 oracle 入门</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Oracle-公司"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 Oracle 公司</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-Oracle-数据库"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 Oracle 数据库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3-Oracle-安装"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 Oracle 安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Oracle-目录结构和系统"><span class="nav-number">3.</span> <span class="nav-text">3  Oracle 目录结构和系统</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-目录"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-Oracle-系统用户"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Oracle 系统用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-服务介绍"><span class="nav-number">3.3.</span> <span class="nav-text">3.3  服务介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-6-练习表介绍-C"><span class="nav-number">3.4.</span> <span class="nav-text">3.6 练习表介绍 C</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-Oracle-客户端"><span class="nav-number">4.</span> <span class="nav-text">4 Oracle 客户端</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1-SQL-Plus"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 SQL Plus</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-PLSQL-Developer"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 PLSQL  Developer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-Oracle常用命令及练习表"><span class="nav-number">5.</span> <span class="nav-text">5 Oracle常用命令及练习表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-查看用户的所有表"><span class="nav-number">5.1.</span> <span class="nav-text">5.1 查看用户的所有表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-查看表结构"><span class="nav-number">5.2.</span> <span class="nav-text">5.2 查看表结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3-查询表数据"><span class="nav-number">5.3.</span> <span class="nav-text">5.3 查询表数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-4-显示当前用户"><span class="nav-number">5.4.</span> <span class="nav-text">5.4 显示当前用户</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-退出"><span class="nav-number">5.5.</span> <span class="nav-text">5.5 退出</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-常用表"><span class="nav-number">5.6.</span> <span class="nav-text">5.6 常用表</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Oracle-连接配置"><span class="nav-number">6.</span> <span class="nav-text">6  Oracle 连接配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#6-1-配置监听器和本地网络服务名-A"><span class="nav-number">6.1.</span> <span class="nav-text">6.1  配置监听器和本地网络服务名 A</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#6-1-1-配置-listener-ora-文件"><span class="nav-number">6.1.1.</span> <span class="nav-text">6.1.1 配置 listener.ora 文件</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-1-2-配置-tnsnames-ora-文件"><span class="nav-number">6.1.2.</span> <span class="nav-text">6.1.2 配置  tnsnames.ora 文件</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-2-使用-Oracle-数据库-可能出现的问题"><span class="nav-number">6.2.</span> <span class="nav-text">6.2  使用 Oracle 数据库 可能出现的问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-3-创建用户和授予权限-B"><span class="nav-number">6.3.</span> <span class="nav-text">6.3 创建用户和授予权限 B</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

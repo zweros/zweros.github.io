@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Dubbo 介绍RPC 框架，依赖于 Spring 框架。  单体架构把系统的所有的功能、模块耦合在一个应用中的架构方式。  SOA  架构service Oriented  Architecture 面向服务的架构（SOA）是一个组件模型，它将应用系统拆分成不同的功能单元（称为服务），通过这些服务之间良好的接口和契约联系起来。 RPC 远程过程调用Remote Procedure Call  P">
+<meta name="keywords" content="Dubbo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20190521 Dubbo">
+<meta property="og:url" content="http://zwer.xyz/2019/05/21/20190521 Dubbo/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="Dubbo 介绍RPC 框架，依赖于 Spring 框架。  单体架构把系统的所有的功能、模块耦合在一个应用中的架构方式。  SOA  架构service Oriented  Architecture 面向服务的架构（SOA）是一个组件模型，它将应用系统拆分成不同的功能单元（称为服务），通过这些服务之间良好的接口和契约联系起来。 RPC 远程过程调用Remote Procedure Call  P">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://dubbo.apache.org/docs/zh-cn/user/sources/images/dubbo-architecture-roadmap.jpg">
+<meta property="og:image" content="https://dubbo.apache.org/docs/zh-cn/user/sources/images/dubbo-architecture.jpg">
+<meta property="og:updated_time" content="2019-05-24T09:16:02.494Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20190521 Dubbo">
+<meta name="twitter:description" content="Dubbo 介绍RPC 框架，依赖于 Spring 框架。  单体架构把系统的所有的功能、模块耦合在一个应用中的架构方式。  SOA  架构service Oriented  Architecture 面向服务的架构（SOA）是一个组件模型，它将应用系统拆分成不同的功能单元（称为服务），通过这些服务之间良好的接口和契约联系起来。 RPC 远程过程调用Remote Procedure Call  P">
+<meta name="twitter:image" content="https://dubbo.apache.org/docs/zh-cn/user/sources/images/dubbo-architecture-roadmap.jpg">
+  <link rel="canonical" href="http://zwer.xyz/2019/05/21/20190521 Dubbo/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20190521 Dubbo | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/05/21/20190521 Dubbo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20190521 Dubbo
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-05-21 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-21T00:00:00+08:00">2019-05-21</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-05-24 17:16:02" itemprop="dateModified" datetime="2019-05-24T17:16:02+08:00">2019-05-24</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="Dubbo-介绍"><a href="#Dubbo-介绍" class="headerlink" title="Dubbo 介绍"></a>Dubbo 介绍</h3><p>RPC 框架，依赖于 Spring 框架。</p>
+<p><img src="https://dubbo.apache.org/docs/zh-cn/user/sources/images/dubbo-architecture-roadmap.jpg" alt></p>
+<h4 id="单体架构"><a href="#单体架构" class="headerlink" title="单体架构"></a>单体架构</h4><p>把系统的所有的功能、模块耦合在一个应用中的架构方式。 </p>
+<h4 id="SOA-架构"><a href="#SOA-架构" class="headerlink" title="SOA  架构"></a>SOA  架构</h4><p>service Oriented  Architecture</p>
+<p>面向服务的架构（SOA）是一个组件模型，它将应用系统拆分成不同的功能单元（称为服务），通过这些服务之间良好的接口和契约联系起来。</p>
+<h5 id="RPC-远程过程调用"><a href="#RPC-远程过程调用" class="headerlink" title="RPC 远程过程调用"></a>RPC 远程过程调用</h5><p>Remote Procedure Call  Protocol</p>
+<h4 id="Dubbo-框架图"><a href="#Dubbo-框架图" class="headerlink" title="Dubbo 框架图"></a>Dubbo 框架图</h4><p><img src="https://dubbo.apache.org/docs/zh-cn/user/sources/images/dubbo-architecture.jpg" alt>‘</p>
+<table>
+<thead>
+<tr>
+<th>角色</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Container</td>
+<td>服务运行容器</td>
+</tr>
+<tr>
+<td>Provider</td>
+<td>暴露服务的服务提供方</td>
+</tr>
+<tr>
+<td>Consumer</td>
+<td>调用远程服务的服务消费方</td>
+</tr>
+<tr>
+<td>Registry</td>
+<td>服务注册与发现的注册中心</td>
+</tr>
+<tr>
+<td>Monitor</td>
+<td>统计服务的调用次数和调用时间的监控中心</td>
+</tr>
+</tbody></table>
+<h5 id="调用关系说明"><a href="#调用关系说明" class="headerlink" title="调用关系说明"></a>调用关系说明</h5><ol>
+<li>服务容器负责启动，加载，运行服务提供者。</li>
+<li>服务提供者在启动时，向注册中心注册自己提供的服务。</li>
+<li>服务消费者在启动时，向注册中心订阅自己所需的服务。</li>
+<li>注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费者。</li>
+<li>服务消费者，从提供者地址列表中，基于软负载均衡算法，选一台提供者进行调用，如果调用失败，再选另一台调用。</li>
+<li>服务消费者和提供者，在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心。</li>
+</ol>
+<p>Dubbo 架构具有以下几个特点，分别是连通性、健壮性、伸缩性、以及向未来架构的升级性。</p>
+<h5 id="Dubbo-执行流程"><a href="#Dubbo-执行流程" class="headerlink" title="Dubbo 执行流程"></a>Dubbo 执行流程</h5><p>首先从container 加载服务器提供者（provider），provider 然后将服务相关信息（接口、方法、IP）发布在注册中心（registry）中，服务消费者 Consumer 会从注册中心（Resitry）订阅（Subscribe）服务，然后服务消费者向服务提供者发出请求，服务提供者返回服务消费者所需的结果，这一过程是同步的。若服务提供者更新服务信息，则注册中心会通知（notify），服务消费者。每过二秒，服务提供者和服务消费者都需向监控器（Monitor）发送信息（调用的次数，超时的时间等等）</p>
+<h3 id="Dubbo-支持的协议"><a href="#Dubbo-支持的协议" class="headerlink" title="Dubbo 支持的协议"></a>Dubbo 支持的协议</h3><h4 id="Dubbo-协议（官方协议）"><a href="#Dubbo-协议（官方协议）" class="headerlink" title="Dubbo 协议（官方协议）"></a>Dubbo 协议（官方协议）</h4><p>优点：采用INO复用单一长连接，并使用线程池并发处理请求，减少握手和加大并发效率</p>
+<h4 id="RMI-（Remote-Method-Invocation）协议"><a href="#RMI-（Remote-Method-Invocation）协议" class="headerlink" title="RMI （Remote Method Invocation）协议"></a>RMI （Remote Method Invocation）协议</h4><h4 id="Hession-协议"><a href="#Hession-协议" class="headerlink" title="Hession 协议"></a>Hession 协议</h4><p>第三方协议，需要添加 hession.jar 架包</p>
+<h3 id="Dubbo-支持的注册中心"><a href="#Dubbo-支持的注册中心" class="headerlink" title="Dubbo 支持的注册中心"></a>Dubbo 支持的注册中心</h3><h4 id="ZooKeeper-注册中心"><a href="#ZooKeeper-注册中心" class="headerlink" title="ZooKeeper 注册中心"></a>ZooKeeper 注册中心</h4><p>支持基于网络的集群方式</p>
+<h4 id="Redis-注册中心"><a href="#Redis-注册中心" class="headerlink" title="Redis 注册中心"></a>Redis 注册中心</h4><p>支持基于客户端双写的集群方式，性能高</p>
+<h3 id="安装-Zookeeper-注册中心"><a href="#安装-Zookeeper-注册中心" class="headerlink" title="安装 Zookeeper 注册中心"></a>安装 Zookeeper 注册中心</h3><p>参考上一个 Zookeeper</p>
+<h3 id="Dubbo-入门项目"><a href="#Dubbo-入门项目" class="headerlink" title="Dubbo 入门项目"></a>Dubbo 入门项目</h3><h4 id="创建-Provider"><a href="#创建-Provider" class="headerlink" title="创建 Provider"></a>创建 Provider</h4><p>创建 Maven 的 jar 工程，并修改 pom.xml ，添加 Dubbo 依赖</p>
+<p>服务：项目中对外界所提供的能力</p>
+<h5 id="pom-xml"><a href="#pom-xml" class="headerlink" title="pom.xml"></a>pom.xml</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:aop</span>=<span class="string">"http://www.springframework.org/schema/aop"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tx</span>=<span class="string">"http://www.springframework.org/schema/tx"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:dubbo</span>=<span class="string">"http://code.alibabatech.com/schema/dubbo"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/aop</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/aop/spring-aop.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/tx</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/tx/spring-tx.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/context/spring-context.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://code.alibabatech.com/schema/dubbo</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://code.alibabatech.com/schema/dubbo/dubbo.xsd"</span>&gt;</span></span><br><span class="line">       </span><br><span class="line">       <span class="comment">&lt;!-- 注册 服务提供者的名字 --&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dubbo:application</span> <span class="attr">name</span>=<span class="string">"mypro"</span>/&gt;</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">&lt;!-- address：注册中心的IP 和端口，注意</span></span><br><span class="line"><span class="comment">			  如果 zookeeper 是一个集群，将 IP 地址和端口 都添加该属性中。</span></span><br><span class="line"><span class="comment">		     protocol：注册中心的类型</span></span><br><span class="line"><span class="comment">		 --&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">dubbo:registry</span> 	<span class="attr">address</span>=<span class="string">"192.168.170.4:2181,192.168.170.4:2181,192.168.170.4:2181"</span> </span></span><br><span class="line"><span class="tag">       	<span class="attr">protocol</span>=<span class="string">"zookeeper"</span>/&gt;</span></span><br><span class="line">       </span><br><span class="line">       <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">       			注册服务提供的接口及 实现类</span></span><br><span class="line"><span class="comment">        --&gt;</span>	</span><br><span class="line">       <span class="tag">&lt;<span class="name">dubbo:service</span> <span class="attr">interface</span>=<span class="string">"cn.szxy.service.ShowMessage"</span>  </span></span><br><span class="line"><span class="tag">                      <span class="attr">ref</span>=<span class="string">"showMessageImpl"</span>&gt;</span><span class="tag">&lt;/<span class="name">dubbo:service</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">       <span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"showMessageImpl"</span> <span class="attr">class</span>=<span class="string">"cn.szxy.service.impl.ShowMessageImpl"</span>&gt;</span><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">        </span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="添加-zkClient-依赖"><a href="#添加-zkClient-依赖" class="headerlink" title="添加 zkClient 依赖"></a>添加 zkClient 依赖</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Caused by: java.lang.ClassNotFoundException: org.I0Itec.zkclient.IZkStateListener</span><br><span class="line">	at java.net.URLClassLoader.findClass(Unknown Source)</span><br><span class="line">	at java.lang.ClassLoader.loadClass(Unknown Source)</span><br><span class="line">	at sun.misc.Launcher$AppClassLoader.loadClass(Unknown Source)</span><br><span class="line">	at java.lang.ClassLoader.loadClass(Unknown Source)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- zkClient 客户端工具 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.101tec<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zkclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="开启-spring-容器"><a href="#开启-spring-容器" class="headerlink" title="开启 spring 容器"></a>开启 spring 容器</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.service.impl;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.dubbo.container.Main;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Start</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		//加载 spring 配置文件</span></span><br><span class="line"><span class="comment">		ClassPathXmlApplicationContext ac = </span></span><br><span class="line"><span class="comment">				new ClassPathXmlApplicationContext("applicationContext-Dubbo.xml");</span></span><br><span class="line"><span class="comment">		//开启 spring 容器</span></span><br><span class="line"><span class="comment">		ac.start();</span></span><br><span class="line"><span class="comment">		*/</span></span><br><span class="line">		</span><br><span class="line">		<span class="comment">//1. 使用 Dubbo 开启 Spring 容器</span></span><br><span class="line">		<span class="comment">//2. 优雅关机</span></span><br><span class="line">        <span class="comment">//加载spring 配置文件的路径是 classpth:META/spring/*.xml</span></span><br><span class="line">		Main.main(args);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="查看-zookeeper-客户端"><a href="#查看-zookeeper-客户端" class="headerlink" title="查看 zookeeper 客户端"></a>查看 zookeeper 客户端</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[zk: localhost:2181(CONNECTED) 0] ls /</span><br><span class="line">[dubbo, zookeeper, test]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 1] ls /dubbo </span><br><span class="line">[cn.szxy.service.ShowMessage]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 2] ls /dubbo/cn.szxy.service.ShowMessage</span><br><span class="line">[configurators, providers]</span><br><span class="line">[zk: localhost:2181(CONNECTED) 3] ls /dubbo/cn.szxy.service.ShowMessage/providers</span><br><span class="line"><span class="meta">[dubbo%</span>3A%2F%2F192.168.56.1%3A20880%2Fcn.szxy.service.ShowMessage%3Fanyhost%3Dtrue%26application%3Dmypro%26dubbo%3D2.5.4%26generic%3Dfalse%26interface%3Dcn.szxy.service.ShowMessage%26methods%3DHello%26pid%3D4620%26side%3Dprovider%26timestamp%3D1558485355415]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span># url encode </span><br><span class="line"><span class="meta">[dubbo%</span>3A%2F%2F192.168.56.1%3A20880%2Fcn.szxy.service.ShowMessage%3Fanyhost%3Dtrue%26application%3Dmypro%26dubbo%3D2.5.4%26generic%3Dfalse%26interface%3Dcn.szxy.service.ShowMessage%26methods%3DHello%26pid%3D4620%26side%3Dprovider%26timestamp%3D1558485355415]</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> url decode </span><br><span class="line">[dubbo://192.168.56.1:20880/cn.szxy.service.ShowMessage?anyhost=true&amp;application=mypro&amp;dubbo=2.5.4&amp;generic=false&amp;interface=cn.szxy.service.ShowMessage&amp;methods=Hello&amp;pid=4620&amp;side=provider&amp;timestamp=1558485355415]</span><br></pre></td></tr></table></figure>
+
+<h4 id="搭建-Dubbo-Admin-平台"><a href="#搭建-Dubbo-Admin-平台" class="headerlink" title="搭建 Dubbo Admin 平台"></a>搭建 Dubbo Admin 平台</h4><p>Admin 管理平台是 war 项目</p>
+<p>使用 unzip 解压 zip 类型的压缩包</p>
+<p>将解压后的 ROOT 目录放到 tomcat/webapps 下</p>
+<p>修改 ROOT/WEB-INF/dubbo.properties 配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dubbo.registry.address=zookeeper://192.168.170.4:2181</span><br><span class="line">dubbo.admin.root.password=root</span><br><span class="line">dubbo.admin.guest.password=guest</span><br></pre></td></tr></table></figure>
+
+<p>启动 tomcat 服务器</p>
+<h4 id="创建-Consumer"><a href="#创建-Consumer" class="headerlink" title="创建 Consumer"></a>创建 Consumer</h4><h5 id="pom-xml-1"><a href="#pom-xml-1" class="headerlink" title="pom.xml"></a>pom.xml</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span> <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.szxy<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>01-Dubbo-Customer<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">		 <span class="comment">&lt;!-- 添加 Provider 接口依赖 --&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  			  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>cn.szxy<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line"> 			 <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>00-Dubbo-provider<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  				<span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.1-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  		<span class="comment">&lt;!-- 添加 Dubbo 依赖 --&gt;</span></span><br><span class="line">  		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.5.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- zkClient 客户端工具 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">		    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.101tec<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">		    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>zkclient<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">		    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line">  </span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="applicationContext-xml"><a href="#applicationContext-xml" class="headerlink" title="applicationContext.xml"></a>applicationContext.xml</h5><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">beans</span> <span class="attr">xmlns</span>=<span class="string">"http://www.springframework.org/schema/beans"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:aop</span>=<span class="string">"http://www.springframework.org/schema/aop"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:context</span>=<span class="string">"http://www.springframework.org/schema/context"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tx</span>=<span class="string">"http://www.springframework.org/schema/tx"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:dubbo</span>=<span class="string">"http://code.alibabatech.com/schema/dubbo"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://www.springframework.org/schema/beans</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/beans/spring-beans.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/aop</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/aop/spring-aop.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/tx</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/tx/spring-tx.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/context</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://www.springframework.org/schema/context/spring-context.xsd</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://code.alibabatech.com/schema/dubbo</span></span></span><br><span class="line"><span class="tag"><span class="string">        http://code.alibabatech.com/schema/dubbo/dubbo.xsd"</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">&lt;!-- 扫描组件 --&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">context:component-scan</span> <span class="attr">base-package</span>=<span class="string">"cn.szxy"</span> /&gt;</span>    </span><br><span class="line">    	</span><br><span class="line">    	<span class="comment">&lt;!-- 注册 Consumer 服务应用名 --&gt;</span></span><br><span class="line">    	<span class="tag">&lt;<span class="name">dubbo:application</span>  <span class="attr">name</span>=<span class="string">"myConsumer"</span> /&gt;</span></span><br><span class="line">	        </span><br><span class="line">	    <span class="comment">&lt;!-- 订阅注册中心 --&gt;</span></span><br><span class="line">	    <span class="tag">&lt;<span class="name">dubbo:registry</span> <span class="attr">protocol</span>=<span class="string">"zookeeper"</span></span></span><br><span class="line"><span class="tag">	    	<span class="attr">address</span>=<span class="string">"192.168.170.4:2181,192.168.170.4:2182,192.168.170.4:2183"</span>/&gt;</span></span><br><span class="line">	    	</span><br><span class="line">	   	<span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">	   			为该接口生成 proxy 代理对象</span></span><br><span class="line"><span class="comment">	   	 --&gt;</span></span><br><span class="line">	   	 <span class="tag">&lt;<span class="name">dubbo:reference</span> <span class="attr">id</span>=<span class="string">"showMessage"</span> <span class="attr">interface</span>=<span class="string">"cn.szxy.service.ShowMessage"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">beans</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Dubbo-实战开发"><a href="#Dubbo-实战开发" class="headerlink" title="Dubbo 实战开发"></a>Dubbo 实战开发</h3><h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><p>完成对用户表的 CRUD 操作</p>
+<h4 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h4><p>SOA 面向服务的架构</p>
+<h4 id="技术选型"><a href="#技术选型" class="headerlink" title="技术选型"></a>技术选型</h4><p>Maven、SpringMVC、Spring、Mybatis、MySQL、Zookeeper、Dubbo</p>
+<h4 id="项目结构图"><a href="#项目结构图" class="headerlink" title="项目结构图"></a>项目结构图</h4><table>
+<thead>
+<tr>
+<th>项目名</th>
+<th>子项目或聚合项目</th>
+<th>子项目</th>
+<th>项目类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Dubbo-parent</td>
+<td></td>
+<td></td>
+<td>pom</td>
+</tr>
+<tr>
+<td></td>
+<td>Dubbo-pojo</td>
+<td></td>
+<td>jar</td>
+</tr>
+<tr>
+<td></td>
+<td>Dubbo-mapper</td>
+<td></td>
+<td>jar</td>
+</tr>
+<tr>
+<td></td>
+<td>Dubbo-provider</td>
+<td></td>
+<td>pom</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Dubbo-user-interface</td>
+<td>jar</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Dubbo-user-service</td>
+<td>jar</td>
+</tr>
+<tr>
+<td></td>
+<td>Dubbo-consumer</td>
+<td></td>
+<td>pom</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Dubbo-user-portal</td>
+<td>war</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Dubboj-user-service-portal</td>
+<td>jar</td>
+</tr>
+</tbody></table>
+<h3 id="案例部署-Assembly"><a href="#案例部署-Assembly" class="headerlink" title="案例部署 Assembly"></a>案例部署 Assembly</h3><p>assembly 打包插件是用于将项目打包成 jar 类型</p>
+<h4 id="Assembly-打包"><a href="#Assembly-打包" class="headerlink" title="Assembly 打包"></a>Assembly 打包</h4><p>在 06-Dubbo-user-service 项目的 src 目录下新建 assembly 目录</p>
+<p>将 assembly 项目中 bin 目录 和 conf 目录 拷贝到 assembly 目录中</p>
+<p><strong>清空</strong> conf 目录下的 dubbo.properties 文件内容</p>
+<p>在 assembly 根目录下新建 assembly.xml 文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version='1.0' encoding='UTF-8'?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">assembly</span></span></span><br><span class="line"><span class="tag">	<span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.3 http://maven.apache.org/xsd/assembly-1.1.3.xsd"</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 该字符会添加到最终tar.gz包的名称后面，作为后缀 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">id</span>&gt;</span>assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 指定打包的格式为tar.gz，该类型压缩包在linux中比较常见 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">formats</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">format</span>&gt;</span>tar.gz<span class="tag">&lt;/<span class="name">format</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">formats</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 在tar.gz压缩包中是否包含根文件夹，该根文件夹名称和tar.gz去掉id后缀一致 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">includeBaseDirectory</span>&gt;</span>true<span class="tag">&lt;/<span class="name">includeBaseDirectory</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">fileSets</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 将项目根路径下assembly/bin路径中的内容打包到压缩包中的根目录下的bin目录中 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">fileSet</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- 相对项目根路径的相对路径 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>assembly/bin<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>bin<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- 设置最终tar.gz中该文件夹下的权限，跟linux权限写法一致 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">fileMode</span>&gt;</span>0755<span class="tag">&lt;/<span class="name">fileMode</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">fileSet</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 将项目根路径下assembly/conf路径中的内容打包到压缩包中的根目录下的conf目录中 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">fileSet</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">directory</span>&gt;</span>assembly/conf<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>conf<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">			<span class="comment">&lt;!-- 设置其linux权限 --&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">fileMode</span>&gt;</span>0644<span class="tag">&lt;/<span class="name">fileMode</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">fileSet</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">fileSets</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 将所有依赖的jar包打包到压缩包中的根目录下的lib目录中 --&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 此lib目录中包含自己开发的项目jar包以及demo_service.jar，还有第三方的jar包 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">dependencySets</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">dependencySet</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">outputDirectory</span>&gt;</span>lib<span class="tag">&lt;/<span class="name">outputDirectory</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">dependencySet</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">dependencySets</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">assembly</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 pom.xml 添加 assembly 插件 </p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 指定项目的打包插件信息 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven-assembly-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- 指定打包描述文件的位置：相对项目根目录的路径 --&gt;</span></span><br><span class="line">                <span class="comment">&lt;!-- assembly打包的描述文件 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">descriptor</span>&gt;</span>assembly/assembly.xml<span class="tag">&lt;/<span class="name">descriptor</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">executions</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">execution</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">id</span>&gt;</span>make-assembly<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">phase</span>&gt;</span>package<span class="tag">&lt;/<span class="name">phase</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">goals</span>&gt;</span></span><br><span class="line">                        <span class="tag">&lt;<span class="name">goal</span>&gt;</span>single<span class="tag">&lt;/<span class="name">goal</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;/<span class="name">goals</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">execution</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">executions</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><ol>
+<li><p>Maven 的项目构建，若修改某个项目下的内容，并且其他项目对该项目存在依赖，此时再运行该整体项目会出现修改的项目内容没有及时的更新。</p>
+</li>
+<li><p>Spring 使用注解作为依赖注入，常常因为没有没有扫描该包下的文件或者扫描包的位置出现了错误，而发生无法创建 bean 实例的情况。</p>
+</li>
+<li><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.1:compile (default-compile) on project 10-Dubbo-user-portal-service: Compilation failure: Compilation failure: </span><br><span class="line">[ERROR] /E:/workspaces/20190521Dubbo/08-Dubbo-user-consumer/10-Dubbo-user-portal-service/src/main/java/cn/szxy/service/impl/UserServiceImpl.java:[9,29] 找不到符号</span><br><span class="line">[ERROR]   符号:   类 FindAllUserDubboService</span><br><span class="line">[ERROR]   位置: 程序包 cn.szxy.dubbo.service</span><br><span class="line">[ERROR] /E:/workspaces/20190521Dubbo/08-Dubbo-user-consumer/10-Dubbo-user-portal-service/src/main/java/cn/szxy/service/impl/UserServiceImpl.java:[19,17] 找不到符号</span><br><span class="line">[ERROR]   符号:   类 FindAllUserDubboService</span><br><span class="line">[ERROR]   位置: 类 cn.szxy.service.impl.UserServiceImpl</span><br><span class="line">[ERROR] -&gt; [Help 1]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">玄学。。。。。</span><br><span class="line">怎么办呢？  Maven---update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解决mvn clean后打包错：Cannot create resource output directory</p>
+<p>由于之前使用 xftp 上传该项目下的 jar 包，但是没有关闭 xftp ，导致资源一直被占用。</p>
+</li>
+</ol>
+<ol start="5">
+<li><p>上传 Dubbo 项目，tomcat 启动终止</p>
+<p>由于 zookeeper 注册中心没有开启，导致 dubbo 项目项目初始化无法完成。</p>
+</li>
+<li><p>为 dubbo 多个项目添加新的内容时，eclipse 会出现小红叉在类的方法或项目名上</p>
+<p>解决方法，使用 maven -update 更新相关项目信息</p>
+</li>
+<li><p>使用 maven install 命令打包–报错信息如下</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.1:compile (default-compile) on project 07-Dubbo-user-service: Compilation failure</span><br><span class="line">[ERROR] /E:/workspaces/20190521Dubbo/05-Dubbo-provider/07-Dubbo-user-service/src/main/java/cn/szxy/dubbo/service/impl/FindOneUserDubboServiceImpl.java:[18,34] 找不到符号</span><br><span class="line">[ERROR]   符号:   方法 selectOne(int)</span><br><span class="line">[ERROR]   位置: 类型为cn.szxy.mapper.UserMapper的变量 userMapper</span><br></pre></td></tr></table></figure>
+
+<p>原因项目依赖中  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FindOneUserDubboServiceImpl</span> <span class="keyword">implements</span> <span class="title">FindOneUserDubboService</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Autowired</span></span><br><span class="line">	<span class="keyword">private</span> UserMapper userMapper;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> Users <span class="title">findAllUserDubboService</span><span class="params">(<span class="keyword">int</span> userid)</span> </span>&#123;</span><br><span class="line">		 <span class="keyword">return</span> userMapper.selectOne(userid); <span class="comment">//报错</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li><p>Dubbo-service 启动卡住，由于 Centos 的端口没有开发</p>
+<p>解决方法：关闭 Centos 防火墙</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/Dubbo/" rel="tag"># Dubbo</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/05/20/20190520 ZooKeeper/" rel="next" title="20190520 ZooKeeper">
+                  <i class="fa fa-chevron-left"></i> 20190520 ZooKeeper
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/05/24/20190524 VSFTPD/" rel="prev" title="20190524 VSFTPD">
+                  20190524 VSFTPD <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dubbo-介绍"><span class="nav-number">1.</span> <span class="nav-text">Dubbo 介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#单体架构"><span class="nav-number">1.1.</span> <span class="nav-text">单体架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SOA-架构"><span class="nav-number">1.2.</span> <span class="nav-text">SOA  架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RPC-远程过程调用"><span class="nav-number">1.2.1.</span> <span class="nav-text">RPC 远程过程调用</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo-框架图"><span class="nav-number">1.3.</span> <span class="nav-text">Dubbo 框架图</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#调用关系说明"><span class="nav-number">1.3.1.</span> <span class="nav-text">调用关系说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Dubbo-执行流程"><span class="nav-number">1.3.2.</span> <span class="nav-text">Dubbo 执行流程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dubbo-支持的协议"><span class="nav-number">2.</span> <span class="nav-text">Dubbo 支持的协议</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Dubbo-协议（官方协议）"><span class="nav-number">2.1.</span> <span class="nav-text">Dubbo 协议（官方协议）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RMI-（Remote-Method-Invocation）协议"><span class="nav-number">2.2.</span> <span class="nav-text">RMI （Remote Method Invocation）协议</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hession-协议"><span class="nav-number">2.3.</span> <span class="nav-text">Hession 协议</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dubbo-支持的注册中心"><span class="nav-number">3.</span> <span class="nav-text">Dubbo 支持的注册中心</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ZooKeeper-注册中心"><span class="nav-number">3.1.</span> <span class="nav-text">ZooKeeper 注册中心</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis-注册中心"><span class="nav-number">3.2.</span> <span class="nav-text">Redis 注册中心</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Zookeeper-注册中心"><span class="nav-number">4.</span> <span class="nav-text">安装 Zookeeper 注册中心</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dubbo-入门项目"><span class="nav-number">5.</span> <span class="nav-text">Dubbo 入门项目</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建-Provider"><span class="nav-number">5.1.</span> <span class="nav-text">创建 Provider</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#pom-xml"><span class="nav-number">5.1.1.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#添加-zkClient-依赖"><span class="nav-number">5.1.2.</span> <span class="nav-text">添加 zkClient 依赖</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#开启-spring-容器"><span class="nav-number">5.1.3.</span> <span class="nav-text">开启 spring 容器</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#查看-zookeeper-客户端"><span class="nav-number">5.1.4.</span> <span class="nav-text">查看 zookeeper 客户端</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#搭建-Dubbo-Admin-平台"><span class="nav-number">5.2.</span> <span class="nav-text">搭建 Dubbo Admin 平台</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建-Consumer"><span class="nav-number">5.3.</span> <span class="nav-text">创建 Consumer</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#pom-xml-1"><span class="nav-number">5.3.1.</span> <span class="nav-text">pom.xml</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#applicationContext-xml"><span class="nav-number">5.3.2.</span> <span class="nav-text">applicationContext.xml</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dubbo-实战开发"><span class="nav-number">6.</span> <span class="nav-text">Dubbo 实战开发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需求"><span class="nav-number">6.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#项目架构"><span class="nav-number">6.2.</span> <span class="nav-text">项目架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#技术选型"><span class="nav-number">6.3.</span> <span class="nav-text">技术选型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#项目结构图"><span class="nav-number">6.4.</span> <span class="nav-text">项目结构图</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#案例部署-Assembly"><span class="nav-number">7.</span> <span class="nav-text">案例部署 Assembly</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Assembly-打包"><span class="nav-number">7.1.</span> <span class="nav-text">Assembly 打包</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题："><span class="nav-number">8.</span> <span class="nav-text">问题：</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

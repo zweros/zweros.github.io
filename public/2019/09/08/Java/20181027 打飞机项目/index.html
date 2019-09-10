@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="第一步创建主窗口通过匿名内部类，关闭窗口1234567891011121314151617181920212223242526272829303132package cn.szxy.Frame;import java.awt.Graphics;import java.awt.event.WindowAdapter;import java.awt.event.WindowEvent;import j">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zwer 的博客空间">
+<meta property="og:url" content="http://zwer.xyz/2019/09/08/Java/20181027 打飞机项目/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="第一步创建主窗口通过匿名内部类，关闭窗口1234567891011121314151617181920212223242526272829303132package cn.szxy.Frame;import java.awt.Graphics;import java.awt.event.WindowAdapter;import java.awt.event.WindowEvent;import j">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-10-27T14:50:48.701Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zwer 的博客空间">
+<meta name="twitter:description" content="第一步创建主窗口通过匿名内部类，关闭窗口1234567891011121314151617181920212223242526272829303132package cn.szxy.Frame;import java.awt.Graphics;import java.awt.event.WindowAdapter;import java.awt.event.WindowEvent;import j">
+  <link rel="canonical" href="http://zwer.xyz/2019/09/08/Java/20181027 打飞机项目/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title> | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/09/08/Java/20181027 打飞机项目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-08 19:45:55" itemprop="dateCreated datePublished" datetime="2019-09-08T19:45:55+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2018-10-27 22:50:48" itemprop="dateModified" datetime="2018-10-27T22:50:48+08:00">2018-10-27</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h4 id="第一步创建主窗口"><a href="#第一步创建主窗口" class="headerlink" title="第一步创建主窗口"></a>第一步创建主窗口</h4><h5 id="通过匿名内部类，关闭窗口"><a href="#通过匿名内部类，关闭窗口" class="headerlink" title="通过匿名内部类，关闭窗口"></a>通过匿名内部类，关闭窗口</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.awt.Graphics;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.WindowAdapter;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.WindowEvent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.swing.JFrame;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 飞机游戏主窗口</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> wzer</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">launchFrame</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.setTitle(<span class="string">"飞机大战0.1版本"</span>);</span><br><span class="line">		<span class="keyword">this</span>.setSize(<span class="number">500</span>, <span class="number">500</span>);</span><br><span class="line">		<span class="keyword">this</span>.setLocation(<span class="number">300</span>, <span class="number">300</span>);</span><br><span class="line">		<span class="keyword">this</span>.setVisible(<span class="keyword">true</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//匿名内部类</span></span><br><span class="line">		<span class="keyword">this</span>.addWindowListener(<span class="keyword">new</span> WindowAdapter() &#123;</span><br><span class="line">			 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">windowClosed</span><span class="params">(WindowEvent e)</span> </span>&#123;</span><br><span class="line">				 System.exit(<span class="number">0</span>);</span><br><span class="line">			 &#125;</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		GameMainFrame f = <span class="keyword">new</span> GameMainFrame();</span><br><span class="line">		f.launchFrame();<span class="comment">//启动窗口</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="第二步：字体-颜色-图片加载"><a href="#第二步：字体-颜色-图片加载" class="headerlink" title="第二步：字体 颜色  图片加载"></a>第二步：字体 颜色  图片加载</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.awt.Image;</span><br><span class="line"><span class="keyword">import</span> java.awt.image.BufferedImage;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.net.URL;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.imageio.ImageIO;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GameUntil</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="title">GameUntil</span><span class="params">()</span></span>&#123;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 返回指定路径文件的</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> path</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Image <span class="title">getImage</span><span class="params">(String path)</span></span>&#123;</span><br><span class="line">		BufferedImage bi = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span>&#123;</span><br><span class="line">			URL u = GameUntil.class.getClassLoader().getResource(path);</span><br><span class="line">			bi = ImageIO.read(u);</span><br><span class="line">		&#125;<span class="keyword">catch</span>(IOException e)&#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> bi;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="第三步-线程内部类实现动画"><a href="#第三步-线程内部类实现动画" class="headerlink" title="第三步 线程内部类实现动画"></a>第三步 线程内部类实现动画</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.awt.Color;</span><br><span class="line"><span class="keyword">import</span> java.awt.Font;</span><br><span class="line"><span class="keyword">import</span> java.awt.Graphics;</span><br><span class="line"><span class="keyword">import</span> java.awt.Image;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.WindowAdapter;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.WindowEvent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.swing.JFrame;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 飞机游戏主窗口</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> wzer</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GameMainFrame</span> <span class="keyword">extends</span> <span class="title">JFrame</span></span>&#123;</span><br><span class="line">	<span class="comment">//Image ball = GameUntil.getImage("Images/ball.png");</span></span><br><span class="line">	Image bg = GameUntil.getImage(<span class="string">"Images/bg.jpg"</span>);</span><br><span class="line">	Image plane = GameUntil.getImage(<span class="string">"Images/plane.png"</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">int</span>  planeX=<span class="number">200</span>,planeY=<span class="number">200</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">paint</span><span class="params">(Graphics g)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//Color c = g.getColor();</span></span><br><span class="line">		<span class="comment">//Font f = g.getFont();</span></span><br><span class="line">		<span class="comment">//g.drawLine(200, 200, 400, 400);</span></span><br><span class="line">		<span class="comment">//g.drawImage(ball, 200, 200, null);</span></span><br><span class="line">		g.drawImage(bg,<span class="number">0</span>,	<span class="number">0</span>,<span class="keyword">null</span>);</span><br><span class="line">		g.drawImage(plane,planeX,planeY,<span class="keyword">null</span>);</span><br><span class="line">		planeX++;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 内部类  可以直接使用外部类的属性和方法</span></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">PrintThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			<span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">				repaint();</span><br><span class="line">				<span class="comment">//System.out.println("画画");</span></span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					Thread.sleep(<span class="number">40</span>); <span class="comment">//1s = 1000ms   40ms 每秒25帧</span></span><br><span class="line">				&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">					<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">launchFrame</span><span class="params">()</span></span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.setTitle(<span class="string">"飞机大战0.1版本"</span>);</span><br><span class="line">		<span class="keyword">this</span>.setSize(<span class="number">500</span>, <span class="number">500</span>);</span><br><span class="line">		<span class="keyword">this</span>.setLocation(<span class="number">300</span>, <span class="number">300</span>);</span><br><span class="line">		<span class="keyword">this</span>.setVisible(<span class="keyword">true</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">new</span> PrintThread().start();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//匿名内部类</span></span><br><span class="line">		<span class="keyword">this</span>.addWindowListener(<span class="keyword">new</span> WindowAdapter() &#123;</span><br><span class="line">			 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">windowClosed</span><span class="params">(WindowEvent e)</span> </span>&#123;</span><br><span class="line">				 System.exit(<span class="number">0</span>);</span><br><span class="line">			 &#125;</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		GameMainFrame f = <span class="keyword">new</span> GameMainFrame();</span><br><span class="line">		f.launchFrame();<span class="comment">//启动窗口</span></span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第四部<code>GameObject</code>类 设计</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.awt.Image;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 游戏物体的父类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> wzer</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GameObject</span> </span>&#123;</span><br><span class="line">	Image image;</span><br><span class="line">	<span class="keyword">double</span> x,y;</span><br><span class="line">	<span class="keyword">int</span> speed;</span><br><span class="line">	<span class="keyword">int</span> width,height;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">GameObject</span><span class="params">(Image image, <span class="keyword">double</span> x, <span class="keyword">double</span> y, <span class="keyword">int</span> speed, <span class="keyword">int</span> width,</span></span></span><br><span class="line"><span class="function"><span class="params">			<span class="keyword">int</span> height)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>();</span><br><span class="line">		<span class="keyword">this</span>.image = image;</span><br><span class="line">		<span class="keyword">this</span>.x = x;</span><br><span class="line">		<span class="keyword">this</span>.y = y;</span><br><span class="line">		<span class="keyword">this</span>.speed = speed;</span><br><span class="line">		<span class="keyword">this</span>.width = width;</span><br><span class="line">		<span class="keyword">this</span>.height = height;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">GameObject</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated constructor stub</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="第五步-飞机类的设计"><a href="#第五步-飞机类的设计" class="headerlink" title="第五步 飞机类的设计"></a>第五步 飞机类的设计</h4><p>继承<code>GameObject</code>类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.awt.Graphics;</span><br><span class="line"><span class="keyword">import</span> java.awt.Image;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Plane</span> <span class="keyword">extends</span> <span class="title">GameObject</span></span>&#123;</span><br><span class="line">    Image planeImg = GameUntil.getImage(<span class="string">"Images/plane.png"</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawSelf</span><span class="params">(Graphics g)</span></span>&#123;</span><br><span class="line">        g.drawImage(image,(<span class="keyword">int</span>)x,(<span class="keyword">int</span>)y,<span class="keyword">null</span>);</span><br><span class="line">        x++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Plane</span><span class="params">(Image img,<span class="keyword">double</span> planeX,<span class="keyword">double</span> planeY)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// TODO Auto-generated constructor stub</span></span><br><span class="line">        <span class="keyword">this</span>.image = img;</span><br><span class="line">        <span class="keyword">this</span>.x = planeX;</span><br><span class="line">        <span class="keyword">this</span>.y = planeY;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="第六步-键盘监听"><a href="#第六步-键盘监听" class="headerlink" title="第六步 键盘监听"></a>第六步 键盘监听</h4><h5 id="捕获键盘的活动-打印键盘对应的值"><a href="#捕获键盘的活动-打印键盘对应的值" class="headerlink" title="捕获键盘的活动 打印键盘对应的值"></a>捕获键盘的活动 打印键盘对应的值</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">import</span> java.awt.Color;</span><br><span class="line">    <span class="keyword">import</span> java.awt.Font;</span><br><span class="line">    <span class="keyword">import</span> java.awt.Graphics;</span><br><span class="line">    <span class="keyword">import</span> java.awt.Image;</span><br><span class="line">    <span class="keyword">import</span> java.awt.event.KeyAdapter;</span><br><span class="line">    <span class="keyword">import</span> java.awt.event.KeyEvent;</span><br><span class="line">    <span class="keyword">import</span> java.awt.event.KeyListener;</span><br><span class="line">    <span class="keyword">import</span> java.awt.event.WindowAdapter;</span><br><span class="line">    <span class="keyword">import</span> java.awt.event.WindowEvent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.swing.JFrame;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 飞机游戏主窗口</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@author</span> wzer</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GameMainFrame</span> <span class="keyword">extends</span> <span class="title">JFrame</span></span>&#123;</span><br><span class="line">		<span class="comment">//Image ball = GameUntil.getImage("Images/ball.png");</span></span><br><span class="line">		Image bg = GameUntil.getImage(<span class="string">"Images/bg.jpg"</span>);</span><br><span class="line">		Image planeImg = GameUntil.getImage(<span class="string">"Images/plane.png"</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//int  planeX=200,planeY=200;</span></span><br><span class="line">		Plane plane = <span class="keyword">new</span> Plane(planeImg,<span class="number">200</span>,<span class="number">200</span>);</span><br><span class="line">		Plane plane2 = <span class="keyword">new</span> Plane(planeImg,<span class="number">220</span>,<span class="number">200</span>);</span><br><span class="line">		Plane plane3 = <span class="keyword">new</span> Plane(planeImg,<span class="number">230</span>,<span class="number">200</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">paint</span><span class="params">(Graphics g)</span> </span>&#123;</span><br><span class="line">			<span class="comment">//Color c = g.getColor();</span></span><br><span class="line">			<span class="comment">//Font f = g.getFont();</span></span><br><span class="line">			<span class="comment">//g.drawLine(200, 200, 400, 400);</span></span><br><span class="line">			<span class="comment">//g.drawImage(ball, 200, 200, null);</span></span><br><span class="line">			<span class="comment">//g.drawImage(plane,planeX,planeY,null);</span></span><br><span class="line">			<span class="comment">//planeX++;</span></span><br><span class="line">			g.drawImage(bg,<span class="number">0</span>,	<span class="number">0</span>,<span class="keyword">null</span>);</span><br><span class="line">			plane.drawSelf(g);</span><br><span class="line">			plane2.drawSelf(g);</span><br><span class="line">			plane3.drawSelf(g);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">// 内部类  可以直接使用外部类的属性和方法</span></span><br><span class="line">		<span class="class"><span class="keyword">class</span> <span class="title">PrintThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>&#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">					repaint();</span><br><span class="line">					<span class="comment">//System.out.println("画画");</span></span><br><span class="line">					<span class="keyword">try</span> &#123;</span><br><span class="line">						Thread.sleep(<span class="number">40</span>); <span class="comment">//1s = 1000ms   40ms 每秒25帧</span></span><br><span class="line">					&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">						<span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">						e.printStackTrace();</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">launchFrame</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="keyword">this</span>.setTitle(<span class="string">"飞机大战0.1版本"</span>);</span><br><span class="line">			<span class="keyword">this</span>.setSize(<span class="number">500</span>, <span class="number">500</span>);</span><br><span class="line">			<span class="keyword">this</span>.setLocation(<span class="number">300</span>, <span class="number">300</span>);</span><br><span class="line">			<span class="keyword">this</span>.setVisible(<span class="keyword">true</span>);</span><br><span class="line">			</span><br><span class="line">			<span class="comment">//匿名内部类  用于窗口的关闭</span></span><br><span class="line">			<span class="keyword">this</span>.addWindowListener(<span class="keyword">new</span> WindowAdapter() &#123;</span><br><span class="line">				 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">windowClosed</span><span class="params">(WindowEvent e)</span> </span>&#123;</span><br><span class="line">					 System.exit(<span class="number">0</span>);</span><br><span class="line">				 &#125;</span><br><span class="line">			&#125;);	</span><br><span class="line">			</span><br><span class="line">			<span class="keyword">new</span> PrintThread().start();<span class="comment">//重画窗口</span></span><br><span class="line">			<span class="keyword">this</span>.addKeyListener(<span class="keyword">new</span> KeyMintor());<span class="comment">//增加监视器</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//定义键盘监听 内部类</span></span><br><span class="line">		<span class="class"><span class="keyword">class</span> <span class="title">KeyMintor</span> <span class="keyword">extends</span> <span class="title">KeyAdapter</span></span>&#123;</span><br><span class="line">			 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">keyPressed</span><span class="params">(KeyEvent e)</span> </span>&#123;</span><br><span class="line">				 System.out.println(<span class="string">"按下"</span>+e.getKeyCode());</span><br><span class="line">				 </span><br><span class="line">			 &#125;</span><br><span class="line">			 <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">keyReleased</span><span class="params">(KeyEvent e)</span> </span>&#123;</span><br><span class="line">				 System.out.println(<span class="string">"松开"</span>+e.getKeyCode());</span><br><span class="line">			 &#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">			GameMainFrame f = <span class="keyword">new</span> GameMainFrame();</span><br><span class="line">			f.launchFrame();<span class="comment">//启动窗口</span></span><br><span class="line">			</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="利用键盘监听，使飞机移动起来"><a href="#利用键盘监听，使飞机移动起来" class="headerlink" title="利用键盘监听，使飞机移动起来"></a>利用键盘监听，使飞机移动起来</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.awt.Graphics;</span><br><span class="line"><span class="keyword">import</span> java.awt.Image;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.KeyEvent;</span><br><span class="line"><span class="keyword">import</span> java.awt.event.KeyListener;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Plane</span> <span class="keyword">extends</span> <span class="title">GameObject</span></span>&#123;</span><br><span class="line">	Image planeImg = GameUntil.getImage(<span class="string">"Images/plane.png"</span>);</span><br><span class="line">	<span class="keyword">boolean</span> left,right,up,down;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">drawSelf</span><span class="params">(Graphics g)</span></span>&#123;</span><br><span class="line">		g.drawImage(image,(<span class="keyword">int</span>)x,(<span class="keyword">int</span>)y,<span class="keyword">null</span>);</span><br><span class="line">		<span class="comment">//x++;</span></span><br><span class="line">		<span class="keyword">this</span>.speed =<span class="number">3</span>;</span><br><span class="line">		<span class="keyword">if</span>(left)&#123;</span><br><span class="line">			x-=speed;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(right)&#123;</span><br><span class="line">			x+=speed;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(up)&#123;</span><br><span class="line">			y+=speed;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(down)&#123;</span><br><span class="line">			y-=speed;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Plane</span><span class="params">(Image img,<span class="keyword">double</span> planeX,<span class="keyword">double</span> planeY)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated constructor stub</span></span><br><span class="line">		<span class="keyword">this</span>.image = img;</span><br><span class="line">		<span class="keyword">this</span>.x = planeX;</span><br><span class="line">		<span class="keyword">this</span>.y = planeY;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addDirction</span><span class="params">(KeyEvent e)</span></span>&#123;</span><br><span class="line">		<span class="keyword">switch</span>(e.getKeyCode())&#123;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_UP:</span><br><span class="line">			up = <span class="keyword">true</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_DOWN:</span><br><span class="line">			down = <span class="keyword">true</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_LEFT:</span><br><span class="line">			left = <span class="keyword">true</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_RIGHT:</span><br><span class="line">			right = <span class="keyword">true</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">minussDirction</span><span class="params">(KeyEvent e)</span></span>&#123;</span><br><span class="line">		<span class="keyword">switch</span>(e.getKeyCode())&#123;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_UP:</span><br><span class="line">			up = <span class="keyword">true</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_DOWN:</span><br><span class="line">			down = <span class="keyword">false</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_LEFT:</span><br><span class="line">			left = <span class="keyword">false</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">case</span> KeyEvent.VK_RIGHT:</span><br><span class="line">			right = <span class="keyword">false</span>;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="第七步-炮弹类的设计及碰撞检测"><a href="#第七步-炮弹类的设计及碰撞检测" class="headerlink" title="第七步 炮弹类的设计及碰撞检测"></a>第七步 炮弹类的设计及碰撞检测</h4><h5 id="炮弹类"><a href="#炮弹类" class="headerlink" title="炮弹类"></a>炮弹类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.awt.Color;</span><br><span class="line"><span class="keyword">import</span> java.awt.Graphics;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Shell</span> <span class="keyword">extends</span> <span class="title">GameObject</span></span>&#123;</span><br><span class="line">	<span class="keyword">double</span> degree;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Shell</span><span class="params">()</span></span>&#123;</span><br><span class="line">		x = <span class="number">200</span>;</span><br><span class="line">		y = <span class="number">200</span>;</span><br><span class="line">		width =<span class="number">10</span>;</span><br><span class="line">		height =<span class="number">10</span>;</span><br><span class="line">		speed =<span class="number">3</span>;</span><br><span class="line">		</span><br><span class="line">		degree = Math.random()*Math.PI*<span class="number">2</span>;  <span class="comment">//0&lt;= degree &lt;2π</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">(Graphics g)</span></span>&#123;</span><br><span class="line">		Color c = g.getColor();</span><br><span class="line">		g.setColor(Color.YELLOW);</span><br><span class="line">		</span><br><span class="line">		g.fillOval((<span class="keyword">int</span>)x, (<span class="keyword">int</span>)y, width, height);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//延任意角度</span></span><br><span class="line">		x+=speed*Math.cos(degree);</span><br><span class="line">		y+=speed*Math.sin(degree);</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//炮弹与游戏边框之间的碰撞检测</span></span><br><span class="line">		<span class="keyword">if</span>(x&lt;<span class="number">0</span>||x&gt;Constant.GAME_WIGTH-width)&#123;</span><br><span class="line">			degree = Math.PI - degree;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span>(y&lt;<span class="number">0</span>||y&gt;Constant.GAME_HEIGHT-height-<span class="number">70</span>)&#123;</span><br><span class="line">			degree =- degree;			</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		g.setColor(c);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="容量或数组产生多枚炮弹"><a href="#容量或数组产生多枚炮弹" class="headerlink" title="容量或数组产生多枚炮弹"></a>容量或数组产生多枚炮弹</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Shell[] shells = <span class="keyword">new</span> Shell[<span class="number">50</span>];<span class="comment">//炮弹</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="常量类"><a href="#常量类" class="headerlink" title="常量类"></a>常量类</h5><p>这样当修改游戏窗口的宽高比的时候，可以很方便地直接在常量类中修改。</p>
+<p>如果不使用常量，则每处使用窗口的高度和宽度的地方都需要修改。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Frame;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Constant</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> GAME_WIGTH = <span class="number">500</span>;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> GAME_HEIGHT = <span class="number">500</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="第八步-双缓冲解决闪烁问题-矩形检测"><a href="#第八步-双缓冲解决闪烁问题-矩形检测" class="headerlink" title="第八步  双缓冲解决闪烁问题 矩形检测"></a>第八步  双缓冲解决闪烁问题 矩形检测</h4><h5 id="双缓冲方法"><a href="#双缓冲方法" class="headerlink" title="双缓冲方法"></a>双缓冲方法</h5><p>继承Frame类，加下下面的方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//双缓冲方法</span></span><br><span class="line"><span class="keyword">private</span> Image offScreenImage = <span class="keyword">null</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(Graphics g)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(offScreenImage == <span class="keyword">null</span>)</span><br><span class="line">        offScreenImage = <span class="keyword">this</span>.createImage(<span class="number">500</span>,<span class="number">500</span>);<span class="comment">//这是游戏窗口的宽度和高度</span></span><br><span class="line">     </span><br><span class="line">    Graphics gOff = offScreenImage.getGraphics();</span><br><span class="line">    paint(gOff);</span><br><span class="line">    g.drawImage(offScreenImage, <span class="number">0</span>, <span class="number">0</span>, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//返回物理所在的矩形，便于后续的碰撞检测</span><br><span class="line">	public Rectangle getRect()&#123;</span><br><span class="line">		return new Rectangle((int)x,(int)y,width,height);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="飞机和炮弹的碰撞检测"><a href="#飞机和炮弹的碰撞检测" class="headerlink" title="飞机和炮弹的碰撞检测"></a>飞机和炮弹的碰撞检测</h5><p>根据飞机所在的矩形区域和炮弹所在的矩形区域是否相交</p>
+<p>若相交，则飞机和炮弹发生碰撞，否则飞机和炮弹未发生碰撞</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">paint</span><span class="params">(Graphics g)</span> </span>&#123;</span><br><span class="line">			g.drawImage(bg,<span class="number">0</span>,<span class="number">0</span>,<span class="keyword">null</span>);<span class="comment">//画背景图</span></span><br><span class="line">			plane.drawSelf(g);</span><br><span class="line">			<span class="keyword">for</span>(Shell s:shells)&#123;</span><br><span class="line">				s.draw(g);</span><br><span class="line">				<span class="comment">//飞机和炮弹的碰撞检测</span></span><br><span class="line">			   	<span class="keyword">boolean</span> flag = s.getRect().intersects(plane.getRect());</span><br><span class="line">				<span class="keyword">if</span>(flag)&#123;</span><br><span class="line">					<span class="comment">//System.out.println("爆炸了");</span></span><br><span class="line">					plane.live = <span class="keyword">false</span>;</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125;</span><br><span class="line">			shell.draw(g);</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/08/Java/20181022 Java 基础知识/" rel="next" title="">
+                  <i class="fa fa-chevron-left"></i> 
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/08/Java/20181029 Java 基础深化与提高/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一步创建主窗口"><span class="nav-number">1.</span> <span class="nav-text">第一步创建主窗口</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#通过匿名内部类，关闭窗口"><span class="nav-number">1.1.</span> <span class="nav-text">通过匿名内部类，关闭窗口</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步：字体-颜色-图片加载"><span class="nav-number">2.</span> <span class="nav-text">第二步：字体 颜色  图片加载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三步-线程内部类实现动画"><span class="nav-number">3.</span> <span class="nav-text">第三步 线程内部类实现动画</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第五步-飞机类的设计"><span class="nav-number">4.</span> <span class="nav-text">第五步 飞机类的设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第六步-键盘监听"><span class="nav-number">5.</span> <span class="nav-text">第六步 键盘监听</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#捕获键盘的活动-打印键盘对应的值"><span class="nav-number">5.1.</span> <span class="nav-text">捕获键盘的活动 打印键盘对应的值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#利用键盘监听，使飞机移动起来"><span class="nav-number">5.2.</span> <span class="nav-text">利用键盘监听，使飞机移动起来</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第七步-炮弹类的设计及碰撞检测"><span class="nav-number">6.</span> <span class="nav-text">第七步 炮弹类的设计及碰撞检测</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#炮弹类"><span class="nav-number">6.1.</span> <span class="nav-text">炮弹类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#容量或数组产生多枚炮弹"><span class="nav-number">6.2.</span> <span class="nav-text">容量或数组产生多枚炮弹</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#常量类"><span class="nav-number">6.3.</span> <span class="nav-text">常量类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第八步-双缓冲解决闪烁问题-矩形检测"><span class="nav-number">7.</span> <span class="nav-text">第八步  双缓冲解决闪烁问题 矩形检测</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#双缓冲方法"><span class="nav-number">7.1.</span> <span class="nav-text">双缓冲方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#飞机和炮弹的碰撞检测"><span class="nav-number">7.2.</span> <span class="nav-text">飞机和炮弹的碰撞检测</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">77</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">52</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
