@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Mysql 安装 CentOS7 上有带有 MariaDB ，而不是 mysql  解决方案： 1234#如果必须要安装MySQL，首先必须添加mysql社区repo通过输入命令：sudo rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm#最后使用像安装MySQL的常规方法一样安装mysql：yum">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在 Centos 7 上搭建JavaEE 环境">
+<meta property="og:url" content="http://zwer.xyz/2019/09/08/markdown/搭建 Centos7 上的JavaEE 环境/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="Mysql 安装 CentOS7 上有带有 MariaDB ，而不是 mysql  解决方案： 1234#如果必须要安装MySQL，首先必须添加mysql社区repo通过输入命令：sudo rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm#最后使用像安装MySQL的常规方法一样安装mysql：yum">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-06-11T01:15:54.109Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在 Centos 7 上搭建JavaEE 环境">
+<meta name="twitter:description" content="Mysql 安装 CentOS7 上有带有 MariaDB ，而不是 mysql  解决方案： 1234#如果必须要安装MySQL，首先必须添加mysql社区repo通过输入命令：sudo rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm#最后使用像安装MySQL的常规方法一样安装mysql：yum">
+  <link rel="canonical" href="http://zwer.xyz/2019/09/08/markdown/搭建 Centos7 上的JavaEE 环境/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>在 Centos 7 上搭建JavaEE 环境 | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/09/08/markdown/搭建 Centos7 上的JavaEE 环境/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">在 Centos 7 上搭建JavaEE 环境
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-08 19:45:55" itemprop="dateCreated datePublished" datetime="2019-09-08T19:45:55+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-06-11 09:15:54" itemprop="dateModified" datetime="2019-06-11T09:15:54+08:00">2019-06-11</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Mysql-安装"><a href="#Mysql-安装" class="headerlink" title="Mysql 安装"></a>Mysql 安装</h1><blockquote>
+<p>CentOS7 上有带有 MariaDB ，而不是 mysql</p>
+</blockquote>
+<p>解决方案：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">如果必须要安装MySQL，首先必须添加mysql社区repo通过输入命令：</span></span><br><span class="line">sudo rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm</span><br><span class="line"><span class="meta">#</span><span class="bash">最后使用像安装MySQL的常规方法一样安装mysql：</span></span><br><span class="line">yum install mysql mysql-server mysql-libs mysql-server</span><br></pre></td></tr></table></figure>
+
+<h3 id="在线安装"><a href="#在线安装" class="headerlink" title="在线安装"></a>在线安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">　yum -y install mysql-server</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置权限"><a href="#设置权限" class="headerlink" title="设置权限"></a>设置权限</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span><span class="bash">grant all privileges on *.* to <span class="string">'root'</span>@<span class="string">'%'</span> identified by <span class="string">'admin'</span>;</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash">grant all privileges on *.* to <span class="string">'root'</span>@<span class="string">'localhost'</span> identified by <span class="string">'admin'</span>;  </span></span><br><span class="line"><span class="meta">#</span><span class="bash">刷新权限</span></span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> flush privileges;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="删除-Mysql"><a href="#删除-Mysql" class="headerlink" title="删除 Mysql"></a>删除 Mysql</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">删除mysql(安装出错时再执行)</span></span><br><span class="line">yum remove mysql mysql-server mysql-libs compat-mysql51  </span><br><span class="line">rm -rf /var/lib/mysql  </span><br><span class="line">rm /etc/my.cnf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">查看是否存在mysql(安装出错时再执行)</span></span><br><span class="line">rpm -qa|grep mysql  //有的话继续删除  </span><br><span class="line">rpm -ql mysql       //查看文件位置</span><br></pre></td></tr></table></figure>
+
+<h1 id="JDK-下载与安装"><a href="#JDK-下载与安装" class="headerlink" title="JDK 下载与安装"></a>JDK 下载与安装</h1><h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><p>从官网上下载，tar.gz 格式的 JDK 文件，然后通过 ftp 软件发给 远程终端</p>
+<h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxf  jdk的位置</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-JDK-环境变量"><a href="#配置-JDK-环境变量" class="headerlink" title="配置 JDK 环境变量"></a>配置 JDK 环境变量</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost java]# vi ~/.bashrc</span><br><span class="line">export JAVA_HOME=/opt/java/jdk1.7.0_71</span><br><span class="line">export JRE_HOME=$&#123;JAVA_HOME&#125;/jre</span><br><span class="line">export CLASSPATH=.:$&#123;JAVA_HOME&#125;/lib:$&#123;JRE_HOME&#125;/lib</span><br><span class="line">export PATH=$&#123;JAVA_HOME&#125;/bin:$PATH</span><br></pre></td></tr></table></figure>
+
+<h3 id="使环境变量生效"><a href="#使环境变量生效" class="headerlink" title="使环境变量生效"></a>使环境变量生效</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<h1 id="Tomcat-服务器的下载与使用"><a href="#Tomcat-服务器的下载与使用" class="headerlink" title="Tomcat 服务器的下载与使用"></a>Tomcat 服务器的下载与使用</h1><blockquote>
+<p>注意 ：web.xml 和 server.xml的 配置，以及设置环境变量</p>
+</blockquote>
+<h2 id="1-Tomcat-下载与安装"><a href="#1-Tomcat-下载与安装" class="headerlink" title="1 Tomcat 下载与安装"></a>1 Tomcat 下载与安装</h2><p>上传 tomcat 压缩包到 linxu 上</p>
+<p>解压 tomcat 压缩包，并移动到  /usr/local 目录下</p>
+<h2 id="2-配置-Tomcat-环境变量"><a href="#2-配置-Tomcat-环境变量" class="headerlink" title="2 配置 Tomcat 环境变量"></a>2 配置 Tomcat 环境变量</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vim ~/.bashrc</span><br><span class="line"><span class="meta">#</span><span class="bash">添加下面语句 </span></span><br><span class="line"><span class="meta">#</span><span class="bash">指定 tomcat 的位置</span></span><br><span class="line">export CATALINA_HOME=/opt/tomcat</span><br><span class="line"><span class="meta">#</span><span class="bash">使环境变量生效</span></span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-Tomcat-使用"><a href="#3-Tomcat-使用" class="headerlink" title="3 Tomcat 使用"></a>3 Tomcat 使用</h2><ol>
+<li>开启服务器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">./startup.sh</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line"></span><br><span class="line">./catalina.sh run   //这种启动可以看到详细的启动信息</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>关闭服务器</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./shutdown.sh</span><br></pre></td></tr></table></figure>
+
+<h1 id="tomcat-服务器启动非常慢问题"><a href="#tomcat-服务器启动非常慢问题" class="headerlink" title="tomcat 服务器启动非常慢问题"></a>tomcat 服务器启动非常慢问题</h1><ul>
+<li>找到 jdk 安装目录下   <code>jdk1.8.0_171/jre/lib/security/java.security</code> 文件</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//修改前</span><br><span class="line">securerandom.source=file:/dev/random</span><br><span class="line">//修改后</span><br><span class="line">securerandom.source=file:/dev/./urandom</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>保存文件，去除 tomcat 进程，重启 tomcat 服务器</li>
+</ul>
+<h1 id="项目中文乱码问题"><a href="#项目中文乱码问题" class="headerlink" title="项目中文乱码问题"></a>项目中文乱码问题</h1><blockquote>
+<p>注意：mysql 中 服务器的编码格式。在mysql 中默认的编码格式是 latin</p>
+</blockquote>
+<h2 id="1-Tomcat中的配置"><a href="#1-Tomcat中的配置" class="headerlink" title="1 Tomcat中的配置"></a>1 Tomcat中的配置</h2><ul>
+<li>修改Tomcat 下  web.xml 文件</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>setCharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span></span><br><span class="line">        	org.apache.catalina.filters.SetCharacterEncodingFilter</span><br><span class="line">    <span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">async-supported</span>&gt;</span>true<span class="tag">&lt;/<span class="name">async-supported</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-Mysql-中-my-cnf-文件的配置"><a href="#2-Mysql-中-my-cnf-文件的配置" class="headerlink" title="2 Mysql 中 my.cnf 文件的配置"></a>2 Mysql 中 my.cnf 文件的配置</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/my.cnf</span><br></pre></td></tr></table></figure>
+
+<p>在 [mysqld] 后面加上下面的语句</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">character-set-server = utf8</span><br></pre></td></tr></table></figure>
+
+<h1 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h1>
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/08/markdown/大数据/" rel="next" title="大数据原理与应用">
+                  <i class="fa fa-chevron-left"></i> 大数据原理与应用
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/08/markdown/数据库模板/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Mysql-安装"><span class="nav-number">1.</span> <span class="nav-text">Mysql 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在线安装"><span class="nav-number">1.0.1.</span> <span class="nav-text">在线安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置权限"><span class="nav-number">1.0.2.</span> <span class="nav-text">设置权限</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除-Mysql"><span class="nav-number">1.0.3.</span> <span class="nav-text">删除 Mysql</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK-下载与安装"><span class="nav-number">2.</span> <span class="nav-text">JDK 下载与安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载"><span class="nav-number">2.0.1.</span> <span class="nav-text">下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解压"><span class="nav-number">2.0.2.</span> <span class="nav-text">解压</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-JDK-环境变量"><span class="nav-number">2.0.3.</span> <span class="nav-text">配置 JDK 环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使环境变量生效"><span class="nav-number">2.0.4.</span> <span class="nav-text">使环境变量生效</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tomcat-服务器的下载与使用"><span class="nav-number">3.</span> <span class="nav-text">Tomcat 服务器的下载与使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Tomcat-下载与安装"><span class="nav-number">3.1.</span> <span class="nav-text">1 Tomcat 下载与安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-配置-Tomcat-环境变量"><span class="nav-number">3.2.</span> <span class="nav-text">2 配置 Tomcat 环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Tomcat-使用"><span class="nav-number">3.3.</span> <span class="nav-text">3 Tomcat 使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tomcat-服务器启动非常慢问题"><span class="nav-number">4.</span> <span class="nav-text">tomcat 服务器启动非常慢问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目中文乱码问题"><span class="nav-number">5.</span> <span class="nav-text">项目中文乱码问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Tomcat中的配置"><span class="nav-number">5.1.</span> <span class="nav-text">1 Tomcat中的配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Mysql-中-my-cnf-文件的配置"><span class="nav-number">5.2.</span> <span class="nav-text">2 Mysql 中 my.cnf 文件的配置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考博客"><span class="nav-number">6.</span> <span class="nav-text">参考博客</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="typora-root-url: ....\1-图片\Typora图片 面向对象深化1. 抽象类和抽象方法1.1 抽象类抽象类通过关键字abstract创建的 抽象类不能创建对象 抽象类可以有构造方法，且提供给子类调用的     抽象类的final方法，只能被子类调用不能被子类重写 1.2 抽象方法注意：  定义抽象方法，不能有方法体，用；结尾  抽象方法只能在抽象类中定义，且抽象方法必须被子类实">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zwer 的博客空间">
+<meta property="og:url" content="http://zwer.xyz/2019/09/08/Java/20181029 Java 基础深化与提高/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="typora-root-url: ....\1-图片\Typora图片 面向对象深化1. 抽象类和抽象方法1.1 抽象类抽象类通过关键字abstract创建的 抽象类不能创建对象 抽象类可以有构造方法，且提供给子类调用的     抽象类的final方法，只能被子类调用不能被子类重写 1.2 抽象方法注意：  定义抽象方法，不能有方法体，用；结尾  抽象方法只能在抽象类中定义，且抽象方法必须被子类实">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://www.zwer.xyz/imple1.png">
+<meta property="og:image" content="c:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813158185.png">
+<meta property="og:image" content="c:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813723009.png">
+<meta property="og:image" content="c:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813784832.png">
+<meta property="og:image" content="c:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813816262.png">
+<meta property="og:image" content="c:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540815644276.png">
+<meta property="og:updated_time" content="2018-11-08T11:08:55.992Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zwer 的博客空间">
+<meta name="twitter:description" content="typora-root-url: ....\1-图片\Typora图片 面向对象深化1. 抽象类和抽象方法1.1 抽象类抽象类通过关键字abstract创建的 抽象类不能创建对象 抽象类可以有构造方法，且提供给子类调用的     抽象类的final方法，只能被子类调用不能被子类重写 1.2 抽象方法注意：  定义抽象方法，不能有方法体，用；结尾  抽象方法只能在抽象类中定义，且抽象方法必须被子类实">
+<meta name="twitter:image" content="http://www.zwer.xyz/imple1.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/09/08/Java/20181029 Java 基础深化与提高/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title> | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/09/08/Java/20181029 Java 基础深化与提高/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-08 19:45:55" itemprop="dateCreated datePublished" datetime="2019-09-08T19:45:55+08:00">2019-09-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2018-11-08 19:08:55" itemprop="dateModified" datetime="2018-11-08T19:08:55+08:00">2018-11-08</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>typora-root-url: ....\1-图片\Typora图片</p>
+<h3 id="面向对象深化"><a href="#面向对象深化" class="headerlink" title="面向对象深化"></a>面向对象深化</h3><h4 id="1-抽象类和抽象方法"><a href="#1-抽象类和抽象方法" class="headerlink" title="1. 抽象类和抽象方法"></a>1. 抽象类和抽象方法</h4><h5 id="1-1-抽象类"><a href="#1-1-抽象类" class="headerlink" title="1.1 抽象类"></a>1.1 抽象类</h5><p>抽象类通过关键字<code>abstract</code>创建的</p>
+<p>抽象类不能创建对象</p>
+<p>抽象类可以有构造方法，且提供给子类调用的    </p>
+<p>抽象类的final方法，只能被子类调用<strong>不能被子类重写</strong></p>
+<h5 id="1-2-抽象方法"><a href="#1-2-抽象方法" class="headerlink" title="1.2 抽象方法"></a>1.2 抽象方法</h5><p>注意：</p>
+<ol>
+<li><p>定义抽象方法，不能有方法体，用<code>；</code>结尾</p>
+</li>
+<li><p>抽象方法只能在抽象类中定义，且<strong>抽象方法必须被子类实现</strong></p>
+<p> Animal.java</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Abstract;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Animal</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated constructor stub</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//抽象方法必须被子类实现</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span>  <span class="title">shut</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shut</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		System.out.println(<span class="string">"汪汪汪..."</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125; </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Animal</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shut</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"喵喵喵...."</span>);</span><br><span class="line">	&#125;;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> TestAnimalDemo.java</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Abstract;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestAnimalDemo</span> </span>&#123;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">			<span class="comment">//父类引用指向子类对象</span></span><br><span class="line">			Animal  dog = <span class="keyword">new</span> Dog();</span><br><span class="line">			Animal cat = <span class="keyword">new</span> Cat();</span><br><span class="line">			<span class="comment">//调用相同的方法</span></span><br><span class="line">			dog.shut();</span><br><span class="line">			cat.shut();</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<p><strong>总结</strong>：abstract 可以修饰类和方法</p>
+<p>​       提高程序的可扩展和可维护性</p>
+<h4 id="2-1-接口详解"><a href="#2-1-接口详解" class="headerlink" title="2.1 接口详解"></a>2.1 接口详解</h4><p>接口 用  <code>interface</code> 关键字</p>
+<h5 id="接口不能有构造方法"><a href="#接口不能有构造方法" class="headerlink" title="接口不能有构造方法"></a>接口不能有构造方法</h5><h5 id="接口的规范："><a href="#接口的规范：" class="headerlink" title="接口的规范："></a>接口的规范：</h5><ol>
+<li><p>允许抽象方法</p>
+</li>
+<li><p>非抽象方法 /<em>JDK1.8新特性 必须使用 default关键字</em>/</p>
+<p> public default  返回类型 方法名(){};</p>
+</li>
+<li><p>属性（<code>public static final</code>）常量</p>
+<p>接口中的成员变量必须初始化（静态变量），且允许    私有化<code>private</code></p>
+</li>
+</ol>
+<h5 id="接口与类的关系："><a href="#接口与类的关系：" class="headerlink" title="接口与类的关系："></a>接口与类的关系：</h5><ol>
+<li><p>类实现接口的抽象方法 <code>implements</code>      实现关系</p>
+</li>
+<li><p>一个类存在继承关系，又存在实现关系 </p>
+<ol>
+<li>继承  父子关系 <strong>亲爹</strong></li>
+<li>接口 实现关系  干爹</li>
+</ol>
+</li>
+<li><p>父类与接口有完全相同的方法</p>
+<p>   <strong>父类优先于接口</strong>，子类实现的是父类的方法</p>
+</li>
+<li><p>父类中与接口中有同名方法</p>
+<p>  <strong>父类与接口中的方法，在子类/实现类中构成方法重载</strong></p>
+</li>
+</ol>
+<h4 id="3-1-接口的特征"><a href="#3-1-接口的特征" class="headerlink" title="3.1 接口的特征"></a>3.1 接口的特征</h4><ol>
+<li><h5 id="接口的传递性-A-gt-B-gt-c"><a href="#接口的传递性-A-gt-B-gt-c" class="headerlink" title="接口的传递性       A - &gt;B -&gt;c"></a>接口的传递性       A - &gt;B -&gt;c</h5></li>
+<li><h5 id="接口的继承性（多继承）-相较于Java单继承"><a href="#接口的继承性（多继承）-相较于Java单继承" class="headerlink" title="接口的继承性（多继承） 相较于Java单继承"></a>接口的继承性（多继承） 相较于Java单继承</h5></li>
+</ol>
+<h4 id="3-2-使用接口的意义"><a href="#3-2-使用接口的意义" class="headerlink" title="3.2 使用接口的意义"></a>3.2 使用接口的意义</h4><p>​    可以实现<strong>设计</strong>和<strong>实现</strong>的分离，<em>抽象</em>出N多不同类的共同点</p>
+<p>​    <strong>接口体现出一种    能力</strong></p>
+<p><img src="http://www.zwer.xyz/imple1.png" alt="imple1"></p>
+<p>Fly.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> cn.szxy.interfacePro;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Fly</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Flane</span> <span class="keyword">implements</span> <span class="title">Fly</span></span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		System.out.println(<span class="string">"在祖国的蓝天中自由飞翔"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bird</span> <span class="keyword">implements</span> <span class="title">Fly</span></span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		System.out.println(<span class="string">"开心地飞翔"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span>  <span class="title">Football</span> <span class="keyword">implements</span> <span class="title">Fly</span></span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">fly</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		System.out.println(<span class="string">"飞入对面的球门"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Test.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.interfacePro;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">//接口是引用数据类型  指向实现类对象	</span></span><br><span class="line">		</span><br><span class="line">		 Fly flane = <span class="keyword">new</span> Flane();</span><br><span class="line">		 Fly bird = <span class="keyword">new</span> Bird();</span><br><span class="line">		 Fly football = <span class="keyword">new</span> Football();</span><br><span class="line">		 </span><br><span class="line">		 flane.fly();</span><br><span class="line">		 bird.fly();</span><br><span class="line">		 football.fly();</span><br><span class="line">		 </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接口类型（引用数据类型）指向实现类的对象    多态</p>
+<p><strong>总结: 使用接口实现多态的步骤</strong></p>
+<p>​               （1） 编写接口</p>
+<p>​         （2） 实现类 实现接口中的方法</p>
+<p>​         （3）接口（类型）new 实现类对象</p>
+<p><strong>面向接口的编程</strong></p>
+<h4 id="4-内部类-inner"><a href="#4-内部类-inner" class="headerlink" title="4.  内部类 inner"></a>4.  内部类 inner</h4><h5 id="1-成员内部类"><a href="#1-成员内部类" class="headerlink" title="1) 成员内部类"></a>1) 成员内部类</h5><p>Face.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> cn.szxy.innerPro;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Face</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> String shape=<span class="string">"瓜子脸"</span>;</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Nose</span></span>&#123;</span><br><span class="line">		<span class="keyword">private</span> String shape=<span class="string">"高鼻梁"</span>;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">beathe</span><span class="params">()</span></span>&#123;</span><br><span class="line">			<span class="comment">/*访问父类的属性前面需要加上父类类名*/</span></span><br><span class="line">			System.out.println(<span class="string">"鼻子长在"</span>+Face.<span class="keyword">this</span>.shape);</span><br><span class="line">			System.out.println(<span class="string">"鼻子的形状是"</span>+<span class="keyword">this</span>.shape);</span><br><span class="line">			System.out.println(<span class="string">"鼻子用于呼吸"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    TestInner.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">package</span> cn.szxy.innerPro;</span><br><span class="line"><span class="keyword">import</span> cn.szxy.innerPro.Face.Nose;<span class="comment">//导包</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestInner</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Face f = <span class="keyword">new</span> Face();</span><br><span class="line">		Nose n = f.new Nose();</span><br><span class="line">		n.beathe();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-静态内部类"><a href="#2-静态内部类" class="headerlink" title="2) 静态内部类"></a>2) 静态内部类</h5><p>​    a. 不允许访问外部类的非static属性</p>
+<p>​    b. 内部类的静态方法必须在静态内部类中</p>
+<h5 id="3）方法内部类"><a href="#3）方法内部类" class="headerlink" title="3）方法内部类"></a>3）方法内部类</h5><p>​    内部类在方法中的局部变量，使用只在该方法中</p>
+<p>​    注意：JDK1.8之前方法中的内部类要访问外部类的局部变量</p>
+<p>​    必须加上final关键字(常量    )</p>
+<h5 id="4）匿名内部类（存在继承或实现关系）"><a href="#4）匿名内部类（存在继承或实现关系）" class="headerlink" title="4）匿名内部类（存在继承或实现关系）"></a>4）匿名内部类（存在继承或实现关系）</h5><p>​    a.  可以实现一个接口，或者继承一个父类</p>
+<pre><code>b.  只能实现一个接口</code></pre><p>​        c. 适合创建那种只需要一次使用的类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.Innerannoymous;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Father</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">dream</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span> <span class="keyword">extends</span> <span class="title">Father</span></span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">dream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">		System.out.println(<span class="string">"当兵光荣"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Father f = <span class="keyword">new</span> Son();<span class="comment">/*有名字的内部类*/</span></span><br><span class="line">		f.dream();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">/*没有名字的类 */</span></span><br><span class="line">		Father f1 = <span class="keyword">new</span> Father()&#123;</span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">void</span> <span class="title">dream</span><span class="params">()</span> </span>&#123;</span><br><span class="line">				<span class="comment">// TODO Auto-generated method stub</span></span><br><span class="line">				System.out.println(<span class="string">"努力实现父亲的目标，当兵光荣"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;;</span><br><span class="line">		f1.dream();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="5）内部类的优缺点"><a href="#5）内部类的优缺点" class="headerlink" title="5）内部类的优缺点:"></a>5）内部类的优缺点:</h5><p>a. 内部类直接访问外部类的私有属性</p>
+<p>b.  破坏类的结构</p>
+<h4 id="5-String类常用方法-API文档阅读"><a href="#5-String类常用方法-API文档阅读" class="headerlink" title="5. String类常用方法 API文档阅读"></a>5. String类常用方法 API文档阅读</h4><h5 id="5-1-String类的定义"><a href="#5-1-String类的定义" class="headerlink" title="5.1 String类的定义"></a>5.1 String类的定义</h5><p><strong>一串不能改变的字符序列</strong>      只能共享，不能改变</p>
+<p>原因：<em>String类相当于char类型的数组，数组的长度一旦创建不能修改</em></p>
+<p><em>value数组还使用final关键字修饰</em></p>
+<p><img src="C:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813158185.png" alt="1540813158185"></p>
+<p>​    </p>
+<h5 id="5-2-String类的常用方法"><a href="#5-2-String类的常用方法" class="headerlink" title="5.2 String类的常用方法"></a>5.2 String类的常用方法</h5><p><img src="C:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813723009.png" alt="1540813723009"></p>
+<p> <img src="C:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813784832.png" alt="1540813784832"></p>
+<p>​    </p>
+<p><img src="C:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540813816262.png" alt="1540813816262"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//TestString.java</span></span><br><span class="line"><span class="keyword">package</span> cn.szxy.TestString;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">测试String类的常用的方法</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestString</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		String name=<span class="string">"abc"</span>;</span><br><span class="line">		System.out.println(name);</span><br><span class="line">		</span><br><span class="line">		String str = <span class="string">"HelloWorld"</span>;</span><br><span class="line">		System.out.println(str.charAt(<span class="number">3</span>));</span><br><span class="line">		System.out.println(str.indexOf(<span class="string">'W'</span>));</span><br><span class="line">		</span><br><span class="line">		System.out.println(str.substring(<span class="number">3</span>));</span><br><span class="line">		System.out.println(str.substring(<span class="number">3</span>,<span class="number">7</span>));</span><br><span class="line">		</span><br><span class="line">		System.out.println(str.replace(<span class="string">'W'</span>, <span class="string">'P'</span>));</span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"https://localhost/Test.jsp"</span>.startsWith(<span class="string">"http://localhost"</span>));</span><br><span class="line">		System.out.println(<span class="string">"Test.java"</span>.endsWith(<span class="string">"java"</span>));</span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"JAVA"</span>.toLowerCase());</span><br><span class="line">		System.out.println(<span class="string">"java"</span>.toUpperCase());</span><br><span class="line">		</span><br><span class="line">		String str3=<span class="string">"   Hello World   "</span>;</span><br><span class="line">		String str4 = str3.trim();</span><br><span class="line">		System.out.println(str3.trim()+<span class="string">'\t'</span>+str3.trim().length());</span><br><span class="line">		System.out.println(str3+<span class="string">'\t'</span>+str3.length());</span><br><span class="line">		System.out.println(str4+<span class="string">'\t'</span>+str4.length());</span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"#################################"</span>);</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-String类和常量池"><a href="#6-String类和常量池" class="headerlink" title="6.String类和常量池"></a>6.String类和常量池</h4><h5 id="6-1-String类"><a href="#6-1-String类" class="headerlink" title="6.1 String类"></a>6.1 String类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.TestString;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestString2</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		String str = <span class="string">"apple"</span>;</span><br><span class="line">		String str1 = <span class="string">"banana"</span>;</span><br><span class="line">		String str2 = <span class="string">"dog"</span>;</span><br><span class="line">		String str3 = <span class="string">"app"</span>;</span><br><span class="line">		</span><br><span class="line">		System.out.println(str.compareTo(str1));<span class="comment">//-1  97-98=-1</span></span><br><span class="line">		System.out.println(str.compareTo(str2));<span class="comment">//-3  97-100=-3</span></span><br><span class="line">		System.out.println(str.compareTo(str3));<span class="comment">//2   5-3=2</span></span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"###################"</span>);</span><br><span class="line">		</span><br><span class="line">		String s = <span class="string">"abc"</span>;</span><br><span class="line">		String s1 = <span class="string">"a"</span>+<span class="string">"b"</span>+<span class="string">"c"</span>;</span><br><span class="line">		String s2 = <span class="keyword">new</span> String(s);</span><br><span class="line">		String s3 = s2+<span class="string">""</span>;</span><br><span class="line">		String s4 = <span class="keyword">new</span> String(<span class="string">"abc"</span>);</span><br><span class="line">		System.out.println(<span class="string">"s==s1:"</span>+(s==s1)); <span class="comment">//false</span></span><br><span class="line">		System.out.println(<span class="string">"s==s2"</span>+s==s1);  <span class="comment">//false    s==s2abc !=abc</span></span><br><span class="line">		System.out.println(<span class="string">"s==s2"</span>+s==s2);</span><br><span class="line">		System.out.println(<span class="string">"s==s3"</span>+s==s3);</span><br><span class="line">		System.out.println(<span class="string">"s==s4"</span>+s==s4);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(String anotherString)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">int</span> len1 = value.length;</span><br><span class="line">     <span class="keyword">int</span> len2 = anotherString.value.length;</span><br><span class="line">     <span class="keyword">int</span> lim = Math.min(len1, len2);</span><br><span class="line">     <span class="keyword">char</span> v1[] = value;</span><br><span class="line">     <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">int</span> k = <span class="number">0</span>;</span><br><span class="line">     <span class="keyword">while</span> (k &lt; lim) &#123;</span><br><span class="line">         <span class="keyword">char</span> c1 = v1[k];</span><br><span class="line">         <span class="keyword">char</span> c2 = v2[k];</span><br><span class="line">         <span class="keyword">if</span> (c1 != c2) &#123;</span><br><span class="line">             <span class="keyword">return</span> c1 - c2;</span><br><span class="line">         &#125;</span><br><span class="line">         k++;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> len1 - len2;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="6-2常量池"><a href="#6-2常量池" class="headerlink" title="6.2常量池"></a>6.2常量池</h5><h5 id><a href="#" class="headerlink" title></a><img src="C:%5CUsers%5CLenovo%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1540815644276.png" alt="1540815644276"></h5><h4 id="7-字符串-相等"><a href="#7-字符串-相等" class="headerlink" title="7. 字符串 相等"></a>7. 字符串 相等</h4><h5 id="7-1-“-”"><a href="#7-1-“-”" class="headerlink" title="7.1 “==”"></a>7.1 “==”</h5><p> 比较两个字符内存地址是否相同</p>
+<h5 id="7-2-equals-Object-obj"><a href="#7-2-equals-Object-obj" class="headerlink" title="7.2 equals(Object obj)"></a>7.2 equals(Object obj)</h5><p>比较两个字符串对象的内容是否相等</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.TestString;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Testequals</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">			String str = <span class="string">"my load"</span>;</span><br><span class="line">			String str2 = <span class="keyword">new</span> String(<span class="string">"my load"</span>);</span><br><span class="line">			System.out.println(<span class="string">"判断两个字符串的内存地址是否相同"</span>+(str==str2));<span class="comment">//false</span></span><br><span class="line">			System.out.println(<span class="string">"判断两个字符串的对应位置的字符是否相同"</span>+(str.equals(str2)));<span class="comment">//true</span></span><br><span class="line">			System.out.println(<span class="string">"判断类型是否相同"</span>+(str.equals(<span class="keyword">new</span> Test())));<span class="comment">//false</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;	</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Test</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//String类equals方法源码分析</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object anObject)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == anObject) &#123;<span class="comment">//比较内存地址</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (anObject <span class="keyword">instanceof</span> String) &#123;<span class="comment">//判断类型是否相同</span></span><br><span class="line">            String anotherString = (String)anObject;</span><br><span class="line">            <span class="keyword">int</span> n = value.length;</span><br><span class="line">            <span class="keyword">if</span> (n == anotherString.value.length) &#123;<span class="comment">//判断长度是否相同，若相同，则比较对应的位置的字符是否相同</span></span><br><span class="line">                <span class="keyword">char</span> v1[] = value;</span><br><span class="line">                <span class="keyword">char</span> v2[] = anotherString.value;</span><br><span class="line">                <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">                <span class="keyword">while</span> (n-- != <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (v1[i] != v2[i])</span><br><span class="line">                        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/08/Java/20181027 打飞机项目/" rel="next" title="">
+                  <i class="fa fa-chevron-left"></i> 
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/08/Java/20181031 数组/" rel="prev" title="">
+                   <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#面向对象深化"><span class="nav-number">1.</span> <span class="nav-text">面向对象深化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-抽象类和抽象方法"><span class="nav-number">1.1.</span> <span class="nav-text">1. 抽象类和抽象方法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-1-抽象类"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 抽象类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#1-2-抽象方法"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 抽象方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-接口详解"><span class="nav-number">1.2.</span> <span class="nav-text">2.1 接口详解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#接口不能有构造方法"><span class="nav-number">1.2.1.</span> <span class="nav-text">接口不能有构造方法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#接口的规范："><span class="nav-number">1.2.2.</span> <span class="nav-text">接口的规范：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#接口与类的关系："><span class="nav-number">1.2.3.</span> <span class="nav-text">接口与类的关系：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-接口的特征"><span class="nav-number">1.3.</span> <span class="nav-text">3.1 接口的特征</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#接口的传递性-A-gt-B-gt-c"><span class="nav-number">1.3.1.</span> <span class="nav-text">接口的传递性       A - &gt;B -&gt;c</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#接口的继承性（多继承）-相较于Java单继承"><span class="nav-number">1.3.2.</span> <span class="nav-text">接口的继承性（多继承） 相较于Java单继承</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-使用接口的意义"><span class="nav-number">1.4.</span> <span class="nav-text">3.2 使用接口的意义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-内部类-inner"><span class="nav-number">1.5.</span> <span class="nav-text">4.  内部类 inner</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-成员内部类"><span class="nav-number">1.5.1.</span> <span class="nav-text">1) 成员内部类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-静态内部类"><span class="nav-number">1.5.2.</span> <span class="nav-text">2) 静态内部类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3）方法内部类"><span class="nav-number">1.5.3.</span> <span class="nav-text">3）方法内部类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4）匿名内部类（存在继承或实现关系）"><span class="nav-number">1.5.4.</span> <span class="nav-text">4）匿名内部类（存在继承或实现关系）</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5）内部类的优缺点"><span class="nav-number">1.5.5.</span> <span class="nav-text">5）内部类的优缺点:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-String类常用方法-API文档阅读"><span class="nav-number">1.6.</span> <span class="nav-text">5. String类常用方法 API文档阅读</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#5-1-String类的定义"><span class="nav-number">1.6.1.</span> <span class="nav-text">5.1 String类的定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-2-String类的常用方法"><span class="nav-number">1.6.2.</span> <span class="nav-text">5.2 String类的常用方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-String类和常量池"><span class="nav-number">1.7.</span> <span class="nav-text">6.String类和常量池</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#6-1-String类"><span class="nav-number">1.7.1.</span> <span class="nav-text">6.1 String类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#6-2常量池"><span class="nav-number">1.7.2.</span> <span class="nav-text">6.2常量池</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#null"><span class="nav-number">1.7.3.</span> <span class="nav-text"></span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-字符串-相等"><span class="nav-number">1.8.</span> <span class="nav-text">7. 字符串 相等</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#7-1-“-”"><span class="nav-number">1.8.1.</span> <span class="nav-text">7.1 “==”</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#7-2-equals-Object-obj"><span class="nav-number">1.8.2.</span> <span class="nav-text">7.2 equals(Object obj)</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

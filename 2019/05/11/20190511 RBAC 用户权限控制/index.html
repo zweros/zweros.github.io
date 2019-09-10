@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1 RBAC 简介 RBAC（Role-Based Access Contrl ）基于角色的访问控制。 RBAC 认为权限的过程可以抽象概括为： 判断 【 Who 是否 可以对 What 进行 How 的访问 操作（Operation）】 who： 权限的拥有者或者主题 What ： 权限针对的对象或者资源 How： 具体的权限 Operator ：操作：表示对 What 的 How 操作。 也就">
+<meta name="keywords" content="RBAC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20190511 RBAC">
+<meta property="og:url" content="http://zwer.xyz/2019/05/11/20190511 RBAC 用户权限控制/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="1 RBAC 简介 RBAC（Role-Based Access Contrl ）基于角色的访问控制。 RBAC 认为权限的过程可以抽象概括为： 判断 【 Who 是否 可以对 What 进行 How 的访问 操作（Operation）】 who： 权限的拥有者或者主题 What ： 权限针对的对象或者资源 How： 具体的权限 Operator ：操作：表示对 What 的 How 操作。 也就">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://www.zwer.xyz/picGo/20190512104815.png">
+<meta property="og:image" content="http://www.zwer.xyz/picGo/20190512110138.png">
+<meta property="og:updated_time" content="2019-05-14T00:08:54.345Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20190511 RBAC">
+<meta name="twitter:description" content="1 RBAC 简介 RBAC（Role-Based Access Contrl ）基于角色的访问控制。 RBAC 认为权限的过程可以抽象概括为： 判断 【 Who 是否 可以对 What 进行 How 的访问 操作（Operation）】 who： 权限的拥有者或者主题 What ： 权限针对的对象或者资源 How： 具体的权限 Operator ：操作：表示对 What 的 How 操作。 也就">
+<meta name="twitter:image" content="http://www.zwer.xyz/picGo/20190512104815.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/05/11/20190511 RBAC 用户权限控制/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20190511 RBAC | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/05/11/20190511 RBAC 用户权限控制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20190511 RBAC
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-05-11 00:00:00" itemprop="dateCreated datePublished" datetime="2019-05-11T00:00:00+08:00">2019-05-11</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-05-14 08:08:54" itemprop="dateModified" datetime="2019-05-14T08:08:54+08:00">2019-05-14</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-RBAC-简介"><a href="#1-RBAC-简介" class="headerlink" title="1 RBAC 简介"></a>1 RBAC 简介</h1><blockquote>
+<p>RBAC（Role-Based Access Contrl ）基于角色的访问控制。</p>
+<p>RBAC 认为权限的过程可以抽象概括为：</p>
+<p>判断 【 Who 是否 可以对 What 进行 How 的访问 操作（Operation）】</p>
+<p>who： 权限的拥有者或者主题</p>
+<p>What ： 权限针对的对象或者资源</p>
+<p>How： 具体的权限</p>
+<p>Operator ：操作：表示对 What 的 How 操作。 也就是 Privilege + Resource </p>
+<p>Role： 角色：，一定数量的权限的集合。权限的分配的单位与载体。</p>
+<p>目的：隔离 User  与 Privilege 的逻辑关系</p>
+<p>应用场景： OA 系统、后台系统</p>
+</blockquote>
+<h2 id="1-1-RBAC-96"><a href="#1-1-RBAC-96" class="headerlink" title="1.1 RBAC 96"></a>1.1 RBAC 96</h2><blockquote>
+<p>RBAC 模型，RBAC 96 模型中有 RBAC0~3</p>
+<p>其中RBAC0 已经满足目前的权限控制</p>
+</blockquote>
+<h3 id="RBAC0"><a href="#RBAC0" class="headerlink" title="RBAC0"></a>RBAC0</h3><p>定义了能构成一个 RBAC 控制系统的最小的元素集合</p>
+<p>1、 用户 User</p>
+<p>2、角色 Role </p>
+<p>3、许可 Permission</p>
+<p>4、 会话 Session</p>
+<p><img src="http://www.zwer.xyz/picGo/20190512104815.png" alt></p>
+<p>UA   User Assignment : 用户角色分配。</p>
+<p>PA Permission Assignment 角色许可分配</p>
+<h3 id="RBAC1、RABC2、RBAC3"><a href="#RBAC1、RABC2、RBAC3" class="headerlink" title="RBAC1、RABC2、RBAC3"></a>RBAC1、RABC2、RBAC3</h3><p>RBAC1 在 RBAC0 的基础上增加继承关系，一个角色可以继承其他角色的权限 Permission</p>
+<p>RBAC2 在 RBAC1 的基础上增加责任分离关系（eg。财务：出纳和会计）</p>
+<p>RBAC3 结合了 RBAC0 和 RBAC1 ，既提供了角色间的继承关系和责任分离关系</p>
+<h1 id="2-RBAC0-实战"><a href="#2-RBAC0-实战" class="headerlink" title="2 RBAC0 实战"></a>2 RBAC0 实战</h1><h2 id="2-1-需求分析与数据库设计"><a href="#2-1-需求分析与数据库设计" class="headerlink" title="2.1 需求分析与数据库设计"></a>2.1 需求分析与数据库设计</h2><h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>​    实现用户登录功能</p>
+<p>​    使用 RBAC0 模型管理系统权限</p>
+<p>​    对系统的菜单以及菜单中选项</p>
+<p>​    </p>
+<h3 id="技术选择"><a href="#技术选择" class="headerlink" title="技术选择"></a>技术选择</h3><p>​    框架：SSM ：SpringMVC+Spring+Mybatis</p>
+<p>​    数据库：Mysql</p>
+<h3 id="数据库设计"><a href="#数据库设计" class="headerlink" title="数据库设计"></a>数据库设计</h3><p><img src="http://www.zwer.xyz/picGo/20190512110138.png" alt></p>
+<h3 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h3><p>用户表、角色表、菜单表、菜单角色中间表、功能表</p>
+<h4 id="动态菜单实现"><a href="#动态菜单实现" class="headerlink" title="动态菜单实现"></a>动态菜单实现</h4><p>使用菜单表</p>
+<h3 id="SSM-框架整合"><a href="#SSM-框架整合" class="headerlink" title="SSM 框架整合"></a>SSM 框架整合</h3><p>WEB-INF 目录下的资源只有服务器可以访问，客户端是无法直接访问的。</p>
+<p>把 Spring 配置文件分离提高配置文件的可读性、方便查找位置。</p>
+<p>定义 pojo类，以及类中的属性关联关系 </p>
+<p>编写 mapper 映射文件</p>
+<p>自定义异常，继承运行时异常，在业务层抛出</p>
+<h3 id="页面布局"><a href="#页面布局" class="headerlink" title="页面布局"></a>页面布局</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%@</span> <span class="attr">page</span> <span class="attr">language</span>=<span class="string">"java"</span> <span class="attr">import</span>=<span class="string">"java.util.*"</span> <span class="attr">pageEncoding</span>=<span class="string">"UTF-8"</span>%&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">%</span></span></span><br><span class="line"><span class="tag"><span class="attr">String</span> <span class="attr">path</span> = <span class="string">request.getContextPath();</span></span></span><br><span class="line"><span class="tag"><span class="attr">String</span> <span class="attr">basePath</span> = <span class="string">request.getScheme()+</span>"<span class="attr">:</span>//"+<span class="attr">request.getServerName</span>()+"<span class="attr">:</span>"+<span class="attr">request.getServerPort</span>()+<span class="attr">path</span>+"/";</span></span><br><span class="line"><span class="tag">%&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">base</span> <span class="attr">href</span>=<span class="string">"&lt;%=basePath%&gt;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>主页<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">			 总体的布局 头 header 中间 center 尾部 footer </span></span><br><span class="line"><span class="comment">			注意：使用 frameset 和 frame 标签是不可以使用在它们标签的外面使用 body 标签</span></span><br><span class="line"><span class="comment">			否则：页面不显示</span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">	  <span class="tag">&lt;<span class="name">frameset</span> <span class="attr">rows</span>=<span class="string">"20%,*,10%"</span> <span class="attr">border</span>=<span class="string">"1"</span>&gt;</span></span><br><span class="line">   			<span class="comment">&lt;!-- 头部 --&gt;</span></span><br><span class="line">   			<span class="tag">&lt;<span class="name">frame</span> <span class="attr">src</span>=<span class="string">"header"</span> <span class="attr">scrolling</span>=<span class="string">"no"</span> <span class="attr">name</span>=<span class="string">"header"</span>&gt;</span></span><br><span class="line">   			</span><br><span class="line">   			<span class="comment">&lt;!-- 中间部分 --&gt;</span></span><br><span class="line">   			<span class="tag">&lt;<span class="name">frameset</span> <span class="attr">cols</span>=<span class="string">"20%,*"</span>&gt;</span></span><br><span class="line">   				<span class="tag">&lt;<span class="name">frame</span> <span class="attr">src</span>=<span class="string">"menu"</span> <span class="attr">scrolling</span>=<span class="string">"no"</span> <span class="attr">name</span>=<span class="string">"menu"</span>&gt;</span></span><br><span class="line">   				<span class="tag">&lt;<span class="name">frame</span> <span class="attr">src</span>=<span class="string">"body"</span> <span class="attr">scrolling</span>=<span class="string">"no"</span> <span class="attr">name</span>=<span class="string">"body"</span>&gt;</span></span><br><span class="line">   			<span class="tag">&lt;/<span class="name">frameset</span>&gt;</span></span><br><span class="line">   </span><br><span class="line">   			<span class="tag">&lt;<span class="name">frame</span> <span class="attr">src</span>=<span class="string">"footer"</span> <span class="attr">scrolling</span>=<span class="string">"no"</span> <span class="attr">name</span>=<span class="string">"header"</span>&gt;</span></span><br><span class="line">   		<span class="tag">&lt;/<span class="name">frameset</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-2-DTree"><a href="#2-2-DTree" class="headerlink" title="2.2 DTree"></a>2.2 DTree</h2><blockquote>
+<p>用 js 开发的导航目录</p>
+</blockquote>
+<h3 id="Functions"><a href="#Functions" class="headerlink" title="Functions"></a>Functions</h3><h4 id="add"><a href="#add" class="headerlink" title="add()"></a>add()</h4><p>Adds a node to the tree.<br>Can only be called before the tree is drawn.</p>
+<p>id, pid and name are required.</p>
+<h4 id="Parameters"><a href="#Parameters" class="headerlink" title="Parameters"></a>Parameters</h4><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>Number</td>
+<td>Unique identity number.</td>
+</tr>
+<tr>
+<td>pid</td>
+<td>Number</td>
+<td>Number refering to the parent node. The value for the root node has to be -1.</td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td>Text label for the node.</td>
+</tr>
+<tr>
+<td>url</td>
+<td>String</td>
+<td>Url for the node.</td>
+</tr>
+<tr>
+<td>title</td>
+<td>String</td>
+<td>Title for the node.</td>
+</tr>
+<tr>
+<td>target</td>
+<td>String</td>
+<td>Target for the node.</td>
+</tr>
+<tr>
+<td>icon</td>
+<td>String</td>
+<td>Image file to use as the icon. Uses default if not specified.</td>
+</tr>
+<tr>
+<td>iconOpen</td>
+<td>String</td>
+<td>Image file to use as the open icon. Uses default if not specified.</td>
+</tr>
+<tr>
+<td>open</td>
+<td>Boolean</td>
+<td>Is the node open.</td>
+</tr>
+</tbody></table>
+<h4 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mytree.add(1, 0, 'My node', 'node.html', 'node title', 'mainframe', 'img/musicfolder.gif');</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加菜单"><a href="#添加菜单" class="headerlink" title="添加菜单"></a>添加菜单</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="用户登录过滤器"><a href="#用户登录过滤器" class="headerlink" title="用户登录过滤器"></a>用户登录过滤器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest arg0, ServletResponse arg1,</span></span></span><br><span class="line"><span class="function"><span class="params">                     FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//将 ServletRequest 对象强转为 HttpServletRequest 对象</span></span><br><span class="line">    HttpServletRequest req = (HttpServletRequest)arg0;</span><br><span class="line">    <span class="comment">//获取统一资源标识符</span></span><br><span class="line">    String uri = req.getRequestURI();</span><br><span class="line">    System.out.println(<span class="string">"uri: "</span>+uri);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//根据 URI 判断用户所访问的资源位置是否满足条件允许访问</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(uri.indexOf(<span class="string">"login"</span>) != -<span class="number">1</span> || uri.indexOf(<span class="string">"userLogin"</span>) != -<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="comment">//对用户登录资源放行</span></span><br><span class="line">        chain.doFilter(arg0, arg1);</span><br><span class="line"></span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"></span><br><span class="line">        User user = (User)req.getSession().getAttribute(<span class="string">"user"</span>);</span><br><span class="line">        <span class="keyword">if</span>(user == <span class="keyword">null</span>)&#123;<span class="comment">//用户未登录</span></span><br><span class="line">            req.setAttribute(<span class="string">"error"</span>, <span class="string">"请先登录"</span>);</span><br><span class="line">            req.getRequestDispatcher(<span class="string">"login"</span>).forward(req, arg1);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;<span class="comment">//用户已登录</span></span><br><span class="line">            chain.doFilter(arg0, arg1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-权限管理"><a href="#2-3-权限管理" class="headerlink" title="2.3 权限管理"></a>2.3 权限管理</h2><h3 id="越级访问"><a href="#越级访问" class="headerlink" title="越级访问"></a>越级访问</h3><p>虽然 DTree 菜单管理可以实现不同角色下的用户的菜单不同，其他菜单下的功能可能没有在菜单栏中显示，但是用户可以猜测方式在浏览器地址栏上直接输入URI ，访问本身用户不能访问的资源或者功能。在黑客领域中，这样的操作叫做<strong>越级访问</strong>，简单来说就是用低级别的角色访问高级别的资源。</p>
+<h3 id="用户基础资源管理"><a href="#用户基础资源管理" class="headerlink" title="用户基础资源管理"></a>用户基础资源管理</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">1</span>,<span class="string">'首页'</span>,<span class="string">'index'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">2</span>,<span class="string">'头页面'</span>,<span class="string">'header'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">3</span>,<span class="string">'菜单页面'</span>,<span class="string">'menu'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">4</span>,<span class="string">'操作页面'</span>,<span class="string">'body'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">5</span>,<span class="string">'底页面'</span>,<span class="string">'footer'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">6</span>,<span class="string">'错误页面'</span>,<span class="string">'error'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">7</span>,<span class="string">'角色错误页面'</span>,<span class="string">'roleerror'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">8</span>,<span class="string">'成功'</span>,<span class="string">'ok'</span>,<span class="number">1</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">100</span>,<span class="string">'添加用户页面'</span>,<span class="string">'addUser'</span>,<span class="number">3</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">101</span>,<span class="string">'添加用户动作'</span>,<span class="string">'addUserDo'</span>,<span class="number">3</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">102</span>,<span class="string">'查询用户页面'</span>,<span class="string">'findUser'</span>,<span class="number">4</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">103</span>,<span class="string">'查询用户页面动作'</span>,<span class="string">'findUserDo'</span>,<span class="number">4</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">104</span>,<span class="string">'显示用户页面'</span>,<span class="string">'showUser'</span>,<span class="number">4</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">105</span>,<span class="string">'预更新用户动作'</span>,<span class="string">'preUpdateUserDo'</span>,<span class="number">4</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">106</span>,<span class="string">'更新用户页面'</span>,<span class="string">'updateUser'</span>,<span class="number">4</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">107</span>,<span class="string">'添加用户动作'</span>,<span class="string">'updateUserDo'</span>,<span class="number">4</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">200</span>,<span class="string">'添加客户页面'</span>,<span class="string">'addCust'</span>,<span class="number">6</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">201</span>,<span class="string">'添加客户动作'</span>,<span class="string">'addCustDo'</span>,<span class="number">6</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">202</span>,<span class="string">'查询客户页面'</span>,<span class="string">'findCust'</span>,<span class="number">7</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">203</span>,<span class="string">'查询客户动作'</span>,<span class="string">'findCust'</span>,<span class="number">7</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">204</span>,<span class="string">'显示客户页面'</span>,<span class="string">'findCustDo'</span>,<span class="number">7</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">205</span>,<span class="string">'预更新客户动作'</span>,<span class="string">'preUpdateCust'</span>,<span class="number">7</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">206</span>,<span class="string">'更新客户页面'</span>,<span class="string">'updateCust'</span>,<span class="number">7</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">207</span>,<span class="string">'更新客户动作'</span>,<span class="string">'updateCustDo'</span>,<span class="number">7</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> fun <span class="keyword">value</span>(<span class="number">208</span>,<span class="string">'删除客户动作'</span>,<span class="string">'delCustDo'</span>,<span class="number">7</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="查询资源"><a href="#查询资源" class="headerlink" title="查询资源"></a>查询资源</h3><h4 id="修改查询-SQL-语句"><a href="#修改查询-SQL-语句" class="headerlink" title="修改查询 SQL 语句"></a>修改查询 SQL 语句</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> us.username,us.password,ro.*,me.* ,f.funurl</span><br><span class="line">		<span class="keyword">from</span> <span class="keyword">users</span> us </span><br><span class="line">		<span class="keyword">join</span> <span class="keyword">role</span> ro <span class="keyword">on</span> us.role_id = ro.role_id</span><br><span class="line">		<span class="keyword">join</span> role_menu rm <span class="keyword">on</span> ro.role_id = rm.role_id</span><br><span class="line">		<span class="keyword">join</span> menu me <span class="keyword">on</span> rm.menu_id  = me.menu_id</span><br><span class="line">		<span class="keyword">left</span> <span class="keyword">join</span> fun f <span class="keyword">on</span> me.menu_id = f.menu_id</span><br><span class="line">		<span class="keyword">where</span> us.username = <span class="comment">#&#123;username&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="修改-ResultMap"><a href="#修改-ResultMap" class="headerlink" title="修改 ResultMap"></a>修改 ResultMap</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE mapper</span></span><br><span class="line"><span class="meta">  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"</span></span><br><span class="line"><span class="meta">  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">"com.szxy.mapper.UserMapper"</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">&lt;!-- 配置结果集映射 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">type</span>=<span class="string">"User"</span> <span class="attr">id</span>=<span class="string">"userMapper"</span> &gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 定义主键关联 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"username"</span> <span class="attr">column</span>=<span class="string">"username"</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"password"</span> <span class="attr">column</span>=<span class="string">"password"</span>/&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 属性关联， 一对多 </span></span><br><span class="line"><span class="comment">			 需要指定 javaType 的类型</span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">association</span> <span class="attr">property</span>=<span class="string">"role"</span> <span class="attr">javaType</span>=<span class="string">"Role"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"roleid"</span> <span class="attr">column</span>=<span class="string">"role_id"</span>/&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"rolename"</span> <span class="attr">column</span>=<span class="string">"role_name"</span> /&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">association</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 属性关联 多对一 </span></span><br><span class="line"><span class="comment">			 需要指定 ofType 类型</span></span><br><span class="line"><span class="comment">		--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"menus"</span> <span class="attr">ofType</span>=<span class="string">"Menu"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">id</span> <span class="attr">property</span>=<span class="string">"menuid"</span> <span class="attr">column</span>=<span class="string">"menu_id"</span>/&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"menuame"</span> <span class="attr">column</span>=<span class="string">"menu_name"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"menuurl"</span> <span class="attr">column</span>=<span class="string">"menuurl"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"fatherid"</span> <span class="attr">column</span>=<span class="string">"father_id"</span>&gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line">		<span class="comment">&lt;!-- 属性关联  fun 表功能表 --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">collection</span> <span class="attr">property</span>=<span class="string">"funs"</span> <span class="attr">ofType</span>=<span class="string">"Fun"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">result</span> <span class="attr">property</span>=<span class="string">"funurl"</span> <span class="attr">column</span>=<span class="string">"funurl"</span>/&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">collection</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">		parameterType 表示参数类型</span></span><br><span class="line"><span class="comment">		string 是 java.lang.String 的别名</span></span><br><span class="line"><span class="comment">	 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">"selectUserByName"</span> <span class="attr">parameterType</span>=<span class="string">"string"</span> <span class="attr">resultMap</span>=<span class="string">"userMapper"</span>&gt;</span></span><br><span class="line">		 	select us.username,us.password,ro.*,me.* ,f.funurl</span><br><span class="line">			from users us </span><br><span class="line">			join role ro on us.role_id = ro.role_id</span><br><span class="line">			join role_menu rm on ro.role_id = rm.role_id</span><br><span class="line">			join menu me on rm.menu_id  = me.menu_id</span><br><span class="line">			left join fun f on me.menu_id = f.menu_id</span><br><span class="line">			where us.username = #&#123;username&#125;</span><br><span class="line">	<span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">	</span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="权限过滤器"><a href="#权限过滤器" class="headerlink" title="权限过滤器"></a>权限过滤器</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest arg0, ServletResponse arg1,</span></span></span><br><span class="line"><span class="function"><span class="params">                     FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">    <span class="comment">//强转为 req 对象</span></span><br><span class="line">    HttpServletRequest req = (HttpServletRequest)arg0;</span><br><span class="line">    <span class="comment">//获取 URI </span></span><br><span class="line">    String uri = req.getRequestURI();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//放行静态资源</span></span><br><span class="line">    <span class="keyword">if</span>(uri.indexOf(<span class="string">"images"</span>) !=-<span class="number">1</span> || uri.indexOf(<span class="string">"js"</span>) !=-<span class="number">1</span>)&#123;</span><br><span class="line">        chain.doFilter(arg0, arg1);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(uri.indexOf(<span class="string">"login"</span>) != -<span class="number">1</span> || uri.indexOf(<span class="string">"userLogin"</span>) != -<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="comment">//对用户登录资源放行</span></span><br><span class="line">            chain.doFilter(arg0, arg1);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="comment">//从 session 中获取 funs 获取当前用户的角色权限</span></span><br><span class="line">            User user = (User)req.getSession().getAttribute(<span class="string">"user"</span>);</span><br><span class="line">            <span class="comment">//获取 funs 集合</span></span><br><span class="line">            List&lt;Fun&gt; funs = user.getFuns();</span><br><span class="line">            <span class="comment">//判断 uri 是否存在与 funs 中的标志</span></span><br><span class="line">            <span class="keyword">boolean</span> flag = <span class="keyword">false</span>; </span><br><span class="line">            <span class="keyword">for</span> (Fun f : funs) &#123;</span><br><span class="line">                <span class="keyword">if</span>(uri.indexOf(f.getFunurl()) != -<span class="number">1</span>)&#123;</span><br><span class="line">                    flag = <span class="keyword">true</span>;</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(flag)&#123;<span class="comment">//允许用户访问当前资源</span></span><br><span class="line">                chain.doFilter(arg0, arg1);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//强转为 resp 对象</span></span><br><span class="line">                HttpServletResponse resp = (HttpServletResponse)arg1;</span><br><span class="line">                <span class="comment">//重定向</span></span><br><span class="line">                resp.sendRedirect(<span class="string">"roleerror"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h1><h2 id="WEB-INF简介"><a href="#WEB-INF简介" class="headerlink" title="WEB-INF简介"></a>WEB-INF简介</h2><p>WEB-INF是Java的WEB应用的<strong>安全目录</strong>。</p>
+<p>所谓安全就是客户端无法访问，只有服务端可以访问的目录。</p>
+<p>如果想在页面中直接访问其中的文件，</p>
+<p>必须通过 web.xml 文件对要访问的文件进行相应映射才能访问。</p>
+<h4 id="filter-中-lt-url-pattern-gt-的配置"><a href="#filter-中-lt-url-pattern-gt-的配置" class="headerlink" title="filter 中  &lt;url-pattern&gt; 的配置"></a>filter 中  <code>&lt;url-pattern&gt;</code> 的配置</h4><p>使用 <code>/*</code> 拦截所有请求，优先级高</p>
+<h4 id="spring-配置文件-context-property-placeholder-标签"><a href="#spring-配置文件-context-property-placeholder-标签" class="headerlink" title="spring 配置文件 context:property-placeholder  标签"></a>spring 配置文件 context:property-placeholder  标签</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 加载常量配置文件</span></span><br><span class="line"><span class="comment">   	 	   注意： context:property-placeholde 标签一个 spring.xml 整体只能有一个</span></span><br><span class="line"><span class="comment">   	 	  否侧报 Could not resolve placeholder。</span></span><br><span class="line"><span class="comment">   	 	  解决方法：若要一个整体的 spring 配置文件有多个  context:property-placeholde</span></span><br><span class="line"><span class="comment">   	 	  属性必须加上 ignore-unresolvable="true" </span></span><br><span class="line"><span class="comment">   	  --&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">context:property-placeholder</span> <span class="attr">location</span>=<span class="string">"classpath:constants.properties"</span> <span class="attr">ignore-unresolvable</span>=<span class="string">"true"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/RBAC/" rel="tag"># RBAC</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/05/10/20190510 SSM框架整合/" rel="next" title="20190510 SSM 框架整合">
+                  <i class="fa fa-chevron-left"></i> 20190510 SSM 框架整合
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/05/13/20190513 Shiro 安全框架/" rel="prev" title="20190513 Shiro 安全框架">
+                  20190513 Shiro 安全框架 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-RBAC-简介"><span class="nav-number">1.</span> <span class="nav-text">1 RBAC 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-RBAC-96"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 RBAC 96</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RBAC0"><span class="nav-number">1.1.1.</span> <span class="nav-text">RBAC0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RBAC1、RABC2、RBAC3"><span class="nav-number">1.1.2.</span> <span class="nav-text">RBAC1、RABC2、RBAC3</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-RBAC0-实战"><span class="nav-number">2.</span> <span class="nav-text">2 RBAC0 实战</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-需求分析与数据库设计"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 需求分析与数据库设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">2.1.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#技术选择"><span class="nav-number">2.1.2.</span> <span class="nav-text">技术选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库设计"><span class="nav-number">2.1.3.</span> <span class="nav-text">数据库设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建表"><span class="nav-number">2.1.4.</span> <span class="nav-text">创建表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#动态菜单实现"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">动态菜单实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSM-框架整合"><span class="nav-number">2.1.5.</span> <span class="nav-text">SSM 框架整合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面布局"><span class="nav-number">2.1.6.</span> <span class="nav-text">页面布局</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-DTree"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 DTree</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Functions"><span class="nav-number">2.2.1.</span> <span class="nav-text">Functions</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#add"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">add()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parameters"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">Parameters</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Example"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">Example</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加菜单"><span class="nav-number">2.2.2.</span> <span class="nav-text">添加菜单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户登录过滤器"><span class="nav-number">2.2.3.</span> <span class="nav-text">用户登录过滤器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-权限管理"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 权限管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#越级访问"><span class="nav-number">2.3.1.</span> <span class="nav-text">越级访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用户基础资源管理"><span class="nav-number">2.3.2.</span> <span class="nav-text">用户基础资源管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询资源"><span class="nav-number">2.3.3.</span> <span class="nav-text">查询资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#修改查询-SQL-语句"><span class="nav-number">2.3.3.1.</span> <span class="nav-text">修改查询 SQL 语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改-ResultMap"><span class="nav-number">2.3.3.2.</span> <span class="nav-text">修改 ResultMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#权限过滤器"><span class="nav-number">2.3.3.3.</span> <span class="nav-text">权限过滤器</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注意"><span class="nav-number">3.</span> <span class="nav-text">注意</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WEB-INF简介"><span class="nav-number">3.1.</span> <span class="nav-text">WEB-INF简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#filter-中-lt-url-pattern-gt-的配置"><span class="nav-number">3.1.0.1.</span> <span class="nav-text">filter 中  &lt;url-pattern&gt; 的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#spring-配置文件-context-property-placeholder-标签"><span class="nav-number">3.1.0.2.</span> <span class="nav-text">spring 配置文件 context:property-placeholder  标签</span></a></li></ol></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

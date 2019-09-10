@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1 登录模块套用1.1 添加插件 添加前端书写插件，把插件放在 MyEclipse 的安装目录中 drops 文件中，然后重启 MyElipse，即可使用前端书写快捷键 Ctrl+E  1.2 套用登录模块 先创建一个 JSP 页面，然后剪切 &amp;lt;base href=&amp;quot;&amp;lt;%=basePath%&amp;gt;&amp;quot;&amp;gt; 复制 模块.html 中的代码到 JSP界面。  2 项">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JSP 和 Servlet 整合">
+<meta property="og:url" content="http://zwer.xyz/2019/03/07/20190307 JSP和Servlet整合/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="1 登录模块套用1.1 添加插件 添加前端书写插件，把插件放在 MyEclipse 的安装目录中 drops 文件中，然后重启 MyElipse，即可使用前端书写快捷键 Ctrl+E  1.2 套用登录模块 先创建一个 JSP 页面，然后剪切 &amp;lt;base href=&amp;quot;&amp;lt;%=basePath%&amp;gt;&amp;quot;&amp;gt; 复制 模块.html 中的代码到 JSP界面。  2 项">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-06-16T00:30:46.415Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JSP 和 Servlet 整合">
+<meta name="twitter:description" content="1 登录模块套用1.1 添加插件 添加前端书写插件，把插件放在 MyEclipse 的安装目录中 drops 文件中，然后重启 MyElipse，即可使用前端书写快捷键 Ctrl+E  1.2 套用登录模块 先创建一个 JSP 页面，然后剪切 &amp;lt;base href=&amp;quot;&amp;lt;%=basePath%&amp;gt;&amp;quot;&amp;gt; 复制 模块.html 中的代码到 JSP界面。  2 项">
+  <link rel="canonical" href="http://zwer.xyz/2019/03/07/20190307 JSP和Servlet整合/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>JSP 和 Servlet 整合 | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/03/07/20190307 JSP和Servlet整合/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">JSP 和 Servlet 整合
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-03-07 00:00:00" itemprop="dateCreated datePublished" datetime="2019-03-07T00:00:00+08:00">2019-03-07</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-06-16 08:30:46" itemprop="dateModified" datetime="2019-06-16T08:30:46+08:00">2019-06-16</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/后端/" itemprop="url" rel="index"><span itemprop="name">后端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-登录模块套用"><a href="#1-登录模块套用" class="headerlink" title="1 登录模块套用"></a>1 登录模块套用</h1><h2 id="1-1-添加插件"><a href="#1-1-添加插件" class="headerlink" title="1.1 添加插件"></a>1.1 添加插件</h2><blockquote>
+<p>添加前端书写插件，把插件放在 MyEclipse 的安装目录中 drops 文件中，然后重启</p>
+<p>MyElipse，即可使用前端书写快捷键 <code>Ctrl+E</code></p>
+</blockquote>
+<h2 id="1-2-套用登录模块"><a href="#1-2-套用登录模块" class="headerlink" title="1.2 套用登录模块"></a>1.2 套用登录模块</h2><blockquote>
+<p>先创建一个 JSP 页面，然后剪切 <code>&lt;base href=&quot;&lt;%=basePath%&gt;&quot;&gt;</code></p>
+<p>复制 模块.html 中的代码到 JSP界面。</p>
+</blockquote>
+<h1 id="2-项目系统分析"><a href="#2-项目系统分析" class="headerlink" title="2 项目系统分析"></a>2 项目系统分析</h1><p>项目名称：</p>
+<p>​    后台管理系统</p>
+<p>项目需求：</p>
+<p>​    实现用户登录</p>
+<p>​    实现用户退出</p>
+<p>​    实现用户注册</p>
+<p>功能分析</p>
+<p>​    用户登录</p>
+<p>​    用户退出</p>
+<p>​    用户注册</p>
+<p>数据库设计</p>
+<p>​    用户表</p>
+<p>​        字段</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> <span class="keyword">project</span>;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user(</span><br><span class="line">	uid <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span> auto_increment,</span><br><span class="line">    pwd <span class="keyword">String</span> <span class="built_in">varchar</span>(<span class="number">50</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    <span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    age <span class="built_in">int</span>(<span class="number">3</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    sex <span class="built_in">varchar</span>(<span class="number">10</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    birthday <span class="built_in">date</span> <span class="keyword">not</span> <span class="literal">null</span></span><br><span class="line">)<span class="keyword">engine</span>=INoDB,<span class="keyword">charset</span>=utf8</span><br></pre></td></tr></table></figure>
+
+<p>SQL 语句设计</p>
+<p>​    用户登录  </p>
+<p>​    用户注册</p>
+<hr>
+<p>代码实现：</p>
+<p>​    参照源码</p>
+<hr>
+<p>问题1：</p>
+<p>​    现在我们一个请求或者一个独立的业务逻辑都单独进行一个Servlet的创建进行请求处理。</p>
+<p>但是一个网站的功能是非常的多，如果每个都创建单独的Servlet进行处理，这样造成</p>
+<p>Servlet 过多。造成资源浪费。</p>
+<p>解决：</p>
+<p>​    服务器在接受到浏览器发送的请求后，会调用对应的Servlet进行请求</p>
+<p>​    然后调用 Servlet 中 Service 方法进行处理</p>
+<p>​    我们将不同功能的处理封装成对应的方法。</p>
+<p>​    在service方法中 调用其对应的功能处理方法进行请求处理</p>
+<p>​    这样Servlet 我们只需要一个</p>
+<p>新的问题：</p>
+<p>​    如何在 Service 方法中实现根据请求动态的调用器功能处理方法呢？</p>
+<p>解决：</p>
+<p>​    使用反射动态的获取 Servlet 中的方法</p>
+<p>注意：<strong>请求中要附带方法的名称</strong></p>
+<hr>
+<p>问题2： 现在使用反射我们事先了在service 方法中动态的根据请求调用对应的方法</p>
+<p>进行请求处理，但是真实开发过程中，不对每个功能都创建一个servlet ，但是</p>
+<p>也不会只使用一个 Servlet ，我们的 Servlet 不只是一个。</p>
+<p>一般是一个独立的功能模块一个servlet 。我们需要在这些 servlet 中的  service 中</p>
+<p>都要将 反射的代码声明一个遍。</p>
+<h1 id="3-登录-Servlet-创建和MVC思想"><a href="#3-登录-Servlet-创建和MVC思想" class="headerlink" title="3  登录 Servlet 创建和MVC思想"></a>3  登录 Servlet 创建和MVC思想</h1><blockquote>
+<p>用户登录：</p>
+<p>​    用户点击登录发送请求到 UserServet</p>
+<p>​    tomcat 服务器接受到</p>
+<p>MVC 分层开发；</p>
+<p>​    M：model  service层、dao层和 实体类</p>
+<p>​    V： view     视图层   JSP 页面</p>
+<p>​    C：controller   控制层 Servlet</p>
+</blockquote>
+<p>注意： 定义birthday 属性可以使用 String 类型。</p>
+<p>service层： getUserInfoService(String name,String pwd)</p>
+<p>dao 层： getUserInfoDao(String uname,String pwd)   查询用户信息</p>
+<h1 id="4-用户登录失败和成功处理"><a href="#4-用户登录失败和成功处理" class="headerlink" title="4 用户登录失败和成功处理"></a>4 用户登录失败和成功处理</h1><blockquote>
+<p>在用户登录失败的页面上，打印用户登录失败的提示，使用 JSP 和 session。</p>
+<p>在用户成功登录后，在合适的位置打印当前用户登录名。</p>
+<p>在 JSP 界面寻找合适的位置的方法：</p>
+<p>方法可以先使用行内样式<code>border: solid 3px red</code>,确定边框的大小和位置</p>
+<p>然后通过添加 span 标签或其他标签内，声明 java 代码.</p>
+</blockquote>
+<h1 id="5-用户退出"><a href="#5-用户退出" class="headerlink" title="5 用户退出"></a>5 用户退出</h1><blockquote>
+<p>点击 退出按钮，使用 JS 确认框，询问用户是否退出。</p>
+<p>若退出，选择是，否则不执行退出操作</p>
+</blockquote>
+<h2 id="5-1-LoginOutServlet-java"><a href="#5-1-LoginOutServlet-java" class="headerlink" title="5.1  LoginOutServlet.java"></a>5.1  LoginOutServlet.java</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 用户退出</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 销毁session </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginOutServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span></span></span><br><span class="line"><span class="function">				<span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line">			  	<span class="comment">//设置请求编码格式</span></span><br><span class="line">				req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">				<span class="comment">//设置响应编码格式</span></span><br><span class="line">				resp.setContentType(<span class="string">"text/html;charset=utf-8"</span>);</span><br><span class="line">				<span class="comment">//响应处理结果</span></span><br><span class="line">					<span class="comment">//获取session 对象</span></span><br><span class="line">					HttpSession session = req.getSession();</span><br><span class="line">					<span class="comment">//销毁 session 对象</span></span><br><span class="line">					session.invalidate();</span><br><span class="line">					<span class="comment">//重定向</span></span><br><span class="line">					resp.sendRedirect(<span class="string">"/projectsxt/login.jsp"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-2-JS-事件绑定"><a href="#5-2-JS-事件绑定" class="headerlink" title="5.2  JS 事件绑定"></a>5.2  JS 事件绑定</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    <span class="comment">/* 	function loginOut()&#123;</span></span><br><span class="line"><span class="comment">    			</span></span><br><span class="line"><span class="comment">    		return window.confirm("您确定要退出嘛？");</span></span><br><span class="line"><span class="comment">    			</span></span><br><span class="line"><span class="comment">    	&#125;  */</span></span><br><span class="line">    	</span><br><span class="line">    	$(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    		<span class="comment">/* </span></span><br><span class="line"><span class="comment">    			ID 选择器 ，注意前面加 井号# </span></span><br><span class="line"><span class="comment">            	事件绑定函数</span></span><br><span class="line"><span class="comment">            */</span>	</span><br><span class="line">    		$(<span class="string">"#out"</span>).click(</span><br><span class="line">    			</span><br><span class="line">    			<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    				<span class="comment">/*</span></span><br><span class="line"><span class="comment">    					确定框，如果点 "是" ,则返回 true，这样就触发 a 标签的 href 属性</span></span><br><span class="line"><span class="comment">    					反之，则什么也不做，不会触发 a 标签的 href 属性。</span></span><br><span class="line"><span class="comment">    				*/</span></span><br><span class="line">    				<span class="keyword">return</span> <span class="built_in">window</span>.confirm(<span class="string">"您确定要退出嘛？"</span>);</span><br><span class="line">    		&#125;);</span><br><span class="line">    		</span><br><span class="line">    	&#125;);</span><br><span class="line">    &lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"head-l"</span> <span class="attr">style</span>=<span class="string">"position: relative; left: 850px; color:white; font-size: 15px;"</span>&gt;</span> 	  当前用户:<span class="tag">&lt;<span class="name">%=(String)session.getAttribute("uname")</span> %&gt;</span></span><br><span class="line">     &amp;nbsp;&amp;nbsp;</span><br><span class="line">     <span class="tag">&lt;<span class="name">a</span> <span class="attr">id</span>=<span class="string">"out"</span> <span class="attr">class</span>=<span class="string">"button button-little bg-red"</span> <span class="attr">href</span>=<span class="string">"user/out"</span> <span class="attr">onclick</span>=<span class="string">"loginOut()"</span>&gt;</span>			<span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">"icon-power-off"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span>退出登录</span><br><span class="line">     <span class="tag">&lt;/<span class="name">a</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="6-用户注册"><a href="#6-用户注册" class="headerlink" title="6 用户注册"></a>6 用户注册</h1><h2 id="6-1-用户注册界面"><a href="#6-1-用户注册界面" class="headerlink" title="6.1 用户注册界面"></a>6.1 用户注册界面</h2><blockquote>
+<p>找用户注册界面相似的模块进行修改</p>
+<p>MySQL 会将字符类型的数据，按照隐形转换成数字和日期类型</p>
+<p>regUserInfoDao 方法</p>
+<p>regUserInfoService 方法</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 选择出生日期  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"form-group"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"label"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">"sitename"</span>&gt;</span>出生日期：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"field"</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 设置 type 的属性为 date ，选择日期 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"date"</span> <span class="attr">class</span>=<span class="string">"input w50"</span> <span class="attr">id</span>=<span class="string">"mpass"</span> <span class="attr">name</span>=<span class="string">"mpass"</span></span></span><br><span class="line"><span class="tag">               <span class="attr">size</span>=<span class="string">"50"</span>  /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&lt;script type=<span class="string">"text/javascript"</span>&gt;</span><br><span class="line">	</span><br><span class="line">		$(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">			</span><br><span class="line">				<span class="comment">/**    设置性别选择                   ****/</span></span><br><span class="line">				$(<span class="string">"#male"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">					</span><br><span class="line">					$(<span class="string">"#span_male"</span>).addClass(<span class="string">"icon-check"</span>);</span><br><span class="line">					$(<span class="string">"#span_female"</span>).removeClass(<span class="string">"icon-check"</span>);</span><br><span class="line">					</span><br><span class="line">				&#125;);</span><br><span class="line">			</span><br><span class="line">				$(<span class="string">"#female"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">					</span><br><span class="line">					$(<span class="string">"#span_female"</span>).addClass(<span class="string">"icon-check"</span>);</span><br><span class="line">					$(<span class="string">"#span_male"</span>).removeClass(<span class="string">"icon-check"</span>);</span><br><span class="line">					</span><br><span class="line">				&#125;);</span><br><span class="line">		&#125;);</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="7-项目改良"><a href="#7-项目改良" class="headerlink" title="7 项目改良"></a>7 项目改良</h1><blockquote>
+<p>用一个 Servlet 解决，使用反射的方法，获取方法名，然后执行相应的方法。</p>
+<p>方法：请求附带方法名的方式</p>
+<p>一、使用隐藏标签发送附带请求信息</p>
+<p>二、使用超链接附带请求信息</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 隐藏标签 请求的方法名--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"method"</span>  <span class="attr">value</span>=<span class="string">"方法名"</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 超链接 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"data?method="</span>某某方法名"&gt;</span><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 使用 js --&gt;</span></span><br><span class="line">window.location.href="data?method="某某方法名"</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-1-DataServlet"><a href="#7-1-DataServlet" class="headerlink" title="7.1 DataServlet"></a>7.1 DataServlet</h2><blockquote>
+<p>用户模块 </p>
+<p>​    用户登录</p>
+<p>​    用户注销</p>
+<p>​    用户注册</p>
+<p>将原来的三个 Servlet 变为一个 Servlet ，使用反射动态获取请求方法。</p>
+<p>好处：减少 servlet 的数量，从服务器角度来说，serlvet 从第一次启动就会一直运行，直到服务器结束运行，这样对服务器的压力比较大，尤其是当前业务比较多的时候。减少多余代码的书写，将原来每个细小的模块都放在一个大的模块中作为一个 servlet。</p>
+<p>注意：请求方法在请求中附带，可使用 <code>input</code> 隐藏标签</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cn.szxy.pojo.User;</span><br><span class="line"><span class="keyword">import</span> cn.szxy.service.UserService;</span><br><span class="line"><span class="keyword">import</span> cn.szxy.service.impl.UserServiceImpl;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 使用一个 servlet 动态分发一个模块的请求方法</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 设置请求编码格式</span></span><br><span class="line">		req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">		<span class="comment">// 设置响应编码格式</span></span><br><span class="line">		resp.setContentType(<span class="string">"text/html;utf-8"</span>);</span><br><span class="line">		<span class="comment">// 获取请求的方法名</span></span><br><span class="line">		String methodName = req.getParameter(<span class="string">"method"</span>);</span><br><span class="line">		<span class="comment">// 根据方法名的不同动态选择方法对应处理请求</span></span><br><span class="line">		<span class="comment">// 获取该类的类对象</span></span><br><span class="line">		Class clazz = <span class="keyword">this</span>.getClass();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 获取该类的方法</span></span><br><span class="line">			Method method = clazz.getMethod(methodName,</span><br><span class="line">					HttpServletRequest.class, HttpServletResponse.class);</span><br><span class="line">			<span class="comment">// 执行对应的请求方法</span></span><br><span class="line">			method.invoke(<span class="keyword">this</span>, req, resp);</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 用户登录</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">userLogin</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"DataServlet.userLogin() 处理请求..."</span>);</span><br><span class="line">		<span class="comment">// 获取请求数据</span></span><br><span class="line">		String uname = req.getParameter(<span class="string">"uname"</span>);</span><br><span class="line">		String pwd = req.getParameter(<span class="string">"pwd"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 处理请求数据</span></span><br><span class="line">		<span class="comment">// 获取 业务逻辑层对象</span></span><br><span class="line">		UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">		User u = service.getUserInfoService(uname, pwd);</span><br><span class="line">		System.out.println(u);</span><br><span class="line">		<span class="comment">// 获取或创建 session 对象</span></span><br><span class="line">		HttpSession session = req.getSession();</span><br><span class="line">		<span class="comment">// 检查用户名和密码</span></span><br><span class="line">		<span class="keyword">if</span> (u != <span class="keyword">null</span>) &#123;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 处理响应结果</span></span><br><span class="line">			session.setAttribute(<span class="string">"uname"</span>, uname);</span><br><span class="line">			session.setAttribute(<span class="string">"pwd"</span>, pwd);</span><br><span class="line">			<span class="comment">// 重定向</span></span><br><span class="line">			resp.sendRedirect(<span class="string">"/projectsxt2/index.jsp"</span>);</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">			<span class="comment">// 处理响应结果</span></span><br><span class="line">			session.setAttribute(<span class="string">"flag"</span>, <span class="string">"LoginFailure"</span>);</span><br><span class="line">			<span class="comment">// 重定向</span></span><br><span class="line">			resp.sendRedirect(<span class="string">"/projectsxt2/login.jsp"</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 用户退出</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">userLoginOut</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"DataServlet.userLoginOut() 处理请求"</span>);</span><br><span class="line">		<span class="comment">// 响应处理结果</span></span><br><span class="line">		<span class="comment">// 获取session 对象</span></span><br><span class="line">		HttpSession session = req.getSession();</span><br><span class="line">		<span class="comment">// 销毁 session 对象</span></span><br><span class="line">		session.invalidate();</span><br><span class="line">		<span class="comment">// 重定向</span></span><br><span class="line">		resp.sendRedirect(<span class="string">"/projectsxt2/login.jsp"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 用户注册</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">userRegister</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"DataServlet.userRegister() 处理请求"</span>);</span><br><span class="line">		<span class="comment">// 获取请求数据</span></span><br><span class="line">		String uname = req.getParameter(<span class="string">"uname"</span>);</span><br><span class="line">		String pwd = req.getParameter(<span class="string">"pwd"</span>);</span><br><span class="line">		String sex = req.getParameter(<span class="string">"sex"</span>);</span><br><span class="line">		<span class="keyword">int</span> age = Integer.valueOf(req.getParameter(<span class="string">"age"</span>));</span><br><span class="line">		String birthday = req.getParameter(<span class="string">"birthday"</span>);</span><br><span class="line">		<span class="comment">// System.out.println(uname+" "+pwd+" "+sex+" "+age+" "+birthday);</span></span><br><span class="line">		<span class="comment">// 处理请求数据</span></span><br><span class="line">		<span class="comment">// 获取业务层对象</span></span><br><span class="line">		UserService service = <span class="keyword">new</span> UserServiceImpl();</span><br><span class="line">		<span class="keyword">int</span> flag = service.regUserInfoService(uname, pwd, sex, age, birthday);</span><br><span class="line">		<span class="comment">// 创建 session 对象</span></span><br><span class="line">		HttpSession session = req.getSession();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (flag != -<span class="number">1</span>) &#123;</span><br><span class="line">			session.setAttribute(<span class="string">"flag"</span>, <span class="string">"RegisterSuccess"</span>);</span><br><span class="line">			<span class="comment">// 重定向</span></span><br><span class="line">			resp.sendRedirect(<span class="string">"/projectsxt2/login.jsp"</span>);</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">			session.setAttribute(<span class="string">"flag"</span>, <span class="string">"RegisterFailure"</span>);</span><br><span class="line">			<span class="comment">// 重定向</span></span><br><span class="line">			resp.sendRedirect(<span class="string">"/projectsxt2/login.jsp"</span>);</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="8-BaseServlet"><a href="#8-BaseServlet" class="headerlink" title="8  BaseServlet"></a>8  BaseServlet</h1><blockquote>
+<p>向上抽取成父类，解决多个模块书写相同代码的问题</p>
+<p>注意：</p>
+<p>一： BaseServlet 不能被访问 ，在 web.xml 不配置 BaseServlet</p>
+<p>二： BaseServlet 不能被实例化，改为 abstract 类</p>
+<p>使用：</p>
+<p>一： 创建 Servlet 继承 BaseServlet 即可。</p>
+<p>二：在自己的 Servlet 中 不要声明  service 方法</p>
+<p>三：正常访问我们自己的servlet</p>
+<p>注意：<strong>请求必须附带要被执行的方法名</strong></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> cn.szxy.web;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> cn.szxy.pojo.User;</span><br><span class="line"><span class="keyword">import</span> cn.szxy.service.UserService;</span><br><span class="line"><span class="keyword">import</span> cn.szxy.service.impl.UserServiceImpl;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * Servlet 工具类</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 不配置 web.xml 访问路径</span></span><br><span class="line"><span class="comment"> * 抽象类不能被实例化</span></span><br><span class="line"><span class="comment"> * 父类的 this 指针指向 子类对象</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * 使用：</span></span><br><span class="line"><span class="comment"> * 	  只要继承该类就可以了，不可以重写 HttpServlt父类的方法</span></span><br><span class="line"><span class="comment"> * 	 在自己的  servlet 中只写 请求方法</span></span><br><span class="line"><span class="comment"> *  </span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span>  <span class="class"><span class="keyword">class</span> <span class="title">BaseServlet</span> <span class="keyword">extends</span> <span class="title">HttpServlet</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">service</span><span class="params">(HttpServletRequest req, HttpServletResponse resp)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> ServletException, IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 设置请求编码格式</span></span><br><span class="line">		req.setCharacterEncoding(<span class="string">"utf-8"</span>);</span><br><span class="line">		<span class="comment">// 设置响应编码格式</span></span><br><span class="line">		resp.setContentType(<span class="string">"text/html;utf-8"</span>);</span><br><span class="line">		<span class="comment">// 获取请求的方法名</span></span><br><span class="line">		String methodName = req.getParameter(<span class="string">"method"</span>);</span><br><span class="line">		<span class="comment">// 根据方法名的不同动态选择方法对应处理请求</span></span><br><span class="line">		<span class="comment">// 获取该类的类对象</span></span><br><span class="line">		Class clazz = <span class="keyword">this</span>.getClass();</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="comment">// 获取该类的方法</span></span><br><span class="line">			Method method = clazz.getMethod(methodName,</span><br><span class="line">					HttpServletRequest.class, HttpServletResponse.class);</span><br><span class="line">			<span class="comment">// 执行对应的请求方法</span></span><br><span class="line">			method.invoke(<span class="keyword">this</span>, req, resp);</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="9-总结"><a href="#9-总结" class="headerlink" title="9 总结"></a>9 总结</h1><ol>
+<li><p>套用模板进行页面快速构建</p>
+<p>在自己的项目中常见 jsp 文件，然后将模板中的前端相关代码赋值到</p>
+<p>自己的jsp 文件中，将静态资源赋值到 webRoot 下</p>
+</li>
+<li><p>MVC的开发流程</p>
+<p>M： model      service dao pojo </p>
+<p>v：view         Jsp js  css html</p>
+<p>c：controller   Servlet 控制</p>
+</li>
+<li><p>Servlet+jsp+jdbc 的功能开发流程</p>
+<p>浏览器发起页面请求直接给 jsp </p>
+<p>浏览器发起功能请求给 servlet ，servlet 调用service， service 进行业务逻辑处理</p>
+<p>service  调用dao，dao 进行数据库操作( jdbc)，dao 层将处理结果返回给 servcie </p>
+<p>servcie 再将结果返回给 servlet ，请求转发或重定向给 jsp ，jsp 做出页面响应</p>
+</li>
+<li><p>request 和session 作用有的使用</p>
+<p>request： 请求转发的数据流转的载体</p>
+<p>session： 重定向类型的数据流转的载体(但是 session 可以解决 同一个用户不同请求的数据共享)</p>
+</li>
+<li><p>浏览器发起请求到服务器请求发起的方式(重点记忆)</p>
+<ol>
+<li>非 ajxk</li>
+</ol>
+<p>form 表单提交： action 数据提交地址，method：数据提交方法</p>
+<p>超链接标签（相当于 get 请求） href:为数据提交地址，可以直接使用？拼接请求数据</p>
+<p>js中的window.location.herf ：为数据提交地址，可以直接使用？拼接请求数据</p>
+<p>注意：</p>
+<p>​    使用以上请求发起的请求，浏览器在接收到响应内容后，会原有内容覆盖，显示响应效果</p>
+<ol start="6">
+<li><p>ajax 技术</p>
+<p>在整个页面中局部的页面刷新操作</p>
+</li>
+</ol>
+</li>
+<li><p>BaeSrrvlet 的抽去和使用</p>
+<ol>
+<li><p>反射</p>
+</li>
+<li><p>抽象类</p>
+</li>
+</ol>
+</li>
+<li><p>项目缺陷</p>
+<ol>
+<li><p>在jsp中获取从Servlet 流转过来的数据特别麻烦   </p>
+<p>解决:使用 EL 表达式</p>
+<ol>
+<li>在 jsp 页面中使用 java 代码块进行逻辑处理书写和阅读极不方便</li>
+</ol>
+<p>解决：使用 JSTL 标签库</p>
+<ol>
+<li><p>使用 session 进行数据流转是很方便的，但是 session 失效了，所有 依赖 session 都会失效。</p>
+</li>
+<li><p>响应结果都是覆盖原有内容显示给用户</p>
+</li>
+</ol>
+<p>解决：使用 ajax 技术</p>
+</li>
+</ol>
+</li>
+<li><p>删除用户信息</p>
+<p>delUserInfo 下一章节</p>
+<p>问题： 在删除成功后，响应内容会将请求页面的所有的内容覆盖</p>
+<p>​    显示新的内容，但是我们希望在保留当前请求页信息的基础上显示新的内容</p>
+<p>明确：</p>
+<p>(没有指明资源显示位置)指的不一定是浏览器中一个标签页，一般 frameset 标签中都的划分区域，</p>
+<p>都是单独的。如果某个区域发起了请求，则该区域可以称为当前请求页</p>
+<p>也就是说浏览器在当前页向服务器发出请求，服务器接受请求，处理请求数据，在未指明资源显示位置，a 标签 默认将响应结果发送给浏览器当前页上，会覆盖之前的响应内容，显示新的响应内容。</p>
+<pre><code>解决：使用 ajax 技术</code></pre><ol start="9">
+<li><p>显示当前在线人数:</p>
+<p>统计当前系统的 session 的个数，一个 session就是一个用户在线。</p>
+<p>在 session 被创建的使用计数器+1，session 数据被销毁时计数器 -1</p>
+<p>问题：</p>
+<p>​    我怎么能在 session 创建的时触发计数器执行 +1</p>
+</li>
+</ol>
+<p>​        </p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/03/03/markdown/搭建安卓开发环境/" rel="next" title="安卓开发">
+                  <i class="fa fa-chevron-left"></i> 安卓开发
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/03/09/20190309 EL表达式和JSTL/" rel="prev" title="20190309 EL表达式和JSTL标签库">
+                  20190309 EL表达式和JSTL标签库 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-登录模块套用"><span class="nav-number">1.</span> <span class="nav-text">1 登录模块套用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-添加插件"><span class="nav-number">1.1.</span> <span class="nav-text">1.1 添加插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-套用登录模块"><span class="nav-number">1.2.</span> <span class="nav-text">1.2 套用登录模块</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-项目系统分析"><span class="nav-number">2.</span> <span class="nav-text">2 项目系统分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-登录-Servlet-创建和MVC思想"><span class="nav-number">3.</span> <span class="nav-text">3  登录 Servlet 创建和MVC思想</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-用户登录失败和成功处理"><span class="nav-number">4.</span> <span class="nav-text">4 用户登录失败和成功处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-用户退出"><span class="nav-number">5.</span> <span class="nav-text">5 用户退出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#5-1-LoginOutServlet-java"><span class="nav-number">5.1.</span> <span class="nav-text">5.1  LoginOutServlet.java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-2-JS-事件绑定"><span class="nav-number">5.2.</span> <span class="nav-text">5.2  JS 事件绑定</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-用户注册"><span class="nav-number">6.</span> <span class="nav-text">6 用户注册</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#6-1-用户注册界面"><span class="nav-number">6.1.</span> <span class="nav-text">6.1 用户注册界面</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7-项目改良"><span class="nav-number">7.</span> <span class="nav-text">7 项目改良</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#7-1-DataServlet"><span class="nav-number">7.1.</span> <span class="nav-text">7.1 DataServlet</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8-BaseServlet"><span class="nav-number">8.</span> <span class="nav-text">8  BaseServlet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9-总结"><span class="nav-number">9.</span> <span class="nav-text">9 总结</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

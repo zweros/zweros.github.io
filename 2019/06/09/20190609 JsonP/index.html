@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1 JsonP 简介JsonP(JSON     with Padding) 是 json 的一种“使用模式” 可以让网页从别的域名(网站)那获取资料，即跨域读取数据 跨域一个域（网站）下的文档或脚本试图去请求另一个域（网站）下的资源  同源策略所谓同源：协议+域名+端口 三者相同 注意：即便两个域名指向同一个 IP ，也非同源 JsonP 的缺点只支持 GET 请求，而不支持 POST  等其他">
+<meta name="keywords" content="JsonP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20190609 JsonP">
+<meta property="og:url" content="http://zwer.xyz/2019/06/09/20190609 JsonP/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="1 JsonP 简介JsonP(JSON     with Padding) 是 json 的一种“使用模式” 可以让网页从别的域名(网站)那获取资料，即跨域读取数据 跨域一个域（网站）下的文档或脚本试图去请求另一个域（网站）下的资源  同源策略所谓同源：协议+域名+端口 三者相同 注意：即便两个域名指向同一个 IP ，也非同源 JsonP 的缺点只支持 GET 请求，而不支持 POST  等其他">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190610084021.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190610102102.png">
+<meta property="og:updated_time" content="2019-06-10T03:54:38.620Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20190609 JsonP">
+<meta name="twitter:description" content="1 JsonP 简介JsonP(JSON     with Padding) 是 json 的一种“使用模式” 可以让网页从别的域名(网站)那获取资料，即跨域读取数据 跨域一个域（网站）下的文档或脚本试图去请求另一个域（网站）下的资源  同源策略所谓同源：协议+域名+端口 三者相同 注意：即便两个域名指向同一个 IP ，也非同源 JsonP 的缺点只支持 GET 请求，而不支持 POST  等其他">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20190610084021.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/06/09/20190609 JsonP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20190609 JsonP | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/06/09/20190609 JsonP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20190609 JsonP
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-06-09 00:00:00" itemprop="dateCreated datePublished" datetime="2019-06-09T00:00:00+08:00">2019-06-09</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-06-10 11:54:38" itemprop="dateModified" datetime="2019-06-10T11:54:38+08:00">2019-06-10</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/前端/" itemprop="url" rel="index"><span itemprop="name">前端</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-JsonP-简介"><a href="#1-JsonP-简介" class="headerlink" title="1 JsonP 简介"></a>1 JsonP 简介</h1><p>JsonP(JSON     with Padding) 是 json 的一种“使用模式”</p>
+<p>可以让网页从别的域名(网站)那获取资料，即跨域读取数据</p>
+<h3 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h3><p>一个域（网站）下的文档或脚本试图去请求另一个域（网站）下的资源</p>
+<p><img src="http://img.zwer.xyz/blog/20190610084021.png" alt></p>
+<h3 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h3><p>所谓同源<strong>：协议+域名+端口</strong> 三者相同</p>
+<p>注意：即便两个域名指向同一个 IP ，也非同源</p>
+<h3 id="JsonP-的缺点"><a href="#JsonP-的缺点" class="headerlink" title="JsonP 的缺点"></a>JsonP 的缺点</h3><p><strong>只支持 GET 请求</strong>，而不支持 POST  等其他请求类型的 HTTP 请求：</p>
+<p>它支持跨域 HTTP 请求这种情况，不能解决不同域的两个页面之间如何进行 JS 调用的问题</p>
+<h1 id="2-JsonP-的使用"><a href="#2-JsonP-的使用" class="headerlink" title="2 JsonP 的使用"></a>2 JsonP 的使用</h1><p>直接请求不同端口下的跨域访问出现的问题</p>
+<p><img src="http://img.zwer.xyz/blog/20190610102102.png" alt></p>
+<h3 id="解决跨域问题"><a href="#解决跨域问题" class="headerlink" title="解决跨域问题"></a>解决跨域问题</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">%@</span> <span class="attr">page</span> <span class="attr">language</span>=<span class="string">"java"</span> <span class="attr">contentType</span>=<span class="string">"text/html; charset=UTF-8"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">pageEncoding</span>=<span class="string">"UTF-8"</span>%&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Type"</span> <span class="attr">content</span>=<span class="string">"text/html; charset=UTF-8"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Insert title here<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"https://cdn.staticfile.org/jquery/1.7/jquery.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line">	</span><br><span class="line">	/*</span><br><span class="line"><span class="javascript">		(index):<span class="number">1</span> Access to XMLHttpRequest at <span class="string">'http://localhost:9090/user/findUser'</span> </span></span><br><span class="line"><span class="javascript">		<span class="keyword">from</span> origin <span class="string">'http://localhost:8080'</span> has been blocked by CORS policy: </span></span><br><span class="line"><span class="javascript">		No <span class="string">'Access-Control-Allow-Origin'</span> header is present on the requested resource.</span></span><br><span class="line">	*/</span><br><span class="line"><span class="javascript">	$(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">		$(<span class="string">"#btn"</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line">			/* </span><br><span class="line"><span class="javascript">			$.<span class="keyword">get</span>("http://localhost:9090/user/findUser",function(data)&#123;</span></span><br><span class="line">				alert(data);</span><br><span class="line">			&#125;);	</span><br><span class="line">			 */</span><br><span class="line"><span class="javascript">			<span class="comment">//跨域访问</span></span></span><br><span class="line"><span class="javascript">			$.ajax(&#123;</span></span><br><span class="line"><span class="javascript">				url:<span class="string">"http://localhost:9090/user/findUser3"</span>,</span></span><br><span class="line"><span class="javascript">				type:<span class="string">"get"</span>,<span class="comment">// jsonp 跨域必须使用 GET 方式请求</span></span></span><br><span class="line"><span class="javascript">				dataType:<span class="string">"jsonp"</span>,</span></span><br><span class="line"><span class="javascript">				<span class="comment">//jsonp</span></span></span><br><span class="line"><span class="javascript">				<span class="comment">////设置跨域访问回调函数的名称,即在一个jsonp请求中重写回调函数的名字。</span></span></span><br><span class="line"><span class="javascript">				<span class="comment">//这个值用来替代在"callback=?"这种GET或POST请求中URL参数里的"callback"部分，</span></span></span><br><span class="line"><span class="javascript">				<span class="comment">//比如&#123;jsonp:'onJsonPLoad'&#125;会导致将"onJsonPLoad=?"传给服务器。</span></span></span><br><span class="line"><span class="javascript">			    jsonp:<span class="string">"callback"</span>,</span></span><br><span class="line"><span class="javascript">				success:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">					<span class="keyword">var</span> str = <span class="string">""</span>;</span></span><br><span class="line"><span class="javascript">					<span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span>;i&lt;data.length;i++)&#123;</span></span><br><span class="line"><span class="xml">						str += "<span class="tag">&lt;<span class="name">tr</span>&gt;</span><span class="tag">&lt;<span class="name">td</span>&gt;</span>"+data[i].userid+"<span class="tag">&lt;/<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">td</span>&gt;</span>"+data[i].username+"<span class="tag">&lt;/<span class="name">td</span>&gt;</span><span class="tag">&lt;<span class="name">td</span>&gt;</span>"+data[i].userage+"<span class="tag">&lt;/<span class="name">td</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span>";</span></span><br><span class="line">					&#125;</span><br><span class="line"><span class="javascript">					<span class="keyword">var</span> table = <span class="string">"&lt;table border='1'&gt;"</span>+str+<span class="string">"&lt;/table&gt;"</span>;</span></span><br><span class="line"><span class="javascript">					$(<span class="string">"#showUser"</span>).html(table);</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;);</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">h1</span> <span class="attr">align</span>=<span class="string">"center"</span>&gt;</span>Hello JsonP, My name is JsonDemo1<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">hr</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"btn"</span>&gt;</span>OK<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">br</span>/&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">span</span> <span class="attr">id</span>=<span class="string">"showUser"</span>&gt;</span><span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value=<span class="string">"/findUser2"</span>)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">findUser</span><span class="params">(HttpServletResponse resp,String callback)</span></span>&#123;<span class="comment">//形参名 callback 必须与  jsonp:"callback",  一致 </span></span><br><span class="line">    resp.setCharacterEncoding(<span class="string">"text/plain;charset=utf-8"</span>);</span><br><span class="line">    Users u1 = <span class="keyword">new</span> Users(<span class="number">1</span>,<span class="string">"admin"</span>,<span class="number">21</span>);</span><br><span class="line">    Users u2 = <span class="keyword">new</span> Users(<span class="number">2</span>,<span class="string">"张三"</span>,<span class="number">23</span>);</span><br><span class="line">    Users u3 = <span class="keyword">new</span> Users(<span class="number">3</span>,<span class="string">"李四"</span>,<span class="number">24</span>);</span><br><span class="line">    List&lt;Users&gt; users = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    users.add(u1);</span><br><span class="line">    users.add(u2);</span><br><span class="line">    users.add(u3);</span><br><span class="line">    String list = JsonUtils.objectToJson(users);</span><br><span class="line">    <span class="keyword">return</span> callback+<span class="string">"("</span>+list+<span class="string">")"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="springmvc-对-jsonp-的支持"><a href="#springmvc-对-jsonp-的支持" class="headerlink" title="springmvc 对 jsonp 的支持"></a>springmvc 对 jsonp 的支持</h3><p>使用 MappingJacksonValue 类将 Oject 类型的对象转为 json 格式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping</span>(value=<span class="string">"/findUser3"</span>)</span><br><span class="line"><span class="meta">@ResponseBody</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">findUser</span><span class="params">(String callback)</span></span>&#123;<span class="comment">//形参名与   jsonp:"callback", 一致 </span></span><br><span class="line">    Users u1 = <span class="keyword">new</span> Users(<span class="number">1</span>,<span class="string">"admin"</span>,<span class="number">21</span>);</span><br><span class="line">    Users u2 = <span class="keyword">new</span> Users(<span class="number">2</span>,<span class="string">"张三"</span>,<span class="number">23</span>);</span><br><span class="line">    Users u3 = <span class="keyword">new</span> Users(<span class="number">3</span>,<span class="string">"李四"</span>,<span class="number">24</span>);</span><br><span class="line">    List&lt;Users&gt; users = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    users.add(u1);</span><br><span class="line">    users.add(u2);</span><br><span class="line">    users.add(u3);</span><br><span class="line">    MappingJacksonValue jv = <span class="keyword">new</span> MappingJacksonValue(users);</span><br><span class="line">    jv.setJsonpFunction(callback); <span class="comment">//完成字符串的拼接  callback+"("+list+")"</span></span><br><span class="line">    <span class="keyword">return</span> jv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>springmvc 接受的形参名与  jsonp:”callback”, 一致中值相同，不然不能返回数据</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/JsonP/" rel="tag"># JsonP</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/06/05/20190605 ActionMQ/" rel="next" title="20190605 ActionMQ">
+                  <i class="fa fa-chevron-left"></i> 20190605 ActionMQ
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/06/10/20190610 HttpClient/" rel="prev" title="20190610 HttpClient">
+                  20190610 HttpClient <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-JsonP-简介"><span class="nav-number">1.</span> <span class="nav-text">1 JsonP 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#跨域"><span class="nav-number">1.0.1.</span> <span class="nav-text">跨域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同源策略"><span class="nav-number">1.0.2.</span> <span class="nav-text">同源策略</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JsonP-的缺点"><span class="nav-number">1.0.3.</span> <span class="nav-text">JsonP 的缺点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-JsonP-的使用"><span class="nav-number">2.</span> <span class="nav-text">2 JsonP 的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决跨域问题"><span class="nav-number">2.0.1.</span> <span class="nav-text">解决跨域问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#springmvc-对-jsonp-的支持"><span class="nav-number">2.0.2.</span> <span class="nav-text">springmvc 对 jsonp 的支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">2.0.3.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

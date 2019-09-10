@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1 搭建环境 ADT   1.1 下载 ADT Bundle 开发工具集合1. 下载 adt-bundle-windows-x86_64_20140101 ，然后解压到本地磁盘上 2.  打开 SDKManager.exe ，下载相应的安装包，不需要全部下载 3.  将 platform-tools 目录下的 adb.exe ，添加到环境变量中，方便之后调试1.2 实现 HelloWorld 新建">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="安卓开发">
+<meta property="og:url" content="http://zwer.xyz/2019/03/03/markdown/搭建安卓开发环境/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="1 搭建环境 ADT   1.1 下载 ADT Bundle 开发工具集合1. 下载 adt-bundle-windows-x86_64_20140101 ，然后解压到本地磁盘上 2.  打开 SDKManager.exe ，下载相应的安装包，不需要全部下载 3.  将 platform-tools 目录下的 adb.exe ，添加到环境变量中，方便之后调试1.2 实现 HelloWorld 新建">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://www.zwer.xyz/picGo/20190304091743.png">
+<meta property="og:image" content="http://www.zwer.xyz/picGo/20190304090610.png">
+<meta property="og:image" content="http://www.zwer.xyz/picGo/20190304090511.png">
+<meta property="og:updated_time" content="2019-03-04T01:17:51.655Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="安卓开发">
+<meta name="twitter:description" content="1 搭建环境 ADT   1.1 下载 ADT Bundle 开发工具集合1. 下载 adt-bundle-windows-x86_64_20140101 ，然后解压到本地磁盘上 2.  打开 SDKManager.exe ，下载相应的安装包，不需要全部下载 3.  将 platform-tools 目录下的 adb.exe ，添加到环境变量中，方便之后调试1.2 实现 HelloWorld 新建">
+<meta name="twitter:image" content="http://www.zwer.xyz/picGo/20190304091743.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/03/03/markdown/搭建安卓开发环境/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>安卓开发 | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/03/03/markdown/搭建安卓开发环境/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">安卓开发
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-03-03 00:00:00" itemprop="dateCreated datePublished" datetime="2019-03-03T00:00:00+08:00">2019-03-03</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-03-04 09:17:51" itemprop="dateModified" datetime="2019-03-04T09:17:51+08:00">2019-03-04</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="1-搭建环境"><a href="#1-搭建环境" class="headerlink" title="1 搭建环境"></a>1 搭建环境</h1><blockquote>
+<p>ADT </p>
+</blockquote>
+<h4 id="1-1-下载-ADT-Bundle-开发工具集合"><a href="#1-1-下载-ADT-Bundle-开发工具集合" class="headerlink" title="1.1 下载 ADT Bundle 开发工具集合"></a>1.1 下载 ADT Bundle 开发工具集合</h4><pre><code>1. 下载 adt-bundle-windows-x86_64_20140101 ，然后解压到本地磁盘上
+2.  打开 SDKManager.exe ，下载相应的安装包，不需要全部下载
+3.  将 platform-tools 目录下的 adb.exe ，添加到环境变量中，方便之后调试</code></pre><h4 id="1-2-实现-HelloWorld"><a href="#1-2-实现-HelloWorld" class="headerlink" title="1.2 实现 HelloWorld"></a>1.2 实现 HelloWorld</h4><ol>
+<li>新建一个 安卓模拟器，注意打开后不要关闭了，方便后面项目使用，DDMS</li>
+<li>新建一个 android application project 项目</li>
+<li>点击 Run 运行该HelloWorld 项目，即可在安卓模拟器看到 HelloWorld 项目的app</li>
+<li>打包 apk导出到本地磁盘</li>
+</ol>
+<h1 id="2-UI"><a href="#2-UI" class="headerlink" title="2 UI"></a>2 UI</h1><blockquote>
+<p>按照自己的意图排列图标、图片、按钮等在界面上的位置 </p>
+</blockquote>
+<h2 id="2-1-相对布局"><a href="#2-1-相对布局" class="headerlink" title="2.1 相对布局"></a>2.1 相对布局</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- RelationLayout 相对布局  --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">RelativeLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:gravity</span>=<span class="string">"top"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingBottom</span>=<span class="string">"@dimen/activity_vertical_margin"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingLeft</span>=<span class="string">"@dimen/activity_horizontal_margin"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingRight</span>=<span class="string">"@dimen/activity_horizontal_margin"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:paddingTop</span>=<span class="string">"@dimen/activity_vertical_margin"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">".HelloWorldActivity"</span> &gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    </span></span><br><span class="line"><span class="comment">    	 文本控件： 设置 RelationLayout 宽         高</span></span><br><span class="line"><span class="comment">    	 match_parent 使视图扩展到父元素大小  </span></span><br><span class="line"><span class="comment">  </span></span><br><span class="line"><span class="comment">      --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/textView1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"@string/hello_world"</span> /&gt;</span></span><br><span class="line">	</span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    	 centerHorizeontal 居中</span></span><br><span class="line"><span class="comment">    	 wrap_content   适配屏幕</span></span><br><span class="line"><span class="comment">    	</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/button1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_alignParentTop</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_centerHorizontal</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_marginTop</span>=<span class="string">"120dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"@string/login"</span>  /&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">&lt;!-- 注意 string 中 s 小写 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/button2"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_alignBottom</span>=<span class="string">"@+id/button1"</span></span></span><br><span class="line"><span class="tag">    	<span class="attr">android:layout_marginBottom</span>=<span class="string">"50dp"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_toRightOf</span>=<span class="string">"@+id/button1"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"@string/regsiter"</span>  /&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://www.zwer.xyz/picGo/20190304091743.png" alt></p>
+<h2 id="2-2-流式布局"><a href="#2-2-流式布局" class="headerlink" title="2.2 流式布局"></a>2.2 流式布局</h2><blockquote>
+<p>应用场景：用户登录</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">"horizontal"</span> &gt;</span></span><br><span class="line">	</span><br><span class="line">    <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">    		LinearLayout 线性布局</span></span><br><span class="line"><span class="comment">    		android:orientation="vertical" 表示垂直  vertical  默认</span></span><br><span class="line"><span class="comment">    		android:orientation="horizontal" 表示水平 horizontal</span></span><br><span class="line"><span class="comment">    		</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">android:id</span>=<span class="string">"@+id/button1"</span> </span></span><br><span class="line"><span class="tag">        	<span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">        	<span class="attr">android:text</span>=<span class="string">"@string/button1"</span>    /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">android:id</span>=<span class="string">"@+id/button2"</span> </span></span><br><span class="line"><span class="tag">        	<span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">        	<span class="attr">android:text</span>=<span class="string">"@string/button2"</span>    /&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">android:id</span>=<span class="string">"@+id/button3"</span> </span></span><br><span class="line"><span class="tag">        	<span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        	<span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">        	<span class="attr">android:text</span>=<span class="string">"@string/button3"</span>    /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-3-表格布局"><a href="#2-3-表格布局" class="headerlink" title="2.3 表格布局"></a>2.3 表格布局</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">TableLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:stretchColumns</span>=<span class="string">"2"</span>&gt;</span></span><br><span class="line">   	   </span><br><span class="line">    <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">    	 android:stretchColumns="2" 表示第三列拉伸</span></span><br><span class="line"><span class="comment">    	 TableRow 表示表格</span></span><br><span class="line"><span class="comment">    	   android:layout_column="0"  列号从 0 开始</span></span><br><span class="line"><span class="comment">     --&gt;</span></span><br><span class="line">   	 <span class="tag">&lt;<span class="name">TableRow</span>&gt;</span></span><br><span class="line">   	     <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:id</span>=<span class="string">"@+id/btn1"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_column</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:text</span>=<span class="string">"@string/btn1"</span> /&gt;</span>  </span><br><span class="line">   	    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:id</span>=<span class="string">"@+id/btn2"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_column</span>=<span class="string">"0"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:text</span>=<span class="string">"@string/btn2"</span> /&gt;</span>    </span><br><span class="line">   	 <span class="tag">&lt;/<span class="name">TableRow</span>&gt;</span>   </span><br><span class="line">   	 </span><br><span class="line">   	<span class="tag">&lt;<span class="name">TableRow</span>&gt;</span></span><br><span class="line">   	    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:id</span>=<span class="string">"@+id/btn3"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_column</span>=<span class="string">"1"</span>  </span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:text</span>=<span class="string">"@string/btn3"</span> /&gt;</span>  </span><br><span class="line">   	          <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:id</span>=<span class="string">"@+id/bt4"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_column</span>=<span class="string">"1"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:text</span>=<span class="string">"@string/btn4"</span> /&gt;</span>      </span><br><span class="line">   	 <span class="tag">&lt;/<span class="name">TableRow</span>&gt;</span>   </span><br><span class="line">   	 </span><br><span class="line">  	<span class="tag">&lt;<span class="name">TableRow</span>&gt;</span></span><br><span class="line">   	    <span class="tag">&lt;<span class="name">Button</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:id</span>=<span class="string">"@+id/btn5"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span> </span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:layout_column</span>=<span class="string">"2"</span></span></span><br><span class="line"><span class="tag">   	        <span class="attr">android:text</span>=<span class="string">"@string/btn5"</span> /&gt;</span>  </span><br><span class="line">   	         </span><br><span class="line">   	 <span class="tag">&lt;/<span class="name">TableRow</span>&gt;</span>   </span><br><span class="line">   	 </span><br><span class="line"><span class="tag">&lt;/<span class="name">TableLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://www.zwer.xyz/picGo/20190304090610.png" alt></p>
+<h2 id="2-4-网格布局"><a href="#2-4-网格布局" class="headerlink" title="2.4 网格布局"></a>2.4 网格布局</h2><blockquote>
+<p>从安卓 4.0 以后开始支持的</p>
+<p>所需的  SDK 版本最低位 14</p>
+<p>应用场景：布局</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">GridLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:columnCount</span>=<span class="string">"4"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">"horizontal"</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">	<span class="tag">&lt;<span class="name">Button</span> </span></span><br><span class="line"><span class="tag">	    <span class="attr">android:layout_column</span>=<span class="string">"3"</span></span></span><br><span class="line"><span class="tag">	    <span class="attr">android:text</span>=<span class="string">"@string/div"</span></span></span><br><span class="line"><span class="tag">	 /&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s1"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s2"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s3"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/plus"</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s4"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s5"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s6"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/sub"</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">     <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s7"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s8"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/s9"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_gravity</span>=<span class="string">"fill"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_rowSpan</span>=<span class="string">"3"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"@string/add"</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_gravity</span>=<span class="string">"fill"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_columnSpan</span>=<span class="string">"2"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"@string/zero"</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span> <span class="attr">android:text</span>=<span class="string">"@string/doublezero"</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">     <span class="tag">&lt;<span class="name">Button</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_columnSpan</span>=<span class="string">"3"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_gravity</span>=<span class="string">"fill"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"@string/equal"</span>/&gt;</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">GridLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://www.zwer.xyz/picGo/20190304090511.png" alt></p>
+<h2 id="2-5-布局总结"><a href="#2-5-布局总结" class="headerlink" title="2.5 布局总结"></a>2.5 布局总结</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//自动设置宽髙</span><br><span class="line">android:layout_width="match_parent"     </span><br><span class="line">android:layout_height="match_parent"</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-5-其他标签"><a href="#2-5-其他标签" class="headerlink" title="2.5 其他标签"></a>2.5 其他标签</h2><p><code>TextView</code>标签  文本提示框</p>
+<p><code>EditText</code>标签  文本输入框，属性有 <code>inputType</code></p>
+<p><code>Button</code>标签  按钮</p>
+<p><code>radioButton</code>标签  单选按钮，用 <code>radioGroup</code>包裹</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/03/02/20190302 搭建 structs 环境md/" rel="next" title="搭建 structs 环境">
+                  <i class="fa fa-chevron-left"></i> 搭建 structs 环境
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/03/07/20190307 JSP和Servlet整合/" rel="prev" title="JSP 和 Servlet 整合">
+                  JSP 和 Servlet 整合 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-搭建环境"><span class="nav-number">1.</span> <span class="nav-text">1 搭建环境</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-下载-ADT-Bundle-开发工具集合"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">1.1 下载 ADT Bundle 开发工具集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-实现-HelloWorld"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">1.2 实现 HelloWorld</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-UI"><span class="nav-number">2.</span> <span class="nav-text">2 UI</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-相对布局"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 相对布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-流式布局"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 流式布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-表格布局"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 表格布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-网格布局"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 网格布局</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-布局总结"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 布局总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-5-其他标签"><span class="nav-number">2.6.</span> <span class="nav-text">2.5 其他标签</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">tags</span>
+        
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
