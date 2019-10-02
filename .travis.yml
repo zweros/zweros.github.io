@@ -12,6 +12,7 @@ branches:
     - hexo 
 
 before_install:
+  - npm install -g hexo
   - npm install -g hexo-cli
 
 # S: Build Lifecycle
