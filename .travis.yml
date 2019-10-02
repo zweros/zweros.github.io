@@ -23,6 +23,7 @@ before_script:
  # - npm install -g gulp
 
 script:
+  - hexo
   - hexo clean
   - hexo generate
 
