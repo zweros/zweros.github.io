@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="Hello World ！！！ 士大夫">
+  <meta name="description" content="Hello World ！！！ 注册 Travishttps://www.travis-ci.org travis.yml12345678910111213141516171819202122232425262728293031323334353637language: node_jsnode_js: stable# Travis-CI Cachingcache:  directories:">
 <meta name="keywords" content="zwer">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Travis CI 一点都不好玩哪">
 <meta property="og:url" content="http://zwer.xyz/2019/09/10/CI-test/index.html">
 <meta property="og:site_name" content="zwer 的博客空间">
-<meta property="og:description" content="Hello World ！！！ 士大夫">
+<meta property="og:description" content="Hello World ！！！ 注册 Travishttps://www.travis-ci.org travis.yml12345678910111213141516171819202122232425262728293031323334353637language: node_jsnode_js: stable# Travis-CI Cachingcache:  directories:">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-10T06:16:49.995Z">
+<meta property="og:updated_time" content="2019-10-02T07:39:14.217Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Travis CI 一点都不好玩哪">
-<meta name="twitter:description" content="Hello World ！！！ 士大夫">
+<meta name="twitter:description" content="Hello World ！！！ 注册 Travishttps://www.travis-ci.org travis.yml12345678910111213141516171819202122232425262728293031323334353637language: node_jsnode_js: stable# Travis-CI Cachingcache:  directories:">
   <link rel="canonical" href="http://zwer.xyz/2019/09/10/CI-test/">
 
 
@@ -226,11 +226,19 @@
                 
               
 
-              <time title="Created: 2019-09-10 10:39:44 / Modified: 14:16:49" itemprop="dateCreated datePublished" datetime="2019-09-10T10:39:44+08:00">2019-09-10</time>
+              <time title="Created: 2019-09-10 00:00:00" itemprop="dateCreated datePublished" datetime="2019-09-10T00:00:00+08:00">2019-09-10</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-02 15:39:14" itemprop="dateModified" datetime="2019-10-02T15:39:14+08:00">2019-10-02</time>
+              </span>
             
           
 
@@ -246,7 +254,9 @@
 
       
         <p>Hello World ！！！</p>
-<p>士大夫</p>
+<h2 id="注册-Travis"><a href="#注册-Travis" class="headerlink" title="注册 Travis"></a>注册 Travis</h2><p><a href="https://www.travis-ci.org/" target="_blank" rel="noopener">https://www.travis-ci.org</a></p>
+<h3 id="travis-yml"><a href="#travis-yml" class="headerlink" title="travis.yml"></a>travis.yml</h3><figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">language:</span> <span class="string">node_js</span></span><br><span class="line"><span class="attr">node_js:</span> <span class="string">stable</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Travis-CI Caching</span></span><br><span class="line"><span class="attr">cache:</span></span><br><span class="line"><span class="attr">  directories:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">node_modules</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># S: Build Lifecycle</span></span><br><span class="line"><span class="attr">install:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">npm</span> <span class="string">install</span></span><br><span class="line"></span><br><span class="line"><span class="attr">before_script:</span></span><br><span class="line"><span class="comment"># - npm install -g gulp</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">script:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">hexo</span> <span class="string">g</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">after_script:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">cd</span> <span class="string">./public</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">init</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">config</span> <span class="string">user.name</span> <span class="string">"zweros"</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">config</span> <span class="string">user.email</span> <span class="string">"414356480@qq.com"</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">add</span> <span class="string">.</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">commit</span> <span class="bullet">-m</span> <span class="string">"Update markdown"</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">push</span> <span class="bullet">--force</span> <span class="bullet">--quiet</span> <span class="string">"https://$&#123;GH_TOKEN&#125;@$&#123;GH_REF&#125;"</span> <span class="attr">master:master</span></span><br><span class="line"><span class="comment"># E: Build LifeCycle</span></span><br><span class="line"></span><br><span class="line"><span class="attr">branches:</span></span><br><span class="line"><span class="attr">  only:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">hexo</span></span><br><span class="line"><span class="attr">env:</span></span><br><span class="line"><span class="attr"> global:</span></span><br><span class="line"><span class="attr">   - GH_REF:</span> <span class="string">github.com/zweros/zweros.github.io.git</span></span><br></pre></td></tr></table></figure>
+
 
     </div>
 
@@ -320,6 +330,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#注册-Travis"><span class="nav-number">1.</span> <span class="nav-text">注册 Travis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#travis-yml"><span class="nav-number">1.1.</span> <span class="nav-text">travis.yml</span></a></li></ol></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
@@ -333,7 +345,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">74</span>
+          <span class="site-state-item-count">68</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
