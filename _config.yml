@@ -79,4 +79,4 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/zweros/zweros.github.io.git
+  repo: https://gh_token@github.com/zweros/zweros.github.io.git

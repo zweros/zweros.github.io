@@ -1,13 +1,57 @@
 ---
 title: Travis CI 一点都不好玩哪
+date: 2019-9-10
 ---
 
 
 
 Hello World ！！！
 
+## 注册 Travis  ##
+
+[https://www.travis-ci.org](https://www.travis-ci.org/)
 
 
 
+### travis.yml ###
 
-士大夫
+```yml
+language: node_js
+node_js: stable
+
+# Travis-CI Caching
+cache:
+  directories:
+    - node_modules
+
+
+# S: Build Lifecycle
+install:
+  - npm install
+
+before_script:
+# - npm install -g gulp
+
+
+script:
+  - hexo g
+
+
+after_script:
+  - cd ./public
+  - git init
+  - git config user.name "zweros"
+  - git config user.email "414356480@qq.com"
+  - git add .
+  - git commit -m "Update markdown"
+  - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:master
+# E: Build LifeCycle
+
+branches:
+  only:
+    - hexo
+env:
+ global:
+   - GH_REF: github.com/zweros/zweros.github.io.git
+```
+
