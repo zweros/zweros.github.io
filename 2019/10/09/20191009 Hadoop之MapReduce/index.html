@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="MapReduce MapTask &amp;amp; ReduceTask  一个切片对应一个 Map，也就是说切片的数量决定了 Map 的数量 split 切片指逻辑上概念，用于指定 Map 处理数据的大小 切片用于将 HDFS中的块与 Map 之间解耦 Reduce 的数量由人来决定，根据前面的组的推导  MR  原语输入(格式化k,v)数据集 -&amp;gt; map映射成一个中间数据集(k,v)  -">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20191009 Hadoop-MapReduce">
+<meta property="og:url" content="http://zwer.xyz/2019/10/09/20191009 Hadoop之MapReduce/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="MapReduce MapTask &amp;amp; ReduceTask  一个切片对应一个 Map，也就是说切片的数量决定了 Map 的数量 split 切片指逻辑上概念，用于指定 Map 处理数据的大小 切片用于将 HDFS中的块与 Map 之间解耦 Reduce 的数量由人来决定，根据前面的组的推导  MR  原语输入(格式化k,v)数据集 -&amp;gt; map映射成一个中间数据集(k,v)  -">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009101915.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009110701.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009111332.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009113152.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009113223.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009113300.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009140653.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009153119.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191009153209.png">
+<meta property="og:updated_time" content="2019-10-09T13:31:04.829Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20191009 Hadoop-MapReduce">
+<meta name="twitter:description" content="MapReduce MapTask &amp;amp; ReduceTask  一个切片对应一个 Map，也就是说切片的数量决定了 Map 的数量 split 切片指逻辑上概念，用于指定 Map 处理数据的大小 切片用于将 HDFS中的块与 Map 之间解耦 Reduce 的数量由人来决定，根据前面的组的推导  MR  原语输入(格式化k,v)数据集 -&amp;gt; map映射成一个中间数据集(k,v)  -">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20191009101915.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/10/09/20191009 Hadoop之MapReduce/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20191009 Hadoop-MapReduce | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/10/09/20191009 Hadoop之MapReduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20191009 Hadoop-MapReduce
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-09 00:00:00 / Modified: 21:31:04" itemprop="dateCreated datePublished" datetime="2019-10-09T00:00:00+08:00">2019-10-09</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h1><blockquote>
+<p>MapTask &amp; ReduceTask</p>
+</blockquote>
+<p>一个切片对应一个 Map，也就是说切片的数量决定了 Map 的数量</p>
+<p>split 切片指逻辑上概念，用于指定 Map 处理数据的大小</p>
+<p>切片用于将 HDFS中的块与 Map 之间解耦</p>
+<p>Reduce 的数量由人来决定，根据前面的组的推导</p>
+<p><img src="http://img.zwer.xyz/blog/20191009101915.png" alt></p>
+<h3 id="MR-原语"><a href="#MR-原语" class="headerlink" title="MR  原语"></a><font color="green">MR  原语</font></h3><p>输入(格式化k,v)数据集 -&gt; map映射成一个中间数据集(k,v)  -&gt; reduce<br><font color="red">“相同”的 key 为一组，调用一次 reduce 方法，方法内迭代这一组数据进行计算</font></p>
+<table>
+<thead>
+<tr>
+<th>关系/对应比例</th>
+<th>block &gt; split</th>
+<th>split &gt; map</th>
+<th>map &gt; reduce</th>
+<th>group(key)&gt;partition</th>
+<th>partition &gt; outputfile</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1:1</td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td></td>
+</tr>
+<tr>
+<td>1:N</td>
+<td>*</td>
+<td></td>
+<td>*</td>
+<td><font color="red">违背了原语</font></td>
+<td></td>
+</tr>
+<tr>
+<td>N:1</td>
+<td>*</td>
+<td></td>
+<td>*</td>
+<td>*</td>
+<td></td>
+</tr>
+<tr>
+<td>N:M</td>
+<td></td>
+<td></td>
+<td>*</td>
+<td>*</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="Shuffler-lt-洗牌-gt"><a href="#Shuffler-lt-洗牌-gt" class="headerlink" title="Shuffler&lt;洗牌&gt;"></a>Shuffler&lt;洗牌&gt;</h3><blockquote>
+<p>框架内部实现机制<br>分布式计算节点数据流转：连接 MapTask 与 ReduceTask</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191009110701.png" alt></p>
+<h3 id="计算框架"><a href="#计算框架" class="headerlink" title="计算框架"></a>计算框架</h3><p><img src="http://img.zwer.xyz/blog/20191009111332.png" alt></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Map</td>
+<td>读懂数据<br>映射为KV模型<br>并行分布式<br><font color="red">计算向数据移动</font></td>
+</tr>
+<tr>
+<td>Reduce</td>
+<td>数据全量/分量加工<br>Reduce中可以包含不同的key<br>相同的Key汇聚到一个Reduce中<br>相同的Key调用一次reduce方法<br>排序实现key的汇聚<br></td>
+</tr>
+<tr>
+<td>K,V使用自定义数据类型<br></td>
+<td>作为参数传发成本，提高程序自由度<br>- Writable 序列化<br> - Comparable 比较器<br>实现具体排序（字典序，数值序等）</td>
+</tr>
+</tbody></table>
+<h3 id="MapReduce-1-x"><a href="#MapReduce-1-x" class="headerlink" title="MapReduce 1.x"></a>MapReduce 1.x</h3><blockquote>
+<p>计算向数据移动</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191009113152.png" alt></p>
+<h4 id="计算框架-Mapper"><a href="#计算框架-Mapper" class="headerlink" title="计算框架 Mapper"></a>计算框架 Mapper</h4><p><img src="http://img.zwer.xyz/blog/20191009113223.png" alt></p>
+<h4 id="计算框架-Reducer"><a href="#计算框架-Reducer" class="headerlink" title="计算框架 Reducer"></a>计算框架 Reducer</h4><p><img src="http://img.zwer.xyz/blog/20191009113300.png" alt></p>
+<table>
+<thead>
+<tr>
+<th>MRv1角色：</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>JobTracker</td>
+<td>核心，<font color="red">主</font>，单点<br>调度所有的作业<br>监控整个集群的资源负载</td>
+</tr>
+<tr>
+<td>TaskTracker</td>
+<td><font color="red">从</font>，自身节点资源管理<br>和 JobTracker 心跳，汇报资源，获取Task</td>
+</tr>
+<tr>
+<td>Client</td>
+<td>作业为单位<br>规划作业计算分布<br>提交作业资源到HDFS<br>最终提交作业到 JobTracker</td>
+</tr>
+<tr>
+<td>弊端：</td>
+<td>JobTracker：负载过重，单点故障<br>资源管理与计算调度强耦合，其他计算框架需要重复实现资源管理<br>不同框架对资源不能全局管理</td>
+</tr>
+</tbody></table>
+<h3 id="MRV2-之-YARN"><a href="#MRV2-之-YARN" class="headerlink" title="MRV2 之 YARN"></a>MRV2 之 YARN</h3><blockquote>
+<p> YARN：解耦资源与计算</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191009140653.png" alt></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ResourceManager</td>
+<td>主，核心<br>集群节点资源管理</td>
+</tr>
+<tr>
+<td>NodeManager</td>
+<td>与RM汇报资源<br>管理Container生命周期<br>计算框架中的角色都以Container表示</td>
+</tr>
+<tr>
+<td>Container</td>
+<td>【节点NM，CPU,MEM,I/O大小，启动命令】<br>默认NodeManager启动线程监控Container大小，超出申请资源额度，kill<br>支持Linux内核的Cgroup</td>
+</tr>
+<tr>
+<td>MR</td>
+<td>- MR-ApplicationMaster-Container<br>x作业为单位，避免单点故障，负载到不同的节点<br>创建Task需要和RM申请资源（Container）<br>- Task-Container</td>
+</tr>
+<tr>
+<td>Client</td>
+<td>RM-Client：请求资源创建AM<br>AM-Client：与AM交互</td>
+</tr>
+</tbody></table>
+<h2 id="搭建-yarn"><a href="#搭建-yarn" class="headerlink" title="搭建 yarn"></a>搭建 yarn</h2><h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>NN-1</th>
+<th>NN-2</th>
+<th>DN</th>
+<th>ZK</th>
+<th>ZKFC</th>
+<th>JNN</th>
+<th>RM</th>
+<th>NM</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>node01</td>
+<td>*</td>
+<td></td>
+<td></td>
+<td></td>
+<td>*</td>
+<td>*</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>node02</td>
+<td></td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+<td></td>
+<td>*</td>
+</tr>
+<tr>
+<td>node03</td>
+<td></td>
+<td></td>
+<td>*</td>
+<td>*</td>
+<td></td>
+<td>*</td>
+<td>*</td>
+<td>*</td>
+</tr>
+<tr>
+<td>node04</td>
+<td></td>
+<td></td>
+<td>*</td>
+<td>*</td>
+<td></td>
+<td></td>
+<td>*</td>
+<td>*</td>
+</tr>
+</tbody></table>
+<p>说明： </p>
+<pre><code>1. HA 高可用 HDFS 
+ 2. RM 资源管理器采用主从架构，使用 Zookeeper 做分布式协调
+ 3. NM 的数量与 DN 的数量相同</code></pre><h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><ul>
+<li>mapred-site.xml </li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>yarn-site.xml</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.ha.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.cluster-id<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>cluster1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.ha.rm-ids<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>rm1,rm2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname.rm1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node03<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname.rm2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node04<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.zk-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>node02:2181,node03:2181,node04:2181<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>分发</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 将 node01 修改的配置文件分发给 node02、node03、node04</span><br><span class="line">scp mapred-site.xml yarn-site.xml root@node02:`pwd`</span><br><span class="line">scp mapred-site.xml yarn-site.xml root@node03:`pwd`</span><br><span class="line">scp mapred-site.xml yarn-site.xml root@node04:`pwd`</span><br></pre></td></tr></table></figure>
+
+<h3 id="部署-yarn"><a href="#部署-yarn" class="headerlink" title="部署 yarn"></a>部署 yarn</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 在 node01。 </span><br><span class="line"><span class="meta">#</span> node01 可以免秘钥直接访问其他三个节点 node02、node03、node04</span><br><span class="line"><span class="meta">#</span> 这样 node01 上 hadoop 管理脚本可以直接操纵其他其他机器上的 hadoop</span><br><span class="line">start-yarn.sh </span><br><span class="line"><span class="meta">#</span> 在 node03、node04</span><br><span class="line">yarn-daemon.sh start resourcemanager</span><br></pre></td></tr></table></figure>
+
+<h3 id="访问-yarn-web-界面"><a href="#访问-yarn-web-界面" class="headerlink" title="访问 yarn web 界面"></a>访问 yarn web 界面</h3><figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http://node03:8088</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.zwer.xyz/blog/20191009153119.png" alt></p>
+<p>直接访问 <a href="http://node04:8088" target="_blank" rel="noopener">http://node04:8088</a> ,会自动重定向到  <a href="http://node03:8088" target="_blank" rel="noopener">http://node03:8088</a></p>
+<p><img src="http://img.zwer.xyz/blog/20191009153209.png" alt></p>
+<h3 id="测试-运行-wordCount-程序"><a href="#测试-运行-wordCount-程序" class="headerlink" title="测试-运行 wordCount 程序"></a>测试-运行 wordCount 程序</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 进入 hadoop-2.6.5/share/hadoop/mapreduce 目录下</span><br><span class="line">hadoop jar hadoop-mapreduce-examples-2.6.5.jar wordcount /user/root/test.txt /data/wc/output</span><br></pre></td></tr></table></figure>
+
+<h2 id="手写-wordcount-程序"><a href="#手写-wordcount-程序" class="headerlink" title="手写 wordcount 程序"></a>手写 wordcount 程序</h2><h3 id="客户端"><a href="#客户端" class="headerlink" title="客户端"></a>客户端</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainClient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		Configuration conf = <span class="keyword">new</span> Configuration(<span class="keyword">true</span>);</span><br><span class="line">		Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Create a new Job</span></span><br><span class="line">		<span class="comment">// Job job = Job.getInstance();</span></span><br><span class="line">		job.setJarByClass(MainClient.class);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Specify various job-specific parameters</span></span><br><span class="line">		job.setJobName(<span class="string">"myjob"</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// job.setInputPath(new Path("in"));</span></span><br><span class="line">		<span class="comment">// job.setOutputPath(new Path("out"));</span></span><br><span class="line">		<span class="comment">// import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span></span><br><span class="line">		Path path = <span class="keyword">new</span> Path(<span class="string">"/user/root/test.txt"</span>);</span><br><span class="line">		FileInputFormat.addInputPath(job, path);</span><br><span class="line">		</span><br><span class="line">		Path output = <span class="keyword">new</span> Path(<span class="string">"/data/wc/output"</span>);</span><br><span class="line">		<span class="keyword">if</span>(output.getFileSystem(conf).exists(output))&#123;</span><br><span class="line">			output.getFileSystem(conf).delete(output, <span class="keyword">true</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		FileOutputFormat.setOutputPath(job, output );</span><br><span class="line">		</span><br><span class="line">		job.setMapperClass(MyMapper.class);</span><br><span class="line">		job.setMapOutputKeyClass(Text.class);</span><br><span class="line">		job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		job.setReducerClass(MyReducer.class);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Submit the job, then poll for progress until the job is complete</span></span><br><span class="line">		job.waitForCompletion(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Mapper"><a href="#Mapper" class="headerlink" title="Mapper"></a>Mapper</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 自定义 Mapper</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> zwer Hadoop 对基本数据类型进行了包装</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Object</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">static</span> IntWritable one = <span class="keyword">new</span> IntWritable(<span class="number">1</span>);</span><br><span class="line">	<span class="keyword">private</span> Text word = <span class="keyword">new</span> Text();</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Object key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">		<span class="comment">// StringTokenizer 对单词数字进行分割</span></span><br><span class="line">		StringTokenizer itr = <span class="keyword">new</span> StringTokenizer(value.toString());</span><br><span class="line">		<span class="keyword">while</span> (itr.hasMoreTokens()) &#123;</span><br><span class="line">			word.set(itr.nextToken());</span><br><span class="line">			context.write(word, one);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Reducer"><a href="#Reducer" class="headerlink" title="Reducer"></a>Reducer</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyReducer</span></span></span><br><span class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">Reducer</span>&lt;<span class="title">Text</span>, <span class="title">IntWritable</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> IntWritable result = <span class="keyword">new</span> IntWritable();</span><br><span class="line">	<span class="comment">//相同的 key 为一组，调用一次 reduce 方法，方法内迭代这一组数据进行计算 (sum count max min)</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reduce</span><span class="params">(Text key, Iterable&lt;IntWritable&gt; values, Context context)</span></span></span><br><span class="line"><span class="function">			<span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (IntWritable val : values) &#123;</span><br><span class="line">			sum += val.get();</span><br><span class="line">		&#125;</span><br><span class="line">		result.set(sum);</span><br><span class="line">		context.write(key, result);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意： 导出 jar 的 JDK 版本与 Linux 上 JDK 版本（大版本号）一致</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/01/README/" rel="next" title="流年">
+                  <i class="fa fa-chevron-left"></i> 流年
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MapReduce"><span class="nav-number">1.</span> <span class="nav-text">MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MR-原语"><span class="nav-number">1.0.1.</span> <span class="nav-text">MR  原语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shuffler-lt-洗牌-gt"><span class="nav-number">1.0.2.</span> <span class="nav-text">Shuffler&lt;洗牌&gt;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算框架"><span class="nav-number">1.0.3.</span> <span class="nav-text">计算框架</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce-1-x"><span class="nav-number">1.0.4.</span> <span class="nav-text">MapReduce 1.x</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#计算框架-Mapper"><span class="nav-number">1.0.4.1.</span> <span class="nav-text">计算框架 Mapper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计算框架-Reducer"><span class="nav-number">1.0.4.2.</span> <span class="nav-text">计算框架 Reducer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MRV2-之-YARN"><span class="nav-number">1.0.5.</span> <span class="nav-text">MRV2 之 YARN</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建-yarn"><span class="nav-number">1.1.</span> <span class="nav-text">搭建 yarn</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备"><span class="nav-number">1.1.1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">1.1.2.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署-yarn"><span class="nav-number">1.1.3.</span> <span class="nav-text">部署 yarn</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问-yarn-web-界面"><span class="nav-number">1.1.4.</span> <span class="nav-text">访问 yarn web 界面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试-运行-wordCount-程序"><span class="nav-number">1.1.5.</span> <span class="nav-text">测试-运行 wordCount 程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手写-wordcount-程序"><span class="nav-number">1.2.</span> <span class="nav-text">手写 wordcount 程序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端"><span class="nav-number">1.2.1.</span> <span class="nav-text">客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Mapper"><span class="nav-number">1.2.2.</span> <span class="nav-text">Mapper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Reducer"><span class="nav-number">1.2.3.</span> <span class="nav-text">Reducer</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

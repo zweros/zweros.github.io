@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="大数据高并发 -&amp;gt; 日志* -&amp;gt; 分析行为 -&amp;gt;画像 -&amp;gt;推荐 -&amp;gt; 服务* TCP/IP 网络模型三次握手：确认客户端和服务端的收发正常（IO 正常），可以进行连接  C -&amp;gt; S : 发送 sync 包给服务端，表示客户端想与服务端建立连接  S -&amp;gt; C：服务端接收到客户端的 sync 包，并将 sync +ack  包，发送给客户端 表示服务端接收">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20190924 高并发">
+<meta property="og:url" content="http://zwer.xyz/2019/09/24/20190924  TCP、keepalived、Nginx/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="大数据高并发 -&amp;gt; 日志* -&amp;gt; 分析行为 -&amp;gt;画像 -&amp;gt;推荐 -&amp;gt; 服务* TCP/IP 网络模型三次握手：确认客户端和服务端的收发正常（IO 正常），可以进行连接  C -&amp;gt; S : 发送 sync 包给服务端，表示客户端想与服务端建立连接  S -&amp;gt; C：服务端接收到客户端的 sync 包，并将 sync +ack  包，发送给客户端 表示服务端接收">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190924154314.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190924202409.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190927160750.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190928094014.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190928100941.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20190928155702.png">
+<meta property="og:updated_time" content="2019-10-09T13:30:52.228Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20190924 高并发">
+<meta name="twitter:description" content="大数据高并发 -&amp;gt; 日志* -&amp;gt; 分析行为 -&amp;gt;画像 -&amp;gt;推荐 -&amp;gt; 服务* TCP/IP 网络模型三次握手：确认客户端和服务端的收发正常（IO 正常），可以进行连接  C -&amp;gt; S : 发送 sync 包给服务端，表示客户端想与服务端建立连接  S -&amp;gt; C：服务端接收到客户端的 sync 包，并将 sync +ack  包，发送给客户端 表示服务端接收">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20190924154314.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/09/24/20190924  TCP、keepalived、Nginx/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20190924 高并发 | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/09/24/20190924  TCP、keepalived、Nginx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20190924 高并发
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-24 00:00:00" itemprop="dateCreated datePublished" datetime="2019-09-24T00:00:00+08:00">2019-09-24</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-09 21:30:52" itemprop="dateModified" datetime="2019-10-09T21:30:52+08:00">2019-10-09</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="大数据"><a href="#大数据" class="headerlink" title="大数据"></a>大数据</h2><p>高并发 -&gt; 日志* -&gt; 分析行为 -&gt;画像 -&gt;推荐 -&gt; 服务*</p>
+<h2 id="TCP-IP-网络模型"><a href="#TCP-IP-网络模型" class="headerlink" title="TCP/IP 网络模型"></a>TCP/IP 网络模型</h2><p>三次握手：确认客户端和服务端的收发正常（IO 正常），可以进行连接</p>
+<ul>
+<li><p>C -&gt; S : 发送 sync 包给服务端，表示客户端想与服务端建立连接</p>
+</li>
+<li><p>S -&gt; C：服务端接收到客户端的 sync 包，并将 sync +ack  包，发送给客户端</p>
+<p>表示服务端接收到客户端的请求，并回复客户端可以与服务端建立连接</p>
+</li>
+<li><p>C -&gt; S: 客户端接收到服务端的 ack 包，将 ack 包发送给服务端，表示客户端马上与服务端建立连接，让服务端做好准备</p>
+</li>
+</ul>
+<p>四次离手：TCP 是稳定的连接，对于连接断开需要经过 Client 与 Server 双方都确认后，才可关闭</p>
+<ul>
+<li>C - &gt;S: 发送 fin 包给服务端，表示客户端想与服务端断开连接</li>
+<li>S -&gt; C: 发送 ack包给客户端，表示接收到服务端的断开请求</li>
+<li>S -&gt; C: 发送 fin 包给客户端，表示服务端想与客户端断开连接</li>
+<li></li>
+<li>C -&gt; S: 发送 ack 包给服务端，服务端接收到后，表示与客户端断开连接。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">TCP/IP协议  OSI 7L参考模型</span><br><span class="line">GET / www.baidu.com/</span><br><span class="line">7:应用层www.baidu.com  IP:80  1212</span><br><span class="line">http，smtp，ssh</span><br><span class="line">4:传输层控制：【三次握手&gt;&gt;（传输数据）&gt;&gt;四次分手】</span><br><span class="line">tcp，udp</span><br><span class="line">SOCKET：IP:PORT-IP:PORT</span><br><span class="line">netstat -natp</span><br><span class="line">3:网络层： 192.168.9.11</span><br><span class="line">ip，icmp</span><br><span class="line">ROUTE：下一跳</span><br><span class="line">route -n</span><br><span class="line">2:链路层</span><br><span class="line">以太网：Ethernet：MAC</span><br><span class="line">ARP：全F，两点通信，交换机学习</span><br><span class="line">arp -a</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.zwer.xyz/blog/20190924154314.png" alt></p>
+<p>注意： 三次握手和四次离手中间不可拆分，一定针对于两台特定  IP:Port - IP:Port</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">netstat antp</span><br><span class="line"></span><br><span class="line">route -n # -n 查看 IP 地址</span><br><span class="line"></span><br><span class="line">arp -a  </span><br><span class="line">0.0.0.0 默认网关</span><br></pre></td></tr></table></figure>
+
+<h3 id="功能分层"><a href="#功能分层" class="headerlink" title="功能分层"></a>功能分层</h3><p>层与层依赖<br>1，能够申请到端口号<br>2，路由表有下一跳条目<br>3，ARP能请求到下一跳MAC<br>4，三次握手<br>5，传输数据<br>6，四次分手</p>
+<p><img src="http://img.zwer.xyz/blog/20190924202409.png" alt></p>
+<h3 id="下一跳"><a href="#下一跳" class="headerlink" title="下一跳"></a>下一跳</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">整个互联网建立在下一跳的模式下</span><br><span class="line">IP是逻辑上的两个端点</span><br><span class="line">MAC是物理上连接的两个节点</span><br><span class="line">端点间TCP传输过程中</span><br><span class="line">确认机制</span><br><span class="line">状态机制</span><br><span class="line">不可分割</span><br><span class="line">解析数据包需要成本</span><br><span class="line">交换机：二层，只关心MAC地址</span><br><span class="line">学习机制：</span><br><span class="line">路由器：三层，只关心IP和路由表</span><br><span class="line">LVS服务器：四层，只关心PORT，状态</span><br><span class="line">nginx：七层，关心socket对应关系</span><br><span class="line"></span><br><span class="line">## 负载均衡 ##</span><br></pre></td></tr></table></figure>
+
+<h2 id="LVS"><a href="#LVS" class="headerlink" title="LVS"></a>LVS</h2><blockquote>
+<p>LVS技术要达到的目标是：通过LVS提供的负载均衡技术和Linux操作系统实现一个高性能、高可用的服务器群集，它具有良好可靠性、可扩展性和可操作性。从而以低廉的成本实现最优的服务性能。</p>
+<p>LVS自从1998年开始，发展到现在已经是一个比较成熟的技术项目了。可以利用LVS技术实现高可伸缩的、高可用的网络服务，例如WWW服务、Cache服务、DNS服务、FTP服务、MAIL服务、视频/音频点播服务等等，有许多比较著名网站和组织都在使用LVS架设的集群系统，例如：Linux的门户网站（<a href="http://www.linux.com/" target="_blank" rel="noopener">www.linux.com</a>）、向RealPlayer提供音频视频服务而闻名的Real公司（<a href="http://www.real.com/" target="_blank" rel="noopener">www.real.com</a>）、全球最大的开源网站（sourceforge.net）等</p>
+</blockquote>
+<p><strong>LVS 参考</strong> <a href="https://superproxy.github.io/docs/lvs/index.html" target="_blank" rel="noopener">https://superproxy.github.io/docs/lvs/index.html</a></p>
+<h3 id="硬件"><a href="#硬件" class="headerlink" title="硬件"></a>硬件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">昂贵，性能优越</span><br><span class="line">F5 BIG-IP </span><br><span class="line">Citrix NetScaler</span><br><span class="line">A10</span><br></pre></td></tr></table></figure>
+
+<h3 id="软件"><a href="#软件" class="headerlink" title="软件"></a>软件</h3><blockquote>
+<p>便宜，灵活度（开源）</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>四层</th>
+<th>七层</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>tcp 之上的第四层协议</td>
+<td>LVS 只能操作IP,端口 ，在操作系统内核中。</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>nginx<br>haproxy<br>httpd  “apache”webserver</td>
+</tr>
+</tbody></table>
+<h3 id="LVS-DR"><a href="#LVS-DR" class="headerlink" title="LVS -DR"></a>LVS -DR</h3><blockquote>
+<p>Director 接收用户的请求，然后根据负载均衡算法选取一台 realserver，将包转发过去，最后由realserver直接回复给用户。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">DR：Director</span><br><span class="line">客户端发送对VIP的请求</span><br><span class="line">lvs负载到后端某一台server</span><br><span class="line">后端server处理后，直接封包回送客户端</span><br><span class="line">源IP地址一定是lvs上面陪的那个公网服务地址</span><br><span class="line">也就后端server要配置这个ip</span><br><span class="line">后端server收到的数据包是lvs没有变动过的（IP：vip）</span><br><span class="line">目标ip一定是自己持有的</span><br><span class="line">so：多个server，接入互联网的server持有相同的IP，是不对的</span><br><span class="line">必须将后端server中的vip隐藏起来（对外隐藏）</span><br><span class="line"></span><br><span class="line">VIP: 虚拟服务器地址</span><br><span class="line">DIP: 转发的网络地址</span><br><span class="line">1，和RIP通信：ARP协议，获取Real Server的RIP：MAC地址</span><br><span class="line">2，转发Client的数据包到RIP上（隐藏的VIP）</span><br><span class="line">RIP: 后端真实主机(后端服务器)</span><br><span class="line"></span><br><span class="line">CIP: 客户端IP地址</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.zwer.xyz/blog/20190927160750.png" alt></p>
+<h3 id="LVS-配置实验"><a href="#LVS-配置实验" class="headerlink" title="LVS 配置实验"></a>LVS 配置实验</h3><h4 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h4><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>node01</th>
+<th>node02</th>
+<th>node03</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IP 类型</td>
+<td>DIP</td>
+<td>RIP</td>
+<td>RIP</td>
+</tr>
+<tr>
+<td>IP</td>
+<td>192.168.170.101</td>
+<td>192.168.170.102</td>
+<td>192.168.170.103</td>
+</tr>
+</tbody></table>
+<h4 id="实验图"><a href="#实验图" class="headerlink" title="实验图"></a>实验图</h4><p><img src="http://img.zwer.xyz/blog/20190928094014.png" alt></p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><ol>
+<li><p>配置 LVS 服务器的虚拟IP 和开启 IPv4 转发</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@node01 ~]# ifconfig eth0:0 192.168.170.100/24  # 临时生效</span><br><span class="line">echo “1” &gt; /proc/sys/net/ipv4/ip_forward</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改 RP 服务器的文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">echo 1 &gt; /proc/sys/net/ipv4/conf/eth0/arp_ignore </span><br><span class="line">echo 2 &gt; /proc/sys/net/ipv4/conf/eth0/arp_announce </span><br><span class="line">echo 1 &gt; /proc/sys/net/ipv4/conf/all/arp_ignore </span><br><span class="line">echo 2 &gt; /proc/sys/net/ipv4/conf/all/arp_announce</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置 RP 服务器的本地环回地址</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ifconfig lo:0 192.168.170.100 netmask 255.255.255.255</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 RP 服务器上安装 httpd 服务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y httpd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置 主页</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /var/www/html</span><br><span class="line">vi index.html</span><br><span class="line">内容： from 192.168.170.102</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动 httpd 服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service httpd start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>LVS 配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> yum install ipvsadm -y</span><br><span class="line">ipvsadm -A -t 192.168.170.100:80 -s rr </span><br><span class="line">ipvsadm -a -t 192.168.170.100:80 -r 192.168.170.102 -g</span><br><span class="line">ipvsadm -a -t 192.168.170.100:80 -r 192.168.170.103 -g</span><br><span class="line"></span><br><span class="line">ipvsadm -ln</span><br><span class="line">浏览器刷新: 访问vip</span><br><span class="line">ipvsadm –lnc</span><br><span class="line">netstat -natp</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="keepalived"><a href="#keepalived" class="headerlink" title="keepalived"></a>keepalived</h2><blockquote>
+<p>集群管理中保证集群高可用的服务软件</p>
+<p>用于做健康检查和主备切换，这里用在 LVS 服务器，使用 LVS 服务器达到高可用 HA(High Availability)</p>
+<p>高可用 High Available</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、需要心跳机制探测后端RS是否提供服务。</span><br><span class="line">	a) 探测down，需要从lvs中删除该RS</span><br><span class="line">	b) 探测发送从down到up，需要从lvs中再次添加RS。</span><br><span class="line">2、Lvs DR，需要主备（HA）</span><br></pre></td></tr></table></figure>
+
+<h3 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h3><h4 id="环境-1"><a href="#环境-1" class="headerlink" title="环境"></a>环境</h4><table>
+<thead>
+<tr>
+<th>主机名</th>
+<th>node01</th>
+<th>node02</th>
+<th>node03</th>
+<th>node04</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>类型</td>
+<td>LVS(MASTER)</td>
+<td>RIP1</td>
+<td>RIP2</td>
+<td>LVS(BACKUP)</td>
+</tr>
+<tr>
+<td>IP</td>
+<td>192.168.170.101</td>
+<td>192.168.170.102</td>
+<td>192.168.170.103</td>
+<td>192.168.170.104</td>
+</tr>
+</tbody></table>
+<h5 id="实验图-1"><a href="#实验图-1" class="headerlink" title="实验图"></a>实验图</h5><p><img src="http://img.zwer.xyz/blog/20190928100941.png" alt></p>
+<h4 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤"></a>步骤</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>  node01 上LVS 服务器上关闭之前的 ipvsadm 设置</span><br><span class="line">ipvsadm -C  #              Clear the virtual server table.</span><br><span class="line">ifconfig eth0:0 down  </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 在 node01、node04上安装 keepalived </span><br><span class="line">yum install -y keepalived </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 安装完成后， 进入 cd /etc/keepalived 目录下,备份 keepalived.conf 文件</span><br><span class="line">! Configuration File for keepalived</span><br><span class="line"></span><br><span class="line">global_defs &#123;</span><br><span class="line">   notification_email &#123;</span><br><span class="line">     acassen@firewall.loc</span><br><span class="line">     failover@firewall.loc</span><br><span class="line">     sysadmin@firewall.loc</span><br><span class="line">   &#125;</span><br><span class="line">   notification_email_from Alexandre.Cassen@firewall.loc</span><br><span class="line">   smtp_server 192.168.200.1</span><br><span class="line">   smtp_connect_timeout 30</span><br><span class="line">   router_id LVS_DEVEL</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state MASTER   # 主节点</span><br><span class="line">    interface eth0  # 操作的网卡</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 100  # 优先级</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication &#123;</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;  # VIP  虚拟IP配置</span><br><span class="line">	192.168.170.100/24 dev eth0 label eth0:3 </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">virtual_server 192.168.170.100 80 &#123;</span><br><span class="line">    delay_loop 6</span><br><span class="line">    lb_algo rr</span><br><span class="line">    lb_kind DR   # 指定 LVS DR模式</span><br><span class="line">    nat_mask 255.255.255.0</span><br><span class="line">    persistence_timeout 0 # 同一个IP地址在50秒内lvs转发给同一个后端服务器</span><br><span class="line">    protocol TCP</span><br><span class="line"></span><br><span class="line">    real_server 192.168.170.102 80 &#123; #设置真实服务器的心跳机制 RID PORT</span><br><span class="line">        weight 1</span><br><span class="line">        HTTP_GET &#123;  #心跳检测的方式</span><br><span class="line">            url &#123;</span><br><span class="line">              path /   # 心跳检查的地址</span><br><span class="line">	    	  status_code 200      #心跳检查返回的状态</span><br><span class="line">            &#125;</span><br><span class="line">            connect_timeout 3</span><br><span class="line">            nb_get_retry 3</span><br><span class="line">            delay_before_retry 3</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    real_server 192.168.170.103 80 &#123;</span><br><span class="line">        weight 1</span><br><span class="line">        HTTP_GET &#123;</span><br><span class="line">            url &#123;</span><br><span class="line">              path /</span><br><span class="line">	      status_code 200</span><br><span class="line">            &#125;</span><br><span class="line">            connect_timeout 3</span><br><span class="line">            nb_get_retry 3</span><br><span class="line">            delay_before_retry 3</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span> 配置完成 keepalived.conf ，将文件拷贝到 node04 上，并修改</span><br><span class="line">scp ./keepalived.conf root@192.168.170.104:/`pwd`</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> keepalived.conf 修改 node04 部分内容</span><br><span class="line">vrrp_instance VI_1 &#123;</span><br><span class="line">    state BACKUP   # 从节点</span><br><span class="line">    interface eth0  # 操作的网卡</span><br><span class="line">    virtual_router_id 51</span><br><span class="line">    priority 50  # 优先级，从节点的优先级应低于主节点的优先级</span><br><span class="line">    advert_int 1</span><br><span class="line">    authentication &#123;</span><br><span class="line">        auth_type PASS</span><br><span class="line">        auth_pass 1111</span><br><span class="line">    &#125;</span><br><span class="line">    virtual_ipaddress &#123;  # VIP  虚拟IP配置</span><br><span class="line">	192.168.170.100/24 dev eth0 label eth0:3 </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> -------------------------------------------------------------------</span><br><span class="line"><span class="meta">#</span> 在 node01、node04 上启动 keepalived 服务</span><br><span class="line">service keepalived start</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 在 ifconfig 命令查看</span><br><span class="line">ifocnifg</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看路由</span><br><span class="line">ipvsadm -ln</span><br></pre></td></tr></table></figure>
+
+<h2 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h2><blockquote>
+<p>Nginx (“engine x”) 是一个高性能的 HTTP 和 反向代理 服务器，也是一个 IMAP/POP3/SMTP 代理服务器。</p>
+</blockquote>
+<h3 id="Apache-与-Nginx-的比较"><a href="#Apache-与-Nginx-的比较" class="headerlink" title="Apache 与 Nginx 的比较"></a>Apache 与 Nginx 的比较</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>Apache</th>
+<th>Nginx</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>一个客户端连接开辟一个进程处理</td>
+<td>仅有一个进程</td>
+</tr>
+<tr>
+<td></td>
+<td>同步阻塞</td>
+<td>异步非阻塞</td>
+</tr>
+</tbody></table>
+<h3 id="nginx-conf"><a href="#nginx-conf" class="headerlink" title="nginx.conf"></a>nginx.conf</h3><h4 id="events"><a href="#events" class="headerlink" title="events"></a>events</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#工作模式与连接数上限</span><br><span class="line">events</span><br><span class="line">&#123;</span><br><span class="line">    #参考事件模型，use [ kqueue | rtsig | epoll | /dev/poll | select | poll ];</span><br><span class="line">    epoll模型是Linux 2.6以上版本内核中的高性能网络I/O模型，如果跑在FreeBSD上面，就用kqueue模型。</span><br><span class="line">    use epoll;</span><br><span class="line">    #单个进程最大连接数（最大连接数=连接数*进程数）</span><br><span class="line">    worker_connections 65535;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">event下的一些配置及其意义</span><br><span class="line">#单个后台worker process进程的最大并发链接数    </span><br><span class="line">worker_connections  1024;</span><br><span class="line"># 并发总数是 worker_processes 和 worker_connections 的乘积</span><br><span class="line"># 即 max_clients = worker_processes * worker_connections</span><br><span class="line"># 在设置了反向代理的情况下，max_clients = worker_processes * worker_connections / 4  为什么</span><br><span class="line"># 为什么上面反向代理要除以4，应该说是一个经验值</span><br><span class="line"># 根据以上条件，正常情况下的Nginx Server可以应付的最大连接数为：4 * 8000 = 32000</span><br><span class="line"># worker_connections 值的设置跟物理内存大小有关</span><br><span class="line"># 因为并发受IO约束，max_clients的值须小于系统可以打开的最大文件数</span><br><span class="line">    </span><br><span class="line">event下的一些配置及其意义</span><br><span class="line"># 而系统可以打开的最大文件数和内存大小成正比，一般1GB内存的机器上可以打开的文件数大约是10万左右</span><br><span class="line"># 我们来看看360M内存的VPS可以打开的文件句柄数是多少：</span><br><span class="line"># $ cat /proc/sys/fs/file-max</span><br><span class="line"># 输出 34336</span><br><span class="line"># 32000 &lt; 34336，即并发连接总数小于系统可以打开的文件句柄总数，这样就在操作系统可以承受的范围之内</span><br><span class="line"># 所以，worker_connections 的值需根据 worker_processes 进程数目和系统可以打开的最大文件总数进行适当地进行设置</span><br><span class="line"># 使得并发总数小于操作系统可以打开的最大文件数目</span><br><span class="line"># 其实质也就是根据主机的物理CPU和内存进行配置</span><br><span class="line"># 当然，理论上的并发总数可能会和实际有所偏差，因为主机还有其他的工作进程需要消耗系统资源。</span><br><span class="line"># ulimit -SHn 65535</span><br><span class="line"></span><br><span class="line">#定义Nginx运行的用户和用户组</span><br><span class="line">user www www;</span><br><span class="line"></span><br><span class="line">#nginx进程数，建议设置为等于CPU总核心数。</span><br><span class="line">worker_processes 8;</span><br><span class="line"></span><br><span class="line">#全局错误日志定义类型，[ debug | info | notice | warn | error | crit ]</span><br><span class="line">error_log /var/log/nginx/error.log info;</span><br><span class="line"></span><br><span class="line">#进程文件</span><br><span class="line">pid /var/run/nginx.pid;</span><br><span class="line"></span><br><span class="line">#一个nginx进程打开的最多文件描述符数目，理论值应该是最多打开文件数（系统的值ulimit -n）与nginx进程数相除，但是nginx分配请求并不均匀，所以建议与ulimit -n的值保持一致。</span><br><span class="line">worker_rlimit_nofile 65535;</span><br></pre></td></tr></table></figure>
+
+<h4 id="httpd"><a href="#httpd" class="headerlink" title="httpd"></a>httpd</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">#设定http服务器</span><br><span class="line">http</span><br><span class="line">&#123;</span><br><span class="line">include mime.types; #文件扩展名与文件类型映射表</span><br><span class="line">default_type application/octet-stream; #默认文件类型</span><br><span class="line">#charset utf-8; #默认编码</span><br><span class="line">server_names_hash_bucket_size 128; #服务器名字的hash表大小</span><br><span class="line">client_header_buffer_size 32k; #上传文件大小限制</span><br><span class="line">large_client_header_buffers 4 64k; #设定请求缓</span><br><span class="line">client_max_body_size 8m; #设定请求缓</span><br><span class="line">sendfile on; #开启高效文件传输模式，sendfile指令指定nginx是否调用sendfile函数来输出文件，对于普通应用设为 on，如果用来进行下载等应用磁盘IO重负载应用，可设置为off，以平衡磁盘与网络I/O处理速度，降低系统的负载。注意：如果图片显示不正常把这个改成off。</span><br><span class="line">autoindex on; #开启目录列表访问，合适下载服务器，默认关闭。</span><br><span class="line">tcp_nopush on; #防止网络阻塞</span><br><span class="line">tcp_nodelay on; #防止网络阻塞</span><br><span class="line">keepalive_timeout 120; #长连接超时时间，单位是秒</span><br></pre></td></tr></table></figure>
+
+<h4 id="gzip"><a href="#gzip" class="headerlink" title="gzip"></a>gzip</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">gzip的一些配置及其意义</span><br><span class="line">#gzip模块设置gzip on;</span><br><span class="line">#开启gzip压缩输出 gzip_min_length 1k; </span><br><span class="line">#最小压缩文件大小 gzip_buffers 4 16k;</span><br><span class="line">#压缩缓冲区 gzip_http_version 1.0; </span><br><span class="line">#压缩版本（默认1.1，前端如果是squid2.5请使用1.0）</span><br><span class="line">gzip_comp_level 2; </span><br><span class="line">#压缩等级</span><br><span class="line">gzip_types text/plain application/x-javascript text/css application/xml;</span><br><span class="line">#压缩类型，默认就已经包含text/html，所以下面就不用再写了，写上去也不会有问题，</span><br><span class="line">但是会有一个warn。</span><br><span class="line">gzip_vary on;</span><br><span class="line">#limit_zone crawler $binary_remote_addr 10m; #开启限制IP连接数的时候需要使用</span><br></pre></td></tr></table></figure>
+
+<h4 id="虚拟主机"><a href="#虚拟主机" class="headerlink" title="虚拟主机"></a>虚拟主机</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">虚拟主机一些配置及其意义</span><br><span class="line">#虚拟主机的配置</span><br><span class="line">server&#123;</span><br><span class="line">    #监听端口 listen 80;</span><br><span class="line">    #域名可以有多个，用空格隔开</span><br><span class="line">    server_name www.ha97.com ha97.com;</span><br><span class="line">    index index.html index.htm index.jsp;</span><br><span class="line">    root /data/www/ha97;</span><br><span class="line">    location ~ .*\.(php|php5)?$&#123;</span><br><span class="line">        fastcgi_pass 127.0.0.1:9000;</span><br><span class="line">        fastcgi_index index.jsp;</span><br><span class="line">        include fastcgi.conf;</span><br><span class="line">&#125;</span><br><span class="line">通过nginx可以实现虚拟主机的配置，nginx支持三种类型的虚拟主机配置，</span><br><span class="line">1、基于ip的虚拟主机， （一块主机绑定多个ip地址）</span><br><span class="line">2、基于域名的虚拟主机（servername）</span><br><span class="line">3、基于端口的虚拟主机（listen如果不写ip端口模式）</span><br><span class="line">示例基于虚拟机ip的配置，这里需要配置多个ip</span><br><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">    listen 192.168.20.20:80;</span><br><span class="line">    server_name www.linuxidc.com;</span><br><span class="line">    root /data/www;</span><br><span class="line">&#125;</span><br><span class="line">server</span><br><span class="line">&#123;</span><br><span class="line">    listen 192.168.20.21:80;</span><br><span class="line">    server_name www.linuxidc.com;</span><br><span class="line">    root /data/www;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="location"><a href="#location" class="headerlink" title="location"></a>location</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">location 映射（ngx_http_core_module）</span><br><span class="line">location [ = | ~ | ~* | ^~ ] uri &#123; ... &#125;</span><br><span class="line">location URI &#123;&#125;:</span><br><span class="line">对当前路径及子路径下的所有对象都生效；</span><br><span class="line">location = URI &#123;&#125;: 注意URL最好为具体路径。</span><br><span class="line">精确匹配指定的路径，不包括子路径，因此，只对当前资源生效；</span><br><span class="line">location ~ URI &#123;&#125;:</span><br><span class="line">location ~* URI &#123;&#125;:</span><br><span class="line">模式匹配URI，此处的URI可使用正则表达式，~区分字符大小写，~*不区分字符大小写；</span><br><span class="line">location ^~ URI &#123;&#125;:</span><br><span class="line">不使用正则表达式</span><br><span class="line">优先级：= &gt; ^~ &gt; ~|~* &gt;  /|/dir/</span><br><span class="line"></span><br><span class="line">/loghaha.html</span><br><span class="line">/logheihei.html</span><br><span class="line">^/log.*html$</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># location 配置规则</span><br><span class="line">=前缀的指令严格匹配这个查询。如果找到，停止搜索。</span><br><span class="line">所有剩下的常规字符串，最长的匹配。如果这个匹配使用^〜前缀，搜索停止。</span><br><span class="line">正则表达式，在配置文件中定义的顺序。</span><br><span class="line">如果第3条规则产生匹配的话，结果被使用。否则，如同从第2条规则被使用</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span># location配置规则</span><br><span class="line">location 的执行逻辑跟 location 的编辑顺序无关。</span><br><span class="line">矫正：这句话不全对，“普通 location ”的匹配规则是“最大前缀”，</span><br><span class="line">因此“普通 location ”的确与 location 编辑顺序无关；</span><br><span class="line"></span><br><span class="line">但是“正则 location ”的匹配规则是“顺序匹配，且只要匹配到第一个就停止后面的匹配”；</span><br><span class="line">“普通location ”与“正则 location ”之间的匹配顺序是？</span><br><span class="line">先匹配普通 location ，再“考虑”匹配正则 location 。</span><br><span class="line">注意这里的“考虑”是“可能”的意思，也就是说匹配完“普通 location ”后，有的时候需要继续匹配“正则 location ”，有的时候则不需要继续匹配“正则 location ”。两种情况下，不需要继续匹配正则 location ：</span><br><span class="line">（ 1 ）当普通 location 前面指定了“ ^~ ”，特别告诉 Nginx 本条普通 location 一旦匹配上，则不需要继续正则匹配；</span><br><span class="line">（ 2 ）当普通location 恰好严格匹配上，不是最大前缀匹配，则不再继续匹配正则</span><br><span class="line"></span><br><span class="line">loghaha.html</span><br><span class="line">l:  logha</span><br><span class="line">l:  ^~ loghah</span><br><span class="line">l:  loghaha.html</span><br><span class="line">l:  =loghaha.html</span><br><span class="line">l:   ^logh.*html$</span><br><span class="line">l:   ^logha.*html$</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 总结</span><br><span class="line">nginx  收到请求头：判定ip，port，hosts决定server</span><br><span class="line">nginx location匹配：用客户端的uri匹配location的uri</span><br><span class="line">先普通</span><br><span class="line">顺序无关</span><br><span class="line">最大前缀</span><br><span class="line">匹配规则简单</span><br><span class="line">打断：</span><br><span class="line">^~</span><br><span class="line">完全匹配</span><br><span class="line">再正则</span><br><span class="line">不完全匹配</span><br><span class="line">正则特殊性：一条URI可以和多条location匹配上</span><br><span class="line">有顺序的</span><br><span class="line">先匹配，先应用，即时退出匹配</span><br></pre></td></tr></table></figure>
+
+<h4 id="请求头"><a href="#请求头" class="headerlink" title="请求头"></a>请求头</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">请求头</span><br><span class="line">host：决策server负责处理</span><br><span class="line">uri：决策location</span><br><span class="line">反向代理：proxy_pass  ip:port[uri];</span><br></pre></td></tr></table></figure>
+
+<h4 id="IP-访问控制"><a href="#IP-访问控制" class="headerlink" title="IP 访问控制"></a>IP 访问控制</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">IP访问控制</span><br><span class="line">location  &#123;</span><br><span class="line">	   deny  IP /IP段</span><br><span class="line">	   deny  192.168.1.109;</span><br><span class="line">	   allow 192.168.1.0/24;192.168.0.0/16;192.0.0.0/8</span><br><span class="line">	&#125;</span><br><span class="line">规则：按照顺序依次检测，直到匹配到第一条规则</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx-的-session-一致性问题"><a href="#Nginx-的-session-一致性问题" class="headerlink" title="Nginx 的 session 一致性问题"></a>Nginx 的 session 一致性问题</h3><p>​        http协议是无状态的，即你连续访问某个网页100次和访问1次对服务器来说是没有区别对待的，因为它记不住你。那么，在一些场合，确实需要服务器记住当前用户怎么办？比如用户登录邮箱后，接下来要收邮件、写邮件，总不能每次操作都让用户输入用户名和密码吧，为了解决这个问题，session的方案就被提了出来，事实上它并不是什么新技术，而且也不能脱离http协议以及任何现有的web技术</p>
+<p>​        session的常见实现形式是会话cookie（session cookie），即未设置过期时间的cookie，这个cookie的默认生命周期为浏览器会话期间，只要关闭浏览器窗口，cookie就消失了。实现机制是当用户发起一个请求的时候，服务器会检查该请求中是否包含sessionid，如果未包含，则系统会创造一个名为JSESSIONID的输出 cookie返回给浏览器(只放入内存，并不存在硬盘中)，并将其以HashTable的形式写到服务器的内存里面；当已经包含sessionid是，服务端会检查找到与该session相匹配的信息，如果存在则直接使用该sessionid，若不存在则重新生成新的 session。这里需要注意的是session始终是有服务端创建的，并非浏览器自己生成的。　但是浏览器的cookie被禁止后session就需要用get方法的URL重写的机制或使用POST方法提交隐藏表单的形式来实现</p>
+<h4 id="Session共享"><a href="#Session共享" class="headerlink" title="Session共享"></a>Session共享</h4><p>​        首先我们应该明白，为什么要实现共享，如果你的网站是存放在一个机器上，那么是不存在这个问题的，因为会话数据就在这台机器，但是如果你使用了负载均衡把请求分发到不同的机器呢？这个时候会话id在客户端是没有问题的，但是如果用户的两次请求到了两台不同的机器，而它的session数据可能存在其中一台机器，这个时候就会出现取不到session数据的情况，于是session的共享就成了一个问题</p>
+<h4 id="Session一致性解决方案"><a href="#Session一致性解决方案" class="headerlink" title="Session一致性解决方案"></a>Session一致性解决方案</h4><p>​    1、session复制<br>​        tomcat 本身带有复制session的功能。（不讲）<br>​    2、共享session<br>​        需要专门管理session的软件，<br>​        memcached 缓存服务，可以和tomcat整合，帮助tomcat共享管理session。</p>
+<ul>
+<li><strong>安装 memecache 缓存服务</strong></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">安装memcached</span><br><span class="line">1、安装libevent</span><br><span class="line">2、安装memcached</span><br><span class="line">3、启动memcached</span><br><span class="line">	memcached -d -m 128m -p 11211 -l 192.168.170.101 -u root -P /tmp/</span><br><span class="line">	-d:后台启动服务</span><br><span class="line">	-m:缓存大小</span><br><span class="line">	-p：端口</span><br><span class="line">	-l:IP</span><br><span class="line">	-P:服务器启动后的系统进程ID，存储的文件</span><br><span class="line">	-u:服务器启动是以哪个用户名作为管理用户</span><br><span class="line">如果源配置了也可以用</span><br><span class="line">	yum –y install memcached</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>tomcat 配置 session共享</strong></li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">配置session共享如下：</span><br><span class="line">3、拷贝jar到tomcat的lib下，jar包见附件</span><br><span class="line">4、配置tomcat，每个tomcat里面的context.xml中加入</span><br><span class="line"><span class="tag">&lt;<span class="name">Manager</span> <span class="attr">className</span>=<span class="string">"de.javakaffee.web.msm.MemcachedBackupSessionManager"</span> </span></span><br><span class="line"><span class="tag">	<span class="attr">memcachedNodes</span>=<span class="string">"n1:192.168.170.101:11211"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">sticky</span>=<span class="string">"false"</span> </span></span><br><span class="line"><span class="tag">    <span class="attr">lockingMode</span>=<span class="string">"auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">sessionBackupAsync</span>=<span class="string">"false"</span></span></span><br><span class="line"><span class="tag">	<span class="attr">requestUriIgnorePattern</span>=<span class="string">".*\.(ico|png|gif|jpg|css|js)$"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">sessionBackupTimeout</span>=<span class="string">"1000"</span> <span class="attr">transcoderFactoryClass</span>=<span class="string">"de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory"</span> </span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意： tomcat 集群一定要保持时间一致性</strong></p>
+<p><img src="http://img.zwer.xyz/blog/20190928155702.png" alt></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/09/21/20190921 Linux 基础/" rel="next" title="20190921 Linux 基础">
+                  <i class="fa fa-chevron-left"></i> 20190921 Linux 基础
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/28/201909028 Hadoop之分布式系统 HDFS/" rel="prev" title="20190928 Hadoop">
+                  20190928 Hadoop <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#大数据"><span class="nav-number">1.</span> <span class="nav-text">大数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP-IP-网络模型"><span class="nav-number">2.</span> <span class="nav-text">TCP/IP 网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#功能分层"><span class="nav-number">2.1.</span> <span class="nav-text">功能分层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下一跳"><span class="nav-number">2.2.</span> <span class="nav-text">下一跳</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LVS"><span class="nav-number">3.</span> <span class="nav-text">LVS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#硬件"><span class="nav-number">3.1.</span> <span class="nav-text">硬件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#软件"><span class="nav-number">3.2.</span> <span class="nav-text">软件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LVS-DR"><span class="nav-number">3.3.</span> <span class="nav-text">LVS -DR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LVS-配置实验"><span class="nav-number">3.4.</span> <span class="nav-text">LVS 配置实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境"><span class="nav-number">3.4.1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实验图"><span class="nav-number">3.4.2.</span> <span class="nav-text">实验图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤"><span class="nav-number">3.4.3.</span> <span class="nav-text">步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#keepalived"><span class="nav-number">4.</span> <span class="nav-text">keepalived</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验"><span class="nav-number">4.1.</span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#环境-1"><span class="nav-number">4.1.1.</span> <span class="nav-text">环境</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#实验图-1"><span class="nav-number">4.1.1.1.</span> <span class="nav-text">实验图</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#步骤-1"><span class="nav-number">4.1.2.</span> <span class="nav-text">步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx"><span class="nav-number">5.</span> <span class="nav-text">Nginx</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Apache-与-Nginx-的比较"><span class="nav-number">5.1.</span> <span class="nav-text">Apache 与 Nginx 的比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nginx-conf"><span class="nav-number">5.2.</span> <span class="nav-text">nginx.conf</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#events"><span class="nav-number">5.2.1.</span> <span class="nav-text">events</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#httpd"><span class="nav-number">5.2.2.</span> <span class="nav-text">httpd</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#gzip"><span class="nav-number">5.2.3.</span> <span class="nav-text">gzip</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#虚拟主机"><span class="nav-number">5.2.4.</span> <span class="nav-text">虚拟主机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#location"><span class="nav-number">5.2.5.</span> <span class="nav-text">location</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#请求头"><span class="nav-number">5.2.6.</span> <span class="nav-text">请求头</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IP-访问控制"><span class="nav-number">5.2.7.</span> <span class="nav-text">IP 访问控制</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx-的-session-一致性问题"><span class="nav-number">5.3.</span> <span class="nav-text">Nginx 的 session 一致性问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Session共享"><span class="nav-number">5.3.1.</span> <span class="nav-text">Session共享</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Session一致性解决方案"><span class="nav-number">5.3.2.</span> <span class="nav-text">Session一致性解决方案</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
