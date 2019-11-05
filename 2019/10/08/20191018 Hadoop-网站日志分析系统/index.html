@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="需求数据流图 JS-SDKJava-SDKBlockingQueue 使用 ： https://app.yinxiang.com/shard/s66/nl/15607671/d69a1aac-5cd6-46fd-ad1f-b28a4d7850b4 Nginx 搭建注册 Nginx 服务123456789101112131415161718192021222324252627282930313233">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20191018 Hadoop 网站日志分析系统">
+<meta property="og:url" content="http://zwer.xyz/2019/10/08/20191018 Hadoop-网站日志分析系统/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="需求数据流图 JS-SDKJava-SDKBlockingQueue 使用 ： https://app.yinxiang.com/shard/s66/nl/15607671/d69a1aac-5cd6-46fd-ad1f-b28a4d7850b4 Nginx 搭建注册 Nginx 服务123456789101112131415161718192021222324252627282930313233">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191018204503.png">
+<meta property="og:image" content="http://flume.apache.org/_images/DevGuide_image00.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191024165218.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191024192805.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191024192833.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191024195013.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191024200334.png">
+<meta property="og:updated_time" content="2019-10-29T14:17:38.423Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20191018 Hadoop 网站日志分析系统">
+<meta name="twitter:description" content="需求数据流图 JS-SDKJava-SDKBlockingQueue 使用 ： https://app.yinxiang.com/shard/s66/nl/15607671/d69a1aac-5cd6-46fd-ad1f-b28a4d7850b4 Nginx 搭建注册 Nginx 服务123456789101112131415161718192021222324252627282930313233">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20191018204503.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/10/08/20191018 Hadoop-网站日志分析系统/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20191018 Hadoop 网站日志分析系统 | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/10/08/20191018 Hadoop-网站日志分析系统/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20191018 Hadoop 网站日志分析系统
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-08 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-08T00:00:00+08:00">2019-10-08</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-29 22:17:38" itemprop="dateModified" datetime="2019-10-29T22:17:38+08:00">2019-10-29</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><h3 id="数据流图"><a href="#数据流图" class="headerlink" title="数据流图"></a>数据流图</h3><p><img src="http://img.zwer.xyz/blog/20191018204503.png" alt></p>
+<h3 id="JS-SDK"><a href="#JS-SDK" class="headerlink" title="JS-SDK"></a>JS-SDK</h3><h3 id="Java-SDK"><a href="#Java-SDK" class="headerlink" title="Java-SDK"></a>Java-SDK</h3><p>BlockingQueue 使用 ：</p>
+<p><a href="https://app.yinxiang.com/shard/s66/nl/15607671/d69a1aac-5cd6-46fd-ad1f-b28a4d7850b4" target="_blank" rel="noopener">https://app.yinxiang.com/shard/s66/nl/15607671/d69a1aac-5cd6-46fd-ad1f-b28a4d7850b4</a></p>
+<h2 id="Nginx-搭建"><a href="#Nginx-搭建" class="headerlink" title="Nginx 搭建"></a>Nginx 搭建</h2><h3 id="注册-Nginx-服务"><a href="#注册-Nginx-服务" class="headerlink" title="注册 Nginx 服务"></a>注册 Nginx 服务</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br></pre></td><td class="code"><pre><span class="line">安装之前准备</span><br><span class="line">1、依赖 gcc openssl-devel pcre-devel zlib-devel</span><br><span class="line">	安装：yum install gcc openssl-devel pcre-devel zlib-devel -y</span><br><span class="line"></span><br><span class="line">安装Nginx</span><br><span class="line">./configure </span><br><span class="line"></span><br><span class="line">make &amp;&amp; make install</span><br><span class="line"></span><br><span class="line">默认安装目录：</span><br><span class="line">/usr/local/nginx</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">配置Nginx为系统服务，以方便管理</span><br><span class="line">  1、在/etc/rc.d/init.d/目录中建立文本文件nginx</span><br><span class="line">  2、在文件中粘贴下面的内容：</span><br><span class="line"><span class="meta">#</span>!/bin/sh</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> nginx - this script starts and stops the nginx daemon</span><br><span class="line"><span class="meta">#</span></span><br><span class="line"><span class="meta">#</span> chkconfig:   - 85 15 </span><br><span class="line"><span class="meta">#</span> description:  Nginx is an HTTP(S) server, HTTP(S) reverse \</span><br><span class="line"><span class="meta">#</span>               proxy and IMAP/POP3 proxy server</span><br><span class="line"><span class="meta">#</span> processname: nginx</span><br><span class="line"><span class="meta">#</span> config:      /etc/nginx/nginx.conf</span><br><span class="line"><span class="meta">#</span> config:      /etc/sysconfig/nginx</span><br><span class="line"><span class="meta">#</span> pidfile:     /var/run/nginx.pid</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span> Source function library.</span><br><span class="line">. /etc/rc.d/init.d/functions</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span> Source networking configuration.</span><br><span class="line">. /etc/sysconfig/network</span><br><span class="line"> </span><br><span class="line"><span class="meta">#</span> Check that networking is up.</span><br><span class="line">[ "$NETWORKING" = "no" ] &amp;&amp; exit 0</span><br><span class="line"> </span><br><span class="line">nginx="/usr/local/nginx/sbin/nginx"</span><br><span class="line">prog=$(basename $nginx)</span><br><span class="line"> </span><br><span class="line">NGINX_CONF_FILE="/usr/local/nginx/conf/nginx.conf"</span><br><span class="line"> </span><br><span class="line">[ -f /etc/sysconfig/nginx ] &amp;&amp; . /etc/sysconfig/nginx</span><br><span class="line"> </span><br><span class="line">lockfile=/var/lock/subsys/nginx</span><br><span class="line"> </span><br><span class="line">make_dirs() &#123;</span><br><span class="line"><span class="meta">   #</span> make required directories</span><br><span class="line">   user=`nginx -V 2&gt;&amp;1 | grep "configure arguments:" | sed 's/[^*]*--user=\([^ ]*\).*/\1/g' -`</span><br><span class="line">   options=`$nginx -V 2&gt;&amp;1 | grep 'configure arguments:'`</span><br><span class="line">   for opt in $options; do</span><br><span class="line">       if [ `echo $opt | grep '.*-temp-path'` ]; then</span><br><span class="line">           value=`echo $opt | cut -d "=" -f 2`</span><br><span class="line">           if [ ! -d "$value" ]; then</span><br><span class="line">               # echo "creating" $value</span><br><span class="line">               mkdir -p $value &amp;&amp; chown -R $user $value</span><br><span class="line">           fi</span><br><span class="line">       fi</span><br><span class="line">   done</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">start() &#123;</span><br><span class="line">    [ -x $nginx ] || exit 5</span><br><span class="line">    [ -f $NGINX_CONF_FILE ] || exit 6</span><br><span class="line">    make_dirs</span><br><span class="line">    echo -n $"Starting $prog: "</span><br><span class="line">    daemon $nginx -c $NGINX_CONF_FILE</span><br><span class="line">    retval=$?</span><br><span class="line">    echo</span><br><span class="line">    [ $retval -eq 0 ] &amp;&amp; touch $lockfile</span><br><span class="line">    return $retval</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">stop() &#123;</span><br><span class="line">    echo -n $"Stopping $prog: "</span><br><span class="line">    killproc $prog -QUIT</span><br><span class="line">    retval=$?</span><br><span class="line">    echo</span><br><span class="line">    [ $retval -eq 0 ] &amp;&amp; rm -f $lockfile</span><br><span class="line">    return $retval</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">restart() &#123;</span><br><span class="line">    configtest || return $?</span><br><span class="line">    stop</span><br><span class="line">    sleep 1</span><br><span class="line">    start</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">reload() &#123;</span><br><span class="line">    configtest || return $?</span><br><span class="line">    echo -n $"Reloading $prog: "</span><br><span class="line">    killproc $nginx -HUP</span><br><span class="line">    RETVAL=$?</span><br><span class="line">    echo</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">force_reload() &#123;</span><br><span class="line">    restart</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">configtest() &#123;</span><br><span class="line"><span class="meta">  $</span>nginx -t -c $NGINX_CONF_FILE</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">rh_status() &#123;</span><br><span class="line">    status $prog</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">rh_status_q() &#123;</span><br><span class="line">    rh_status &gt;/dev/null 2&gt;&amp;1</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">case "$1" in</span><br><span class="line">    start)</span><br><span class="line">        rh_status_q &amp;&amp; exit 0</span><br><span class="line">        $1</span><br><span class="line">        ;;</span><br><span class="line">    stop)</span><br><span class="line">        rh_status_q || exit 0</span><br><span class="line">        $1</span><br><span class="line">        ;;</span><br><span class="line">    restart|configtest)</span><br><span class="line">        $1</span><br><span class="line">        ;;</span><br><span class="line">    reload)</span><br><span class="line">        rh_status_q || exit 7</span><br><span class="line">        $1</span><br><span class="line">        ;;</span><br><span class="line">    force-reload)</span><br><span class="line">        force_reload</span><br><span class="line">        ;;</span><br><span class="line">    status)</span><br><span class="line">        rh_status</span><br><span class="line">        ;;</span><br><span class="line">    condrestart|try-restart)</span><br><span class="line">        rh_status_q || exit 0</span><br><span class="line">            ;;</span><br><span class="line">    *)</span><br><span class="line">        echo $"Usage: $0 &#123;start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest&#125;"</span><br><span class="line">        exit 2</span><br><span class="line">esac</span><br><span class="line"></span><br><span class="line">3、修改nginx文件的执行权限</span><br><span class="line">	chmod +x nginx</span><br><span class="line">4、添加该文件到系统服务中去</span><br><span class="line">	chkconfig --add nginx</span><br><span class="line">	查看是否添加成功</span><br><span class="line">	chkconfig --list nginx</span><br><span class="line"></span><br><span class="line">启动，停止，重新装载</span><br><span class="line">service nginx start|stop</span><br></pre></td></tr></table></figure>
+
+<h3 id="Nginx-conf-配置"><a href="#Nginx-conf-配置" class="headerlink" title="Nginx.conf   配置"></a>Nginx.conf   配置</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line">    </span><br><span class="line">    log_format my_format '$remote_addr^A$msec^A$http_host^A$request_uri';</span><br><span class="line">    </span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">        location = /log.gif &#123;</span><br><span class="line">            default_type image/gif;</span><br><span class="line">            access_log /opt/data/access.log my_format;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        error_page   500 502 503 504  /50x.html;</span><br><span class="line">        location = /50x.html &#123;</span><br><span class="line">            root   html;</span><br><span class="line">        &#125;</span><br><span class="line">      </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Flume"><a href="#Flume" class="headerlink" title="Flume"></a>Flume</h2><h3 id="Flume-简介"><a href="#Flume-简介" class="headerlink" title="Flume 简介"></a>Flume 简介</h3><blockquote>
+<p>Flume is a distributed, reliable, and available service for efficiently collecting, aggregating, and moving large amounts of log data.</p>
+</blockquote>
+<p>It has a simple and flexible architecture based on streaming data flows. It is robust and fault tolerant with tunable reliability mechanisms and many failover and recovery mechanisms. It uses a simple extensible data model that allows for online analytic application.</p>
+<p><img src="http://flume.apache.org/_images/DevGuide_image00.png" alt></p>
+<p>Flume 官网：<a href="http://flume.apache.org/" target="_blank" rel="noopener">http://flume.apache.org/</a></p>
+<h3 id="Flume-安装配置及案例"><a href="#Flume-安装配置及案例" class="headerlink" title="Flume 安装配置及案例"></a>Flume 安装配置及案例</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br></pre></td><td class="code"><pre><span class="line">安装</span><br><span class="line">1、上传</span><br><span class="line">2、解压</span><br><span class="line">3、修改conf/flume-env.sh  文件中的JDK目录</span><br><span class="line"> 注意：JAVA_OPTS 配置  如果我们传输文件过大 报内存溢出时 需要修改这个配置项</span><br><span class="line">4、验证安装是否成功  ./flume-ng version</span><br><span class="line">5、配置环境变量</span><br><span class="line">	export FLUME_HOME=/home/apache-flume-1.6.0-bin</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Source、Channel、Sink有哪些类型</span><br><span class="line">    Flume Source</span><br><span class="line">	Source类型 	              | 说明</span><br><span class="line">	Avro Source 	            | 支持Avro协议（实际上是Avro RPC），内置支持</span><br><span class="line">	Thrift Source 	          | 支持Thrift协议，内置支持</span><br><span class="line">	Exec Source 	            | 基于Unix的command在标准输出上生产数据</span><br><span class="line">	JMS Source 	              | 从JMS系统（消息、主题）中读取数据</span><br><span class="line">	Spooling Directory Source | 监控指定目录内数据变更</span><br><span class="line">	Twitter 1% firehose Source|	通过API持续下载Twitter数据，试验性质</span><br><span class="line">	Netcat Source 	          | 监控某个端口，将流经端口的每一个文本行数据作为Event输入</span><br><span class="line">	Sequence Generator Source | 序列生成器数据源，生产序列数据</span><br><span class="line">	Syslog Sources 	          | 读取syslog数据，产生Event，支持UDP和TCP两种协议</span><br><span class="line">	HTTP Source 	            | 基于HTTP POST或GET方式的数据源，支持JSON、BLOB表示形式</span><br><span class="line">	Legacy Sources 	          | 兼容老的Flume OG中Source（0.9.x版本）</span><br><span class="line"></span><br><span class="line">    Flume Channel</span><br><span class="line">	Channel类型 	  说明</span><br><span class="line">	Memory Channel 	           | Event数据存储在内存中</span><br><span class="line">	JDBC Channel   	           | Event数据存储在持久化存储中，当前Flume Channel内置支持Derby</span><br><span class="line">	File Channel   	           | Event数据存储在磁盘文件中</span><br><span class="line">	Spillable Memory Channel   | Event数据存储在内存中和磁盘上，当内存队列满了，会持久化到磁盘文件</span><br><span class="line">	Pseudo Transaction Channel | 测试用途</span><br><span class="line">	Custom Channel 	           | 自定义Channel实现</span><br><span class="line"></span><br><span class="line">    Flume Sink</span><br><span class="line">	Sink类型 	说明</span><br><span class="line">	HDFS Sink 	        | 数据写入HDFS</span><br><span class="line">	Logger Sink 	      | 数据写入日志文件</span><br><span class="line">	Avro Sink 	        | 数据被转换成Avro Event，然后发送到配置的RPC端口上</span><br><span class="line">	Thrift Sink 	      | 数据被转换成Thrift Event，然后发送到配置的RPC端口上</span><br><span class="line">	IRC Sink    	      | 数据在IRC上进行回放</span><br><span class="line">	File Roll Sink 	    | 存储数据到本地文件系统</span><br><span class="line">	Null Sink 	        | 丢弃到所有数据</span><br><span class="line">	HBase Sink 	        | 数据写入HBase数据库</span><br><span class="line">	Morphline Solr Sink | 数据发送到Solr搜索服务器（集群）</span><br><span class="line">	ElasticSearch Sink 	| 数据发送到Elastic Search搜索服务器（集群）</span><br><span class="line">	Kite Dataset Sink 	| 写数据到Kite Dataset，试验性质的</span><br><span class="line">	Custom Sink 	      | 自定义Sink实现</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">案例1、 A simple example</span><br><span class="line">	http://flume.apache.org/FlumeUserGuide.html#a-simple-example</span><br><span class="line">	</span><br><span class="line">	配置文件</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line"><span class="meta">	#</span> Name the components on this agent</span><br><span class="line">	a1.sources = r1</span><br><span class="line">	a1.sinks = k1</span><br><span class="line">	a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe/configure the source</span><br><span class="line">	a1.sources.r1.type = netcat</span><br><span class="line">	a1.sources.r1.bind = localhost // 改成主机名</span><br><span class="line">	a1.sources.r1.port = 44444</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe the sink</span><br><span class="line">	a1.sinks.k1.type = logger</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Use a channel which buffers events in memory</span><br><span class="line">	a1.channels.c1.type = memory</span><br><span class="line">	a1.channels.c1.capacity = 1000</span><br><span class="line">	a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Bind the source and sink to the channel</span><br><span class="line">	a1.sources.r1.channels = c1</span><br><span class="line">	a1.sinks.k1.channel = c1</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line"></span><br><span class="line">启动flume</span><br><span class="line">flume-ng agent -n a1 -c conf -f simple.conf -Dflume.root.logger=INFO,console</span><br><span class="line"></span><br><span class="line">安装telnet</span><br><span class="line">yum install telnet</span><br><span class="line">退出 ctrl+]  quit</span><br><span class="line"></span><br><span class="line">Memory Chanel 配置</span><br><span class="line">  capacity：默认该通道中最大的可以存储的event数量是100，</span><br><span class="line">  trasactionCapacity：每次最大可以source中拿到或者送到sink中的event数量也是100</span><br><span class="line">  keep-alive：event添加到通道中或者移出的允许时间</span><br><span class="line">  byte**：即event的字节量的限制，只包括eventbody</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">案例2、两个flume做集群</span><br><span class="line"></span><br><span class="line">	node01服务器中，配置文件</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line"><span class="meta">	#</span> Name the components on this agent</span><br><span class="line">	a1.sources = r1</span><br><span class="line">	a1.sinks = k1</span><br><span class="line">	a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe/configure the source</span><br><span class="line">	a1.sources.r1.type = netcat</span><br><span class="line">	a1.sources.r1.bind = node1</span><br><span class="line">	a1.sources.r1.port = 44444</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe the sink</span><br><span class="line"><span class="meta">	#</span> a1.sinks.k1.type = logger</span><br><span class="line">	a1.sinks.k1.type = avro</span><br><span class="line">	a1.sinks.k1.hostname = node2</span><br><span class="line">	a1.sinks.k1.port = 60000</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Use a channel which buffers events in memory</span><br><span class="line">	a1.channels.c1.type = memory</span><br><span class="line">	a1.channels.c1.capacity = 1000</span><br><span class="line">	a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Bind the source and sink to the channel</span><br><span class="line">	a1.sources.r1.channels = c1</span><br><span class="line">	a1.sinks.k1.channel = c1</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line">	</span><br><span class="line">	node02服务器中，安装Flume（步骤略）</span><br><span class="line">	配置文件</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line"><span class="meta">	#</span> Name the components on this agent</span><br><span class="line">	a1.sources = r1</span><br><span class="line">	a1.sinks = k1</span><br><span class="line">	a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe/configure the source</span><br><span class="line">	a1.sources.r1.type = avro</span><br><span class="line">	a1.sources.r1.bind = node2</span><br><span class="line">	a1.sources.r1.port = 60000</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe the sink</span><br><span class="line">	a1.sinks.k1.type = logger</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Use a channel which buffers events in memory</span><br><span class="line">	a1.channels.c1.type = memory</span><br><span class="line">	a1.channels.c1.capacity = 1000</span><br><span class="line">	a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Bind the source and sink to the channel</span><br><span class="line">	a1.sources.r1.channels = c1</span><br><span class="line">	a1.sinks.k1.channel = c1</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line">	</span><br><span class="line">	先启动node02的Flume</span><br><span class="line">	flume-ng agent  -n a1 -c conf -f avro.conf -Dflume.root.logger=INFO,console</span><br><span class="line">	</span><br><span class="line">	再启动node01的Flume</span><br><span class="line">	flume-ng agent  -n a1 -c conf -f simple.conf2 -Dflume.root.logger=INFO,console</span><br><span class="line">	</span><br><span class="line">	打开telnet 测试  node02控制台输出结果</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">案例3、Exec Source</span><br><span class="line">		http://flume.apache.org/FlumeUserGuide.html#exec-source</span><br><span class="line">		</span><br><span class="line">	配置文件</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line">	a1.sources = r1</span><br><span class="line">	a1.sinks = k1</span><br><span class="line">	a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe/configure the source</span><br><span class="line">	a1.sources.r1.type = exec</span><br><span class="line">	a1.sources.r1.command = tail -F /home/flume.exec.log</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe the sink</span><br><span class="line">	a1.sinks.k1.type = logger</span><br><span class="line">	</span><br><span class="line"><span class="meta">	#</span> Use a channel which buffers events in memory</span><br><span class="line">	a1.channels.c1.type = memory</span><br><span class="line">	a1.channels.c1.capacity = 1000</span><br><span class="line">	a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Bind the source and sink to the channel</span><br><span class="line">	a1.sources.r1.channels = c1</span><br><span class="line">	a1.sinks.k1.channel = c1</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line">	</span><br><span class="line">	启动Flume</span><br><span class="line">	flume-ng agent -n a1 -c conf -f exec.conf -Dflume.root.logger=INFO,console</span><br><span class="line">	</span><br><span class="line">	创建空文件演示 touch flume.exec.log</span><br><span class="line">	循环添加数据</span><br><span class="line">	for i in &#123;1..50&#125;; do echo "$i hi flume" &gt;&gt; flume.exec.log ; sleep 0.1; done</span><br><span class="line">		</span><br><span class="line">案例4、Spooling Directory Source</span><br><span class="line">		http://flume.apache.org/FlumeUserGuide.html#spooling-directory-source</span><br><span class="line">	配置文件</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line">	a1.sources = r1</span><br><span class="line">	a1.sinks = k1</span><br><span class="line">	a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe/configure the source</span><br><span class="line">	a1.sources.r1.type = spooldir</span><br><span class="line">	a1.sources.r1.spoolDir = /home/logs</span><br><span class="line">	a1.sources.r1.fileHeader = true</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe the sink</span><br><span class="line">	a1.sinks.k1.type = logger</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Use a channel which buffers events in memory</span><br><span class="line">	a1.channels.c1.type = memory</span><br><span class="line">	a1.channels.c1.capacity = 1000</span><br><span class="line">	a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Bind the source and sink to the channel</span><br><span class="line">	a1.sources.r1.channels = c1</span><br><span class="line">	a1.sinks.k1.channel = c1</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line"></span><br><span class="line">	启动Flume</span><br><span class="line">	flume-ng agent -n a1 -c conf -f spool.conf -Dflume.root.logger=INFO,console</span><br><span class="line"></span><br><span class="line">	拷贝文件演示</span><br><span class="line">	mkdir logs</span><br><span class="line">	cp flume.exec.log logs/</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">案例5、hdfs sink</span><br><span class="line">		http://flume.apache.org/FlumeUserGuide.html#hdfs-sink</span><br><span class="line">	</span><br><span class="line">		配置文件</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line">	a1.sources = r1</span><br><span class="line">	a1.sinks = k1</span><br><span class="line">	a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe/configure the source</span><br><span class="line">	a1.sources.r1.type = spooldir</span><br><span class="line">	a1.sources.r1.spoolDir = /home/logs</span><br><span class="line">	a1.sources.r1.fileHeader = true</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Describe the sink</span><br><span class="line">	***只修改上一个spool sink的配置代码块 a1.sinks.k1.type = logger</span><br><span class="line">	a1.sinks.k1.type=hdfs</span><br><span class="line">	a1.sinks.k1.hdfs.path=hdfs://bjsxt/flume/%Y-%m-%d/%H%M</span><br><span class="line">	</span><br><span class="line"><span class="meta">	#</span>#每隔60s或者文件大小超过10M的时候产生新文件</span><br><span class="line"><span class="meta">	#</span> hdfs有多少条消息时新建文件，0不基于消息个数</span><br><span class="line">	a1.sinks.k1.hdfs.rollCount=0</span><br><span class="line"><span class="meta">	#</span> hdfs创建多长时间新建文件，0不基于时间,时间单位 s</span><br><span class="line">	a1.sinks.k1.hdfs.rollInterval=60</span><br><span class="line"><span class="meta">	#</span> hdfs多大时新建文件，0不基于文件大小</span><br><span class="line">	a1.sinks.k1.hdfs.rollSize=10240</span><br><span class="line"><span class="meta">	#</span> 当目前被打开的临时文件在该参数指定的时间（秒）内，没有任何数据写入，则将该临时文件关闭并重命名成目标文件</span><br><span class="line">	a1.sinks.k1.hdfs.idleTimeout=3</span><br><span class="line">	</span><br><span class="line">	a1.sinks.k1.hdfs.fileType=DataStream</span><br><span class="line">	a1.sinks.k1.hdfs.useLocalTimeStamp=true</span><br><span class="line">	</span><br><span class="line"><span class="meta">	#</span># 每五分钟生成一个目录:</span><br><span class="line"><span class="meta">	#</span> 是否启用时间上的”舍弃”，这里的”舍弃”，类似于”四舍五入”，后面再介绍。如果启用，则会影响除了%t的其他所有时间表达式</span><br><span class="line">	a1.sinks.k1.hdfs.round=true</span><br><span class="line"><span class="meta">	#</span> 时间上进行“舍弃”的值；</span><br><span class="line">	a1.sinks.k1.hdfs.roundValue=5</span><br><span class="line"><span class="meta">	#</span> 时间上进行”舍弃”的单位，包含：second,minute,hour</span><br><span class="line">	a1.sinks.k1.hdfs.roundUnit=minute</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Use a channel which buffers events in memory</span><br><span class="line">	a1.channels.c1.type = memory</span><br><span class="line">	a1.channels.c1.capacity = 1000</span><br><span class="line">	a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"><span class="meta">	#</span> Bind the source and sink to the channel</span><br><span class="line">	a1.sources.r1.channels = c1</span><br><span class="line">	a1.sinks.k1.channel = c1</span><br><span class="line"><span class="meta">	#</span>###########################################################</span><br><span class="line">	创建HDFS目录</span><br><span class="line">	hadoop fs -mkdir /flume</span><br><span class="line">	</span><br><span class="line">	启动Flume</span><br><span class="line">	flume-ng agent -n a1 -c conf -f hdfs.conf -Dflume.root.logger=INFO,console</span><br><span class="line"></span><br><span class="line">	查看hdfs文件</span><br><span class="line">	hadoop fs -ls /flume/...</span><br><span class="line">	hadoop fs -get /flume/...</span><br><span class="line"></span><br><span class="line">作业：</span><br><span class="line">1、flume如何收集java请求数据</span><br><span class="line">2、项目当中如何来做？ 日志存放/log/目录下 以yyyyMMdd为子目录 分别存放每天的数据</span><br></pre></td></tr></table></figure>
+
+<h2 id="项目模块设计"><a href="#项目模块设计" class="headerlink" title="项目模块设计*"></a><font color="pinbrown">项目模块设计*</font></h2><p>Map（k：按照所需的维度划分 v：唯一标志（便于后面去重））</p>
+<p>Reduce（将相同的 k 汇聚到起来，对 value 的值进行去重累加）</p>
+<h2 id="ETL-MR"><a href="#ETL-MR" class="headerlink" title="ETL -MR"></a>ETL -MR</h2><p>抽取 extract </p>
+<p>转换 transform</p>
+<p>加载 load</p>
+<h2 id="Hive-与-Hbase-整合"><a href="#Hive-与-Hbase-整合" class="headerlink" title="Hive 与 Hbase 整合"></a>Hive 与 Hbase 整合</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">hive和hbase同步</span><br><span class="line">https://cwiki.apache.org/confluence/display/Hive/HBaseIntegration</span><br><span class="line"></span><br><span class="line">1、在hive的配置文件增加属性：</span><br><span class="line">&lt;property&gt;</span><br><span class="line">   &lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt;</span><br><span class="line">   &lt;value&gt;node2,node3,node4&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line">2、在hive中创建临时表</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">EXTERNAL</span> <span class="keyword">TABLE</span> tmp_order </span><br><span class="line">(<span class="keyword">key</span> <span class="keyword">string</span>, <span class="keyword">id</span> <span class="keyword">string</span>, user_id <span class="keyword">string</span>)  </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.hbase.HBaseStorageHandler'</span>  </span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (<span class="string">"hbase.columns.mapping"</span> = <span class="string">":key,order:order_id,order:user_id"</span>)  TBLPROPERTIES (<span class="string">"hbase.table.name"</span> = <span class="string">"t_order"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 内部表</span></span><br><span class="line"><span class="comment">-- </span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> hbasetbl(<span class="keyword">key</span> <span class="built_in">int</span>, <span class="keyword">value</span> <span class="keyword">string</span>) </span><br><span class="line"><span class="keyword">STORED</span> <span class="keyword">BY</span> <span class="string">'org.apache.hadoop.hive.hbase.HBaseStorageHandler'</span></span><br><span class="line"><span class="keyword">WITH</span> SERDEPROPERTIES (<span class="string">"hbase.columns.mapping"</span> = <span class="string">":key,cf1:val"</span>)</span><br><span class="line">TBLPROPERTIES (<span class="string">"hbase.table.name"</span> = <span class="string">"xyz"</span>, <span class="string">"hbase.mapred.output.outputtable"</span> = <span class="string">"xyz"</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Apache-Sqoop"><a href="#Apache-Sqoop" class="headerlink" title="Apache Sqoop"></a>Apache Sqoop</h2><blockquote>
+<p>Sqoop 中导入和导出是相对于 HDFS的。</p>
+</blockquote>
+<h3 id="Sqoop-简介"><a href="#Sqoop-简介" class="headerlink" title="Sqoop 简介"></a>Sqoop 简介</h3><p>Sqoop:将关系数据库（oracle、mysql、postgresql等）数据与 hadoop 数据进行转换的工具</p>
+<p>官网：<a href="http://sqoop.apache.org/" target="_blank" rel="noopener">http://sqoop.apache.org/</a></p>
+<p>版本：（两个版本完全不兼容，sqoop1使用最多）</p>
+<p>sqoop1：1.4.x</p>
+<p>sqoop2：1.99.x</p>
+<p>同类产品</p>
+<p>DataX：阿里顶级数据交换工具                                                                                                                                                                                                                                                                                                                                                                                                                                       </p>
+<h3 id="Sqoop-架构"><a href="#Sqoop-架构" class="headerlink" title="Sqoop 架构"></a>Sqoop 架构</h3><ul>
+<li>sqoop 架构非常简单，是 hadoop 生态系统的架构最简单的框架。</li>
+<li>sqoop1 由 client 端直接接入 hadoop ，任务通过解析生成对应的 maprecue 执行</li>
+</ul>
+<p><img src="http://img.zwer.xyz/blog/20191024165218.png" alt></p>
+<h3 id="Sqoop-导入"><a href="#Sqoop-导入" class="headerlink" title="Sqoop 导入"></a>Sqoop 导入</h3><blockquote>
+<p>将数据从 DataBase table 经由 MR 程序导入到 HDFS 中</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191024192805.png" alt></p>
+<h3 id="Sqoop-导出"><a href="#Sqoop-导出" class="headerlink" title="Sqoop 导出"></a>Sqoop 导出</h3><blockquote>
+<p>将数据从 HDFS 经由 MR 作业导出到DataBase table 中</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191024192833.png" alt></p>
+<h3 id="Sqoop-安装"><a href="#Sqoop-安装" class="headerlink" title="Sqoop 安装"></a>Sqoop 安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">安装步骤：</span><br><span class="line">1、解压</span><br><span class="line">2、配置环境变量 </span><br><span class="line">export SQOOP_HOME=/XX/sqoop.xx</span><br><span class="line">source /etc/profile</span><br><span class="line">3、添加数据库驱动包</span><br><span class="line">cp mysql-connector-java-5.1.10.jar /sqoop-install-path/lib</span><br><span class="line">4、重命名配置文件</span><br><span class="line">mv sqoop-env-template.sh sqoop-env.sh</span><br><span class="line">5、修改配置configure-sqoop</span><br><span class="line">去掉未安装服务相关内容；例如（HBase、HCatalog、Accumulo）：</span><br><span class="line"><span class="meta">#</span>if [ ! -d "$&#123;HBASE_HOME&#125;" ]; then</span><br><span class="line"><span class="meta">#</span>  echo "Error: $HBASE_HOME does not exist!"</span><br><span class="line"><span class="meta">#</span>  echo 'Please set $HBASE_HOME to the root of your HBase installation.'</span><br><span class="line"><span class="meta">#</span>  exit 1</span><br><span class="line">6、测试</span><br><span class="line">sqoop version</span><br><span class="line">sqoop list-databases -connect jdbc:mysql://node3:3306/ -username root -password 123</span><br></pre></td></tr></table></figure>
+
+<h3 id="Sqoop-工具"><a href="#Sqoop-工具" class="headerlink" title="Sqoop 工具*"></a>Sqoop 工具*</h3><ul>
+<li>连接</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>含义说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>--connect&lt;jdbc-uri&gt;</code></td>
+<td>指定JDBC 连接字符串</td>
+</tr>
+<tr>
+<td><code>--connection-manager&lt;class-name&gt;</code></td>
+<td>指定要使用的连接管理器类</td>
+</tr>
+<tr>
+<td><code>--driver&lt;class-name&gt;</code></td>
+<td>指定要使用的 JDBC 驱动类</td>
+</tr>
+<tr>
+<td><code>--hadoop-mapred-home&lt;dir&gt;</code></td>
+<td>指定 <code>$HADOOP_MAPRED_HOME</code>路径</td>
+</tr>
+<tr>
+<td><code>--help</code></td>
+<td>万能帮助</td>
+</tr>
+<tr>
+<td><code>--password-file</code></td>
+<td>设置用于存放认证的密码的信息文件的路径</td>
+</tr>
+<tr>
+<td><code>-P</code></td>
+<td>从控制台读取输入的密码</td>
+</tr>
+<tr>
+<td><code>--password&lt;password&gt;</code></td>
+<td>设置认证密码</td>
+</tr>
+<tr>
+<td><code>--username&lt;username&gt;</code></td>
+<td>设置认证用户名</td>
+</tr>
+<tr>
+<td><code>--verbose</code></td>
+<td>打印详细的运行信息</td>
+</tr>
+<tr>
+<td><code>--connection-param-file&lt;filename&gt;</code></td>
+<td>可选，指定存储数据库连接参数的属性文件</td>
+</tr>
+</tbody></table>
+<ul>
+<li>导入工具</li>
+</ul>
+<p><img src="http://img.zwer.xyz/blog/20191024195013.png" alt></p>
+<ul>
+<li><p>导出工具 </p>
+<p><img src="http://img.zwer.xyz/blog/20191024200334.png" alt></p>
+</li>
+<li><p>将 MySQL 中数据导入到 HDFS 中</p>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi 编辑文件 option</span></span><br><span class="line"><span class="comment"># 连接 MySQL 数据库，将表中数据导入 HDFS 中</span></span><br><span class="line">import</span><br><span class="line"><span class="comment">--connect</span></span><br><span class="line">jdbc:mysql://node01:3306/result_db</span><br><span class="line"><span class="comment">--username</span></span><br><span class="line">root</span><br><span class="line"><span class="comment">--password</span></span><br><span class="line">123</span><br><span class="line"><span class="comment">--as-textfile</span></span><br><span class="line"><span class="comment">--columns</span></span><br><span class="line">browser_name,browser_version</span><br><span class="line"><span class="comment">--table</span></span><br><span class="line">dimension_browser</span><br><span class="line"><span class="comment">--delete-target-dir</span></span><br><span class="line"><span class="comment">--target-dir</span></span><br><span class="line">/sqoop/data</span><br><span class="line">-m</span><br><span class="line">1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 执行</span></span><br><span class="line">sqoop <span class="comment">--options-file option</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># vi 编辑文件 option2</span></span><br><span class="line">import</span><br><span class="line"><span class="comment">--connect</span></span><br><span class="line">jdbc:mysql://node01:3306/result_db</span><br><span class="line"><span class="comment">--username</span></span><br><span class="line">root</span><br><span class="line"><span class="comment">--password</span></span><br><span class="line">123</span><br><span class="line"><span class="comment">--as-textfile</span></span><br><span class="line"><span class="comment">--delete-target-dir</span></span><br><span class="line"><span class="comment">--target-dir</span></span><br><span class="line">/sqoop/data</span><br><span class="line">-m</span><br><span class="line">1</span><br><span class="line">-e</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dimension_browser <span class="keyword">where</span> $CONDITIONS   </span><br><span class="line"></span><br><span class="line"><span class="comment"># sqoop --options-file option2</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 MySQL 数据导入到 Hive 中</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import</span><br><span class="line"><span class="comment">--connect</span></span><br><span class="line">jdbc:mysql://node01/result_db</span><br><span class="line"><span class="comment">--username</span></span><br><span class="line">root</span><br><span class="line"><span class="comment">--password</span></span><br><span class="line">123</span><br><span class="line"><span class="comment">--as-textfile</span></span><br><span class="line"><span class="comment">--query</span></span><br><span class="line">'<span class="keyword">select</span> * <span class="keyword">from</span> dimension_browser <span class="keyword">where</span> $CONDITIONS<span class="string">'</span></span><br><span class="line"><span class="string">--delete-target-dir</span></span><br><span class="line"><span class="string">--target-dir</span></span><br><span class="line"><span class="string">/sqoop/tmp</span></span><br><span class="line"><span class="string">-m</span></span><br><span class="line"><span class="string">1</span></span><br><span class="line"><span class="string">--hive-home</span></span><br><span class="line"><span class="string">/user/hive/warehouse</span></span><br><span class="line"><span class="string">--hive-import</span></span><br><span class="line"><span class="string">--create-hive-table</span></span><br><span class="line"><span class="string">--hive-table</span></span><br><span class="line"><span class="string">t_browser</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将 Hive 中导出到 MySQL 表中</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">    export</span><br><span class="line">    --connect</span><br><span class="line">jdbc:mysql://node01/test</span><br><span class="line">    --username</span><br><span class="line">    root</span><br><span class="line">    --password</span><br><span class="line">    123</span><br><span class="line">    -m</span><br><span class="line">    1</span><br><span class="line">    --columns</span><br><span class="line">    id,browser_name,browser_version</span><br><span class="line">    --export-dir</span><br><span class="line">    /sqoop/data</span><br><span class="line">    --table</span><br><span class="line">    h_browser</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<pre><code>注意：MySQL中 test.h_browser   需要提前创建</code></pre><h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><h3 id="调优的目的"><a href="#调优的目的" class="headerlink" title="调优的目的"></a>调优的目的</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">充分的利用机器的性能，更快的完成 mr 程序的计算任务。</span><br><span class="line">甚至是在有限的机器条件下，能够支持运行足够多的mr程序。</span><br></pre></td></tr></table></figure>
+
+<h3 id="调优的总体概述"><a href="#调优的总体概述" class="headerlink" title="调优的总体概述"></a>调优的总体概述</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">从mr程序的内部运行机制，我们可以了解到一个mr程序由mapper和reducer两个阶段组成，其中mapper阶段包括数据的读取、map处理以及写出操作(排序和合并/sort&amp;merge)，而reducer阶段包含mapper输出数据的获取、数据合并(sort&amp;merge)、reduce处理以及写出操作。那么在这七个子阶段中，能够进行较大力度的进行调优的就是map输出、reducer数据合并以及reducer个数这三个方面的调优操作。</span><br><span class="line">也就是说虽然性能调优包括cpu、内存、磁盘io以及网络这四个大方面，但是从mr程序的执行流程中，我们可以知道主要有调优的是内存、磁盘io以及网络。</span><br><span class="line">在mr程序中调优，主要考虑的就是减少网络传输和减少磁盘IO操作，故本次课程的mr调优主要包括服务器调优、代码调优、mapper调优、reducer调优以及runner调优这五个方面。</span><br></pre></td></tr></table></figure>
+
+<h3 id="服务器调优"><a href="#服务器调优" class="headerlink" title="服务器调优"></a>服务器调优</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">服务器调优主要包括服务器参数调优和jvm调优。在本次项目中，由于我们使用hbase作为我们分析数据的原始数据存储表，所以对于hbase我们也需要进行一些调优操作。除了参数调优之外，和其他一般的java程序一样，还需要进行一些jvm调优。</span><br></pre></td></tr></table></figure>
+
+<p>推荐书籍： 《深入理解 Java 虚拟机 -周志明》</p>
+<h3 id="hdfs-调优"><a href="#hdfs-调优" class="headerlink" title="hdfs 调优"></a>hdfs 调优</h3><pre><code>1. dfs.datanode.failed.volumes.tolerated: 允许发生磁盘错误的磁盘数量，默认为0，表示不允许datanode发生磁盘异常。当挂载多个磁盘的时候，可以修改该值。
+2. dfs.replication: 复制因子，默认3
+3. dfs.namenode.handler.count: namenode节点并发线程量，默认10
+4. dfs.datanode.handler.count：datanode之间的并发线程量，默认10。
+5. dfs.datanode.max.transfer.threads：datanode提供的数据流操作的并发线程量，默认4096。
+    一般将其设置为linux系统的文件句柄数的85%~90%之间，查看文件句柄数语句ulimit -a，修改vim /etc/security/limits.conf, 不能设置太大
+    文件末尾，添加
+        * soft nofile 65535
+        * hard nofile 65535
+        注意：句柄数不能够太大，可以设置为1000000以下的所有数值，一般不设置为-1。
+        异常处理：当设置句柄数较大的时候，重新登录可能出现unable load session的提示信息，这个时候采用单用户模式进行修改操作即可。
+            单用户模式：
+                启动的时候按&apos;a&apos;键，进入选择界面，然后按&apos;e&apos;键进入kernel修改界面，然后选择第二行&apos;kernel...&apos;，按&apos;e&apos;键进行修改，在最后添加空格+single即可，按回车键回到修改界面，最后按&apos;b&apos;键进行单用户模式启动，当启动成功后，还原文件后保存，最后退出(exit)重启系统即可。
+6. io.file.buffer.size: 读取/写出数据的buffer大小，默认4096，一般不用设置，推荐设置为4096的整数倍(物理页面的整数倍大小)。</code></pre><h3 id="hbase调优"><a href="#hbase调优" class="headerlink" title="hbase调优"></a>hbase调优</h3><pre><code>1. 设置regionserver的内存大小，默认为1g，推荐设置为4g。
+    修改conf/hbase-env.sh中的HBASE_HEAPSIZE=4g
+2. hbase.regionserver.handler.count: 修改客户端并发线程数，默认为10。设置规则为，当put和scans操作比较的多的时候，将其设置为比较小的值；当get和delete操作比较多的时候，将其设置为比较大的值。原因是防止频繁GC操作导致内存异常。
+3. 自定义hbase的分割和紧缩操作，默认情况下hbase的分割机制是当region大小达到hbase.hregion.max.filesize(10g)的时候进行自动分割，推荐每个regionserver的region个数在20~500个为最佳。hbase的紧缩机制是hbase的一个非常重要的管理机制，hbase的紧缩操作是非常消耗内存和cpu的，所以一般机器压力比较大的话，推荐将其关闭，改为手动控制。
+4. hbase.balancer.period： 设置hbase的负载均衡时间，默认为300000(5分钟)，在负载比较高的集群上，将其值可以适当的改大。
+5. hfile.block.cache.size：修改hflie文件块在内存的占比，默认0.4。在读应用比较多的系统中，可以适当的增大该值，在写应用比较多的系统中，可以适当的减少该值，不过不推荐修改为0。
+6. hbase.regionserver.global.memstore.upperLimit：修改memstore的内存占用比率上限，默认0.4，当达到该值的时候，会进行flush操作将内容写的磁盘中。
+7. hbase.regionserver.global.memstore.lowerLimit: 修改memstore的内存占用比率下限，默认0.38，进行flush操作后，memstore占用的内存比率必须不大于该值。
+8. hbase.hregion.memstore.flush.size: 当memstore的值大于该值的时候，进行flush操作。默认134217728(128M)。
+9. hbase.hregion.memstore.block.multiplier: 修改memstore阻塞块大小比率值，默认为4。也就是说在memstore的大小超过4*hbase.hregion.memstore.flush.size的时候就会触发写阻塞操作。最终可能会导致出现oom异常。</code></pre><h3 id="mapreduce调优"><a href="#mapreduce调优" class="headerlink" title="mapreduce调优"></a>mapreduce调优</h3><pre><code>1. mapreduce.task.io.sort.factor: mr程序进行合并排序的时候，打开的文件数量，默认为10个.
+2. mapreduce.task.io.sort.mb: mr程序进行合并排序操作的时候或者mapper写数据的时候，内存大小，默认100M
+3. mapreduce.map.sort.spill.percent： mr程序进行flush操作的阀值，默认0.80。
+4. mapreduce.reduce.shuffle.parallelcopies：mr程序reducer copy数据的线程数，默认5。
+5. mapreduce.reduce.shuffle.input.buffer.percent: reduce复制map数据的时候指定的内存堆大小百分比，默认为0.70，适当的增加该值可以减少map数据的磁盘溢出，能够提高系统性能。
+6. mapreduce.reduce.shuffle.merge.percent：reduce进行shuffle的时候，用于启动合并输出和磁盘溢写的过程的阀值，默认为0.66。如果允许，适当增大其比例能够减少磁盘溢写次数，提高系统性能。同mapreduce.reduce.shuffle.input.buffer.percent一起使用。
+7. mapreduce.task.timeout：mr程序的task执行情况汇报过期时间，默认600000(10分钟)，设置为0表示不进行该值的判断。</code></pre><h3 id="代码调优"><a href="#代码调优" class="headerlink" title="代码调优"></a>代码调优</h3><p>​    代码调优，主要是mapper和reducer中，针对多次创建的对象，进行代码提出操作。这个和一般的java程序的代码调优一样。</p>
+<ul>
+<li><strong>mapper 调优</strong></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mapper调优主要就是就一个目标：减少输出量。我们可以通过增加combine阶段以及对输出进行压缩设置进行mapper调优。</span><br><span class="line">combine介绍：</span><br><span class="line">实现自定义combine要求继承reducer类，特点：</span><br><span class="line">以map的输出key/value键值对作为输入输出键值对，作用是减少网络输出，在map节点上就合并一部分数据。</span><br><span class="line">比较适合，map的输出是数值型的，方便进行统计。</span><br><span class="line">压缩设置：</span><br><span class="line">在提交job的时候分别设置启动压缩和指定压缩方式。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>reducer 调优</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">reducer调优主要是通过参数调优和设置reducer的个数来完成。</span><br><span class="line">reducer个数调优：</span><br><span class="line">要求：一个reducer和多个reducer的执行结果一致，不能因为多个reducer导致执行结果异常。</span><br><span class="line">规则：一般要求在hadoop集群中的执行mr程序，map执行完成100%后，尽量早的看到reducer执行到33%，可以通过命令hadoop job -status job_id或者web页面来查看。</span><br><span class="line">原因： map的执行process数是通过inputformat返回recordread来定义的；而reducer是有三部分构成的，分别为读取mapper输出数据、合并所有输出数据以及reduce处理，其中第一步要依赖map的执行，所以在数据量比较大的情况下，一个reducer无法满足性能要求的情况下，我们可以通过调高reducer的个数来解决该问题。</span><br><span class="line">优点：充分利用集群的优势。</span><br><span class="line">缺点：有些mr程序没法利用多reducer的优点，比如获取top n的mr程序。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>runner 调优</strong></p>
+<pre><code>runner 调优其实就是在提交job的时候设置 job 参数，一般都可以通过代码和xml文件两种方式进行设置。
+  1~8详见ActiveUserRunner(before和configure方法)，9详解TransformerBaseRunner(initScans方法)</code></pre><ol>
+<li>mapred.child.java.opts: 修改childyard进程执行的jvm参数，针对map和reducer均有效，默认：-Xmx200m </li>
+<li>mapreduce.map.java.opts： 需改map阶段的childyard进程执行jvm参数，默认为空，当为空的时候，使用mapred.child.java.opts。</li>
+<li>mapreduce.reduce.java.opts：修改reducer阶段的childyard进程执行jvm参数，默认为空，当为空的时候，使用mapred.child.java.opts。</li>
+<li>mapreduce.job.reduces： 修改reducer的个数，默认为1。可以通过job.setNumReduceTasks方法来进行更改。</li>
+<li>mapreduce.map.speculative：是否启动map阶段的推测执行，默认为true。其实一般情况设置为false比较好。可通过方法job.setMapSpeculativeExecution来设置。</li>
+<li>mapreduce.reduce.speculative：是否需要启动reduce阶段的推测执行，默认为true，其实一般情况设置为fase比较好。可通过方法job.setReduceSpeculativeExecution来设置。</li>
+<li>mapreduce.map.output.compress：设置是否启动map输出的压缩机制，默认为false。在需要减少网络传输的时候，可以设置为true。</li>
+<li>mapreduce.map.output.compress.codec：设置map输出压缩机制，默认为org.apache.hadoop.io.compress.DefaultCodec，推荐使用SnappyCodec(在之前版本中需要进行安装操作，现在版本不太清楚，安装参数：<a href="http://www.cnblogs.com/chengxin1982/p/3862309.html" target="_blank" rel="noopener">http://www.cnblogs.com/chengxin1982/p/3862309.html</a>)</li>
+<li>hbase参数设置</li>
+</ol>
+</li>
+</ul>
+<pre><code>由于hbase默认是一条一条数据拿取的，在mapper节点上执行的时候是每处理一条数据后就从hbase中获取下一条数据，通过设置cache值可以一次获取多条数据，减少网络数据传输。</code></pre>
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/01/README/" rel="next" title="流年">
+                  <i class="fa fa-chevron-left"></i> 流年
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/09/20191009 Hadoop之MapReduce/" rel="prev" title="20191009 Hadoop-MapReduce">
+                  20191009 Hadoop-MapReduce <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求"><span class="nav-number">1.</span> <span class="nav-text">需求</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据流图"><span class="nav-number">1.1.</span> <span class="nav-text">数据流图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS-SDK"><span class="nav-number">1.2.</span> <span class="nav-text">JS-SDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java-SDK"><span class="nav-number">1.3.</span> <span class="nav-text">Java-SDK</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx-搭建"><span class="nav-number">2.</span> <span class="nav-text">Nginx 搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注册-Nginx-服务"><span class="nav-number">2.1.</span> <span class="nav-text">注册 Nginx 服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx-conf-配置"><span class="nav-number">2.2.</span> <span class="nav-text">Nginx.conf   配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Flume"><span class="nav-number">3.</span> <span class="nav-text">Flume</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume-简介"><span class="nav-number">3.1.</span> <span class="nav-text">Flume 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume-安装配置及案例"><span class="nav-number">3.2.</span> <span class="nav-text">Flume 安装配置及案例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目模块设计"><span class="nav-number">4.</span> <span class="nav-text">项目模块设计*</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ETL-MR"><span class="nav-number">5.</span> <span class="nav-text">ETL -MR</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hive-与-Hbase-整合"><span class="nav-number">6.</span> <span class="nav-text">Hive 与 Hbase 整合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Sqoop"><span class="nav-number">7.</span> <span class="nav-text">Apache Sqoop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sqoop-简介"><span class="nav-number">7.1.</span> <span class="nav-text">Sqoop 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sqoop-架构"><span class="nav-number">7.2.</span> <span class="nav-text">Sqoop 架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sqoop-导入"><span class="nav-number">7.3.</span> <span class="nav-text">Sqoop 导入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sqoop-导出"><span class="nav-number">7.4.</span> <span class="nav-text">Sqoop 导出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sqoop-安装"><span class="nav-number">7.5.</span> <span class="nav-text">Sqoop 安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Sqoop-工具"><span class="nav-number">7.6.</span> <span class="nav-text">Sqoop 工具*</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化"><span class="nav-number">8.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#调优的目的"><span class="nav-number">8.1.</span> <span class="nav-text">调优的目的</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调优的总体概述"><span class="nav-number">8.2.</span> <span class="nav-text">调优的总体概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器调优"><span class="nav-number">8.3.</span> <span class="nav-text">服务器调优</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hdfs-调优"><span class="nav-number">8.4.</span> <span class="nav-text">hdfs 调优</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hbase调优"><span class="nav-number">8.5.</span> <span class="nav-text">hbase调优</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mapreduce调优"><span class="nav-number">8.6.</span> <span class="nav-text">mapreduce调优</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码调优"><span class="nav-number">8.7.</span> <span class="nav-text">代码调优</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

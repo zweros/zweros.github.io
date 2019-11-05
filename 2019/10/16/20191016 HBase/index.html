@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="HBase 简介 Hadoop Database，是一个高可靠性、高性能、面向列、可伸缩、实时读写的分布式数据库  作用：主要用来存储非结构化和半结构化的松散数据（列存 NoSQL 数据库） 利用 Hadoop HDFS 作为其文件存储系统, 利用 Hadoop MapReduce 来处理 HBase 中的海量数据, 利用 Zookeeper 作为其分布式协同服务  非关系型数据库知识面扩展  C">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zwer 的博客空间">
+<meta property="og:url" content="http://zwer.xyz/2019/10/16/20191016 HBase/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="HBase 简介 Hadoop Database，是一个高可靠性、高性能、面向列、可伸缩、实时读写的分布式数据库  作用：主要用来存储非结构化和半结构化的松散数据（列存 NoSQL 数据库） 利用 Hadoop HDFS 作为其文件存储系统, 利用 Hadoop MapReduce 来处理 HBase 中的海量数据, 利用 Zookeeper 作为其分布式协同服务  非关系型数据库知识面扩展  C">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191016145209.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191016162050.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191016162618.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191016164827.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191016165005.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191016204121.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191016213051.png">
+<meta property="og:updated_time" content="2019-11-04T02:45:51.848Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="zwer 的博客空间">
+<meta name="twitter:description" content="HBase 简介 Hadoop Database，是一个高可靠性、高性能、面向列、可伸缩、实时读写的分布式数据库  作用：主要用来存储非结构化和半结构化的松散数据（列存 NoSQL 数据库） 利用 Hadoop HDFS 作为其文件存储系统, 利用 Hadoop MapReduce 来处理 HBase 中的海量数据, 利用 Zookeeper 作为其分布式协同服务  非关系型数据库知识面扩展  C">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20191016145209.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/10/16/20191016 HBase/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title> | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/10/16/20191016 HBase/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-16 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-16T00:00:00+08:00">2019-10-16</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-11-04 10:45:51" itemprop="dateModified" datetime="2019-11-04T10:45:51+08:00">2019-11-04</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="HBase-简介"><a href="#HBase-简介" class="headerlink" title="HBase 简介"></a>HBase 简介</h2><blockquote>
+<p>Hadoop Database，是一个高可靠性、高性能、<strong>面向列</strong>、可伸缩、实时读写的分布式<strong>数据库</strong></p>
+</blockquote>
+<p><strong>作用：</strong>主要用来存储非结构化和半结构化的松散数据（列存 NoSQL 数据库）</p>
+<p>利用 Hadoop HDFS 作为其文件存储系统,</p>
+<p>利用 Hadoop MapReduce 来处理 HBase 中的海量数据,</p>
+<p>利用 Zookeeper 作为其分布式协同服务</p>
+<ul>
+<li><p>非关系型数据库知识面扩展</p>
+<ul>
+<li>Cassandra hbase mongodb </li>
+<li>Couchdb，文件存储数据库</li>
+<li>Neo4j非关系型图数据库</li>
+</ul>
+</li>
+<li><p>HBase 官网地址：<a href="http://hbase.apache.org/" target="_blank" rel="noopener">http://hbase.apache.org/</a></p>
+</li>
+</ul>
+<h3 id="Hadoop-生态系统"><a href="#Hadoop-生态系统" class="headerlink" title="Hadoop 生态系统"></a>Hadoop 生态系统</h3><p><img src="http://img.zwer.xyz/blog/20191016145209.png" alt></p>
+<p><em>MapReduce 计算的数据来源：</em></p>
+<ol>
+<li>HDFS 或者其他文件系统 2.数据库（既可以是关系型数据也可以非关系型）</li>
+</ol>
+<p><em>Hive 和 HBase 的区别：</em></p>
+<p> Hive 是数据仓库，HBase 是数据库。Hive 是用 SQL 方式处理数据，底层使用 MapReduce 计算框架</p>
+<p><em>使用 MapReduce  注意：</em></p>
+<ol>
+<li>map 生成小文件  2. 数据倾斜</li>
+</ol>
+<h2 id="HBase-数据模型"><a href="#HBase-数据模型" class="headerlink" title="HBase 数据模型"></a>HBase 数据模型</h2><p><img src="http://img.zwer.xyz/blog/20191016162050.png" alt></p>
+<ul>
+<li><p><strong>ROW  KEY</strong>（ROW KEY 设计很重要）</p>
+<p>决定一行数据，按照<strong>字典顺序</strong>排序的。Row key只能存储 64k 的字节数据</p>
+</li>
+<li><p><strong>Column Family 列族 &amp; qualifier列</strong></p>
+<ol>
+<li><p>HBase 表中的每个列都归属于某个列族，列族必须作为表模式(schema)定义的一部分预先给出。</p>
+<p>如 create ‘test’, ‘course’；</p>
+</li>
+<li><p>列名以列族作为前缀，每个“列族”都可以有多个列成员(column)；</p>
+<p>如course:math, course:english, 新的列族成员（列）可以随后按需、动态加入；</p>
+</li>
+<li><p>权限控制、存储以及调优都是在列族层面进行的；</p>
+</li>
+<li><p>HBase 把同一列族里面的数据存储在同一目录下，由几个文件保存。</p>
+</li>
+</ol>
+</li>
+<li><p><strong>Cell 单元格</strong></p>
+<p>由行和列的坐标交叉决定；</p>
+<p>单元格是有版本的；</p>
+<p>单元格的内容是未解析的<em>字节数组</em>；</p>
+<p>由<code>{row key， column( =&lt;family&gt; +&lt;qualifier&gt;)， version}</code> 唯一确定的单元。</p>
+<p>cell中的数据是没有类型的，全部是<em>字节码形式存贮</em>。</p>
+</li>
+<li><p><strong>Timestamp 时间戳</strong></p>
+<p>在 HBase 每个 cell 存储单元对同一份数据有多个版本，根据唯一的时间戳来区分每个版本之间的差异，不同版本的数据按照时间倒序排序，最新的数据版本排在最前面。</p>
+<p>时间戳的类型是 64位整型。</p>
+<p>时间戳可以由 HBase (在数据写入时自动)赋值，此时时间戳是精确到毫秒的当前系统时间。</p>
+<p>时间戳也可以由客户显式赋值，如果应用程序要避免数据版本冲突，就必须自己生成具有唯一性的时间戳。</p>
+</li>
+<li><p><strong>HLog(WAL log)</strong></p>
+<p>HLog 文件就是一个普通的 Hadoop Sequence File，Sequence File 的 Key 是 HLogKey 对象，HLogKey 中记录了写入数据的归属信息，除了 table 和 region 名字外，同时还包括 sequence number 和 timestamp，timestamp 是” 写入时间”，sequence number 的起始值为0，或者是最近一次存入文件系统中 sequence number。<br>HLog SequeceFile 的 Value 是 HBase 的 KeyValue 对象，即对应 HFile 中的 KeyValue。</p>
+</li>
+</ul>
+<p>注：region：范围、地区</p>
+<h2 id="HBase-架构"><a href="#HBase-架构" class="headerlink" title="HBase 架构"></a>HBase 架构</h2><h3 id="HBase-架构图"><a href="#HBase-架构图" class="headerlink" title="HBase 架构图"></a>HBase 架构图</h3><p><img src="http://img.zwer.xyz/blog/20191016162618.png" alt></p>
+<h3 id="HBase-架构中各角色作用"><a href="#HBase-架构中各角色作用" class="headerlink" title="HBase 架构中各角色作用"></a>HBase 架构中各角色作用</h3><ul>
+<li><p><strong>Client</strong><br>包含访问 HBase 的接口并维护 cache 来加快对 HBase 的访问</p>
+</li>
+<li><p><strong>Zookeeper</strong>（不仅可以做集群的高可用）<br>保证任何时候，集群中只有一个 master<br>存贮所有 Region 的寻址入口。<br>实时监控 Region server 的上线和下线信息。并实时通知 Master<br>存储 HBase 的 schema 和 table 元数据</p>
+</li>
+<li><p><strong>Master</strong><br>为 Region server 分配 region<br>负责 Region server 的负载均衡<br>发现失效的 Region server 并重新分配其上的 region<br>管理用户对 table 的增删改操作</p>
+</li>
+<li><p><strong>RegionServer</strong><br>Region server 维护 region，处理对这些 region 的 IO 请求<br>Region server 负责切分在运行过程中变得过大的 region</p>
+</li>
+<li><p><strong>Region</strong><br>HBase 自动把表水平划分成多个区域(region)，每个 region 会保存一个表里面某段<em>连续的数据</em>（按字典序）</p>
+<p>每个表一开始只有一个 region，随着数据不断插入表，region 不断增大，当增大到一个阀值的时候，region就会等分会两个新的 region（裂变）</p>
+<p>当 table 中的行不断增多，就会有越来越多的 region。这样一张完整的表被保存在多个 Regionserver 上。</p>
+</li>
+<li><p><strong>Memstore &amp; storefile</strong><br>一个 region 由多个 store 组成，一个 store 对应一个CF（列族）</p>
+<p>store 包括位于内存中的 memstore 和位于磁盘的 storefile 。</p>
+<p>写操作先写入memstore，当 memstore 中的数据达到某个阈值，hregionserver 会启动 flashcache 进程写</p>
+<p>入 storefile，每次写入形成单独的一个 storefile。</p>
+<p>当 storefile 文件的数量增长到一定阈值后，<strong>系统会进行合并（minor、major compaction）</strong>，在合并过程</p>
+<p>中会进行版本合并和删除工作（majar），形成更大的 storefile。</p>
+<p>当一个 region 所有 storefile的大小和数量超过一定阈值后，会把当前的 region 分割为两个，并由 hmaster</p>
+<p>分配到相应的 regionserver 服务器，实现负载均衡。</p>
+<p>客户端检索数据，先在 memstore 找，找不到再找 storefile（先找 cache 后找磁盘）</p>
+</li>
+<li><p><strong>Region补充：</strong></p>
+<p>HRegion 是 HBase 中分布式存储和负载均衡的最小单元。</p>
+<p>最小单元就表示不同的 HRegion 可以分布在不同的 HRegion server上。</p>
+<p>HRegion 由一个或者多个 Store 组成，每个 store 保存一个 columns family。</p>
+<p>每个 Strore 又由一个 memStore 和 0 至多个 StoreFile 组成。</p>
+<p>如图：StoreFile 以 HFile 格式保存在 HDFS上。</p>
+<img src="http://img.zwer.xyz/blog/20191016164827.png" style="zoom: 50%;">
+
+<img src="http://img.zwer.xyz/blog/20191016165005.png" style="zoom:50%;">
+
+</li>
+</ul>
+<h2 id="HBase-环境搭建"><a href="#HBase-环境搭建" class="headerlink" title="HBase 环境搭建"></a>HBase 环境搭建</h2><p>HBase 官方文档地址：<a href="http://hbase.apache.org/book.html#quickstart" target="_blank" rel="noopener">http://hbase.apache.org/book.html#quickstart</a></p>
+<h3 id="HBase-伪分布式搭建"><a href="#HBase-伪分布式搭建" class="headerlink" title="HBase 伪分布式搭建"></a>HBase 伪分布式搭建</h3><ul>
+<li><p><strong>系统环境</strong></p>
+<p>JDK  1.7，并配置 JAVA_HOME 环境变量</p>
+</li>
+<li><p><strong>HBase 安装步骤</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 上传 HBase 压缩包文件，并解压到指定目录， 通过 tar 命令中 -C 指定解压到的目录</span><br><span class="line">tar xf hbase-0.98.12.1-hadoop2-bin.tar.gz  -C  /opt/sxt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 配置 HBase 环境变量</span><br><span class="line">vi /etc/profile</span><br><span class="line"><span class="meta">#</span> 增加的配置内容</span><br><span class="line">export HBASE_HOME=/opt/sxt/hbase-0.98.12.1-hadoop2</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin:$HBASE_HOME/bin</span><br><span class="line"><span class="meta">#</span> 环境变量生效</span><br><span class="line">. /etc/profile</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 进入 $HBSE_HOME/conf 下</span><br><span class="line"><span class="meta">#</span> 修改 hbase-env.sh</span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.7.0_67</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 修改 hbase-site.xml </span><br><span class="line">&lt;property&gt;</span><br><span class="line">&lt;name&gt;hbase.rootdir&lt;/name&gt;</span><br><span class="line">&lt;value&gt;file:///home/testuser/hbase&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">&lt;name&gt;hbase.zookeeper.property.dataDir&lt;/name&gt;</span><br><span class="line">&lt;value&gt;/home/testuser/zookeeper&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">&lt;name&gt;hbase.unsafe.stream.capability.enforce&lt;/name&gt;</span><br><span class="line">&lt;value&gt;false&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动</span><br><span class="line">start-hbase.sh</span><br><span class="line"><span class="meta">#</span> 访问 HBase ，端口号为 60010</span><br><span class="line">http://192.168.170.105:60010</span><br><span class="line"><span class="meta">#</span> </span><br><span class="line">hbase shell</span><br><span class="line"><span class="meta">#</span>help 查看 hbase 使用</span><br><span class="line"><span class="meta">#</span>list  列出所欲当前数据表</span><br><span class="line"><span class="meta">#</span>scan  列出当前数据表中记录数</span><br><span class="line"><span class="meta">#</span>create 创建表</span><br><span class="line"><span class="meta">#</span>put    增加记录</span><br><span class="line"><span class="meta">#</span>delete  删除记录</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><strong>HBase 操作</strong></li>
+</ul>
+<p><img src="http://img.zwer.xyz/blog/20191016204121.png" alt></p>
+<p>补充：  list  显示当前 HBase 中所有表  </p>
+<p>​              flush 将 inmemstore 中数据写入 storefile </p>
+<h3 id="HBase-完全分布式搭建"><a href="#HBase-完全分布式搭建" class="headerlink" title="HBase 完全分布式搭建"></a>HBase 完全分布式搭建</h3><ul>
+<li><p><strong>节点分布</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">NN</th>
+<th align="center">DN</th>
+<th align="center">ZK</th>
+<th align="center">HMaster</th>
+<th align="center">Backup-HMaster</th>
+<th align="center">RegionServer</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">node01</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">node02</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td align="center">node03</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td align="center">node04</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td align="center">node05</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>系统设置</strong></p>
+<ol>
+<li><p>集群间网络通信</p>
+</li>
+<li><p>时间同步</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 安装 ntp 服务</span><br><span class="line">yum install -y ntp</span><br><span class="line"><span class="meta">#</span> 时间服务器</span><br><span class="line">ntpdate ntp1.aliyun.com</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>JDK 环境</p>
+</li>
+<li><p>免秘钥登录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ssh-keygen</span><br><span class="line">ssh-copy-id -i /root/.ssh/id_rsa.pub host(需要免密钥登录的服务器地址)</span><br><span class="line">eg: ssh-copy-id -i .ssh/id_rsa.pub  node02</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>hadoop 集群启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-dfs.sh</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p><strong>HBase 搭建</strong></p>
+<ol>
+<li><p>上传解压</p>
+</li>
+<li><p>修改配置文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> node 节点上------------------------------</span><br><span class="line"><span class="meta">#</span> 进入 $HBASE_HOME/conf 目录下</span><br><span class="line"><span class="meta">#</span> 编辑 vi  hbase-env.sh ,配置JDk 、关闭 zk </span><br><span class="line">export JAVA_HOME=/usr/java/jdk1.7.0_67</span><br><span class="line">export HBASE_MANAGES_ZK=false</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 编辑 vi hbase-site.xml ，增加内容为 </span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hbase.cluster.distributed&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;true&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hbase.rootdir&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;hdfs://mycluster:8020/hbase&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">  &lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt;</span><br><span class="line">  &lt;value&gt;node02,node03,node04&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 编辑 vi regionservers,增加内容为 </span><br><span class="line">node02</span><br><span class="line">node03</span><br><span class="line">node04</span><br><span class="line"><span class="meta">#</span> 编辑 vi backup-masters，增加内容为 </span><br><span class="line">node05</span><br><span class="line"><span class="meta">#</span> 拷贝 $HADOOP_HOME/etc/hadoop/hdfs-size.xml 到 $HBASE_HOME/conf 目录下(重要)</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 分发到 node02、node03、node04、node05</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 配置 node02、node03、node04、node05 的 hbase 环境变量</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start-hbase.sh</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.zwer.xyz/blog/20191016213051.png" alt></p>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="HBase-API"><a href="#HBase-API" class="headerlink" title="HBase-API"></a>HBase-API</h2><blockquote>
+<p>重点 ： rowkey 设计</p>
+</blockquote>
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><ol>
+<li><p>创建 hbase-demo 普通 java 项目，并导入 hadoop 和 hbase 相关依赖 jar 包，并发布到类路径上</p>
+</li>
+<li><p>创建 HBaseDemo</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HbaseDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	HBaseAdmin admin;</span><br><span class="line">	HTable htable;</span><br><span class="line">	Configuration conf;</span><br><span class="line">	String TN = <span class="string">"test"</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">		conf.set(<span class="string">"hbase.zookeeper.quorum"</span>, <span class="string">"node02,node03,node04"</span>);</span><br><span class="line">		admin = <span class="keyword">new</span> HBaseAdmin(conf);</span><br><span class="line">		htable = <span class="keyword">new</span> HTable(conf, TN.getBytes());</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    	<span class="meta">@After</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (admin != <span class="keyword">null</span>) &#123;</span><br><span class="line">			admin.close();</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>创建表</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">createTable</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    HTableDescriptor table = <span class="keyword">new</span> HTableDescriptor(TableName.valueOf(TN.getBytes()));</span><br><span class="line">    HColumnDescriptor column = <span class="keyword">new</span> HColumnDescriptor(<span class="string">"cf"</span>);</span><br><span class="line">    table.addFamily(column);</span><br><span class="line">    <span class="keyword">if</span> (admin.tableExists(TN.getBytes())) &#123;</span><br><span class="line">        admin.disableTable(TN.getBytes());</span><br><span class="line">        admin.deleteTable(TN.getBytes());</span><br><span class="line">    &#125;</span><br><span class="line">    admin.createTable(table);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>存放数据</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">put</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		String rowkey = <span class="string">"r124"</span>;</span><br><span class="line">		Put put = <span class="keyword">new</span> Put(rowkey.getBytes());</span><br><span class="line">		put.add(<span class="string">"cf"</span>.getBytes(), <span class="string">"name"</span>.getBytes(), <span class="string">"xiaoli"</span>.getBytes());</span><br><span class="line">		put.add(<span class="string">"cf"</span>.getBytes(), <span class="string">"age"</span>.getBytes(), <span class="string">"32"</span>.getBytes());</span><br><span class="line">		put.add(<span class="string">"cf"</span>.getBytes(), <span class="string">"sex"</span>.getBytes(), <span class="string">"female"</span>.getBytes());</span><br><span class="line">		htable.put(put);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>获取数据</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showTable</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Get get = <span class="keyword">new</span> Get(<span class="string">"r123"</span>.getBytes());</span><br><span class="line">    <span class="comment">// 必须加</span></span><br><span class="line">    get.addColumn(<span class="string">"cf"</span>.getBytes(), <span class="string">"name"</span>.getBytes());</span><br><span class="line">    get.addColumn(<span class="string">"cf"</span>.getBytes(), <span class="string">"age"</span>.getBytes());</span><br><span class="line">    Result result = htable.get(get);</span><br><span class="line">    Cell name = result.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"name"</span>.getBytes());</span><br><span class="line">    Cell age = result.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"age"</span>.getBytes());</span><br><span class="line">    <span class="comment">// System.out.println(new String(name.getValue()));</span></span><br><span class="line">    <span class="comment">// System.out.println(new String(age.getValue()));</span></span><br><span class="line">    System.out.print(<span class="keyword">new</span> String(CellUtil.cloneValue(name)));</span><br><span class="line">    System.out.print(<span class="keyword">new</span> String(CellUtil.cloneValue(age)));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>条件查询</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 生成电话号码</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> prefix</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	Random r = <span class="keyword">new</span> Random();</span><br><span class="line">	<span class="function"><span class="keyword">private</span> String <span class="title">generatePhoneNumber</span><span class="params">(String prefix)</span> </span>&#123;</span><br><span class="line">		String pNum = prefix + String.format(<span class="string">"%08d"</span>, r.nextInt(<span class="number">99999999</span>));</span><br><span class="line">		<span class="keyword">return</span> pNum;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 *  获取随机时间</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	DateFormat sdf = <span class="keyword">new</span> SimpleDateFormat(<span class="string">"yyyyMMddHHmmss"</span>);</span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">getDate</span><span class="params">(String year)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 月 天 小时 分钟 秒</span></span><br><span class="line">		Object[] args = &#123; r.nextInt(<span class="number">12</span>)+<span class="number">1</span>, r.nextInt(<span class="number">31</span>)+<span class="number">1</span>, r.nextInt(<span class="number">24</span>), r.nextInt(<span class="number">60</span>), r.nextInt(<span class="number">60</span>) &#125;;</span><br><span class="line">		String dateStr = year + String.format(<span class="string">"%02d%02d%02d%02d%02d"</span>, args);</span><br><span class="line">		<span class="keyword">return</span> dateStr;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 *  生成 10个人通话记录</span></span><br><span class="line"><span class="comment">	 *  // phoneNum_(max-timestamp)  </span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">addPhoneRecord</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">		List&lt;Put&gt; puts = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; <span class="number">10</span>;i++)&#123;</span><br><span class="line">			String phoneNum = generatePhoneNumber(<span class="string">"189"</span>);</span><br><span class="line">			<span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>;j &lt; <span class="number">100</span>;j++)&#123;</span><br><span class="line">				String dnum = generatePhoneNumber(<span class="string">"138"</span>);</span><br><span class="line">				String length = r.nextInt(<span class="number">99</span>)+<span class="string">""</span>; <span class="comment">// 通话时长</span></span><br><span class="line">				String type = r.nextInt(<span class="number">2</span>)+<span class="string">""</span>; <span class="comment">// 1 是主叫，2 是被叫</span></span><br><span class="line">				String dataStr  = getDate(<span class="string">"2019"</span>);  <span class="comment">// 通话开始时间</span></span><br><span class="line">				String rowkey = phoneNum+<span class="string">"_"</span>+(Long.MAX_VALUE-sdf.parse(dataStr).getTime());</span><br><span class="line">				Put put = <span class="keyword">new</span> Put(rowkey.getBytes());</span><br><span class="line">				put.add(<span class="string">"cf"</span>.getBytes(),<span class="string">"dnum"</span>.getBytes(),dnum.getBytes());</span><br><span class="line">				put.add(<span class="string">"cf"</span>.getBytes(),<span class="string">"length"</span>.getBytes(),length.getBytes());</span><br><span class="line">				put.add(<span class="string">"cf"</span>.getBytes(),<span class="string">"type"</span>.getBytes(),type.getBytes());</span><br><span class="line">				put.add(<span class="string">"cf"</span>.getBytes(),<span class="string">"dataStr"</span>.getBytes(),dataStr.getBytes());</span><br><span class="line">				puts.add(put);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		htable.put(puts);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 查找通话记录 ，指定电话的在 1月份 4 月份之间的通话记录</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scan</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		String phoneNum = <span class="string">"18985484208"</span>;                            <span class="comment">//20190022203207</span></span><br><span class="line">		String startRow = phoneNum+<span class="string">"_"</span>+(Long.MAX_VALUE-sdf.parse(<span class="string">"20190401000000"</span>).getTime());</span><br><span class="line">		String stopRow =  phoneNum+<span class="string">"_"</span>+(Long.MAX_VALUE-sdf.parse(<span class="string">"20190101000000"</span>).getTime());</span><br><span class="line">		Scan scan = <span class="keyword">new</span> Scan();</span><br><span class="line">		scan.setStartRow(startRow.getBytes());</span><br><span class="line">		scan.setStopRow(stopRow.getBytes());</span><br><span class="line">		ResultScanner scanner = htable.getScanner(scan);</span><br><span class="line">		<span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (Result rs : scanner) &#123;</span><br><span class="line">			System.out.print(<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"dnum"</span>.getBytes()))));</span><br><span class="line">			System.out.print(<span class="string">"\t"</span>+<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"length"</span>.getBytes()))));</span><br><span class="line">			System.out.print(<span class="string">"\t"</span>+<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"type"</span>.getBytes()))));</span><br><span class="line">			System.out.println(<span class="string">"\t"</span>+<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"dataStr"</span>.getBytes()))));</span><br><span class="line">			count ++;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">"count:"</span>+count);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 查找指定电话主叫的通话记录</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">scan2</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">		FilterList list = <span class="keyword">new</span> FilterList(FilterList.Operator.MUST_PASS_ALL);</span><br><span class="line">		PrefixFilter filter1 = <span class="keyword">new</span> PrefixFilter(<span class="string">"18985484208"</span>.getBytes());</span><br><span class="line">		SingleColumnValueFilter filter2 = <span class="keyword">new</span> SingleColumnValueFilter(<span class="string">"cf"</span>.getBytes(), <span class="string">"type"</span>.getBytes(),</span><br><span class="line">				CompareOp.EQUAL, <span class="string">"1"</span>.getBytes());</span><br><span class="line">		list.addFilter(filter1);</span><br><span class="line">		list.addFilter(filter2);</span><br><span class="line">		Scan scan = <span class="keyword">new</span> Scan();</span><br><span class="line">		scan.setFilter(list);</span><br><span class="line">		ResultScanner scanner = htable.getScanner(scan);</span><br><span class="line">		<span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (Result rs : scanner) &#123;</span><br><span class="line">			System.out.print(<span class="keyword">new</span> String(rs.getRow()));</span><br><span class="line">			System.out.print(<span class="string">"\t"</span>+<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"dnum"</span>.getBytes()))));</span><br><span class="line">			System.out.print(<span class="string">"\t"</span>+<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"length"</span>.getBytes()))));</span><br><span class="line">			System.out.print(<span class="string">"\t"</span>+<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"type"</span>.getBytes()))));</span><br><span class="line">			System.out.println(<span class="string">"\t"</span>+<span class="keyword">new</span> String(CellUtil.cloneValue(rs.getColumnLatestCell(<span class="string">"cf"</span>.getBytes(), <span class="string">"dataStr"</span>.getBytes()))));</span><br><span class="line">			count ++;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">"count:"</span>+count);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br><span class="line">509</span><br><span class="line">510</span><br><span class="line">511</span><br><span class="line">512</span><br><span class="line">513</span><br><span class="line">514</span><br><span class="line">515</span><br><span class="line">516</span><br><span class="line">517</span><br><span class="line">518</span><br><span class="line">519</span><br><span class="line">520</span><br><span class="line">521</span><br><span class="line">522</span><br><span class="line">523</span><br><span class="line">524</span><br><span class="line">525</span><br><span class="line">526</span><br><span class="line">527</span><br><span class="line">528</span><br><span class="line">529</span><br><span class="line">530</span><br><span class="line">531</span><br><span class="line">532</span><br><span class="line">533</span><br><span class="line">534</span><br><span class="line">535</span><br><span class="line">536</span><br><span class="line">537</span><br><span class="line">538</span><br><span class="line">539</span><br><span class="line">540</span><br><span class="line">541</span><br><span class="line">542</span><br><span class="line">543</span><br><span class="line">544</span><br><span class="line">545</span><br><span class="line">546</span><br><span class="line">547</span><br><span class="line">548</span><br><span class="line">549</span><br><span class="line">550</span><br><span class="line">551</span><br><span class="line">552</span><br><span class="line">553</span><br><span class="line">554</span><br><span class="line">555</span><br><span class="line">556</span><br><span class="line">557</span><br><span class="line">558</span><br><span class="line">559</span><br><span class="line">560</span><br><span class="line">561</span><br><span class="line">562</span><br><span class="line">563</span><br><span class="line">564</span><br></pre></td><td class="code"><pre><span class="line">public class HBaseDAOImp &#123;</span><br><span class="line"></span><br><span class="line">	HConnection hTablePool = null;</span><br><span class="line">	static Configuration conf = null;</span><br><span class="line"></span><br><span class="line">	public HBaseDAOImp() &#123;</span><br><span class="line">		conf = new Configuration();</span><br><span class="line">		String zk_list = &quot;node01,node02,node03&quot;;</span><br><span class="line">		conf.set(&quot;hbase.zookeeper.quorum&quot;, zk_list);</span><br><span class="line">		try &#123;</span><br><span class="line">			hTablePool = HConnectionManager.createConnection(conf);</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void save(Put put, String tableName) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			table.put(put);</span><br><span class="line"></span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 插入一个cell</span><br><span class="line">	 * </span><br><span class="line">	 * @param tableName</span><br><span class="line">	 * @param rowKey</span><br><span class="line">	 * @param family</span><br><span class="line">	 * @param quailifer</span><br><span class="line">	 * @param value</span><br><span class="line">	 */</span><br><span class="line">	public void insert(String tableName, String rowKey, String family, String quailifer, String value) &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			Put put = new Put(rowKey.getBytes());</span><br><span class="line">			put.add(family.getBytes(), quailifer.getBytes(), value.getBytes());</span><br><span class="line">			table.put(put);</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 在一个列族下插入多个单元格</span><br><span class="line">	 * </span><br><span class="line">	 * @param tableName</span><br><span class="line">	 * @param rowKey</span><br><span class="line">	 * @param family</span><br><span class="line">	 * @param quailifer</span><br><span class="line">	 * @param value</span><br><span class="line">	 */</span><br><span class="line">	public void insert(String tableName, String rowKey, String family, String quailifer[], String value[]) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			Put put = new Put(rowKey.getBytes());</span><br><span class="line">			// 批量添加</span><br><span class="line">			for (int i = 0; i &lt; quailifer.length; i++) &#123;</span><br><span class="line">				String col = quailifer[i];</span><br><span class="line">				String val = value[i];</span><br><span class="line">				put.add(family.getBytes(), col.getBytes(), val.getBytes());</span><br><span class="line">			&#125;</span><br><span class="line">			table.put(put);</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void save(List&lt;Put&gt; Put, String tableName) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			table.put(Put);</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public Result getOneRow(String tableName, String rowKey) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		Result rsResult = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			Get get = new Get(rowKey.getBytes());</span><br><span class="line">			rsResult = table.get(get);</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return rsResult;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 最常用的方法，优化查询 查询一行数据，</span><br><span class="line">	 * </span><br><span class="line">	 * @param tableName</span><br><span class="line">	 * @param rowKey</span><br><span class="line">	 * @param cols</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public Result getOneRowAndMultiColumn(String tableName, String rowKey, String[] cols) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		Result rsResult = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			Get get = new Get(rowKey.getBytes());</span><br><span class="line">			for (int i = 0; i &lt; cols.length; i++) &#123;</span><br><span class="line">				get.addColumn(&quot;cf&quot;.getBytes(), cols[i].getBytes());</span><br><span class="line">			&#125;</span><br><span class="line">			rsResult = table.get(get);</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return rsResult;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public List&lt;Result&gt; getRows(String tableName, String rowKeyLike) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		List&lt;Result&gt; list = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			FilterList fl = new FilterList(FilterList.Operator.MUST_PASS_ALL);</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			PrefixFilter filter = new PrefixFilter(rowKeyLike.getBytes());</span><br><span class="line">			SingleColumnValueFilter filter1 = new SingleColumnValueFilter(&quot;order&quot;.getBytes(), &quot;order_type&quot;.getBytes(),</span><br><span class="line">					CompareOp.EQUAL, Bytes.toBytes(&quot;1&quot;));</span><br><span class="line">			fl.addFilter(filter);</span><br><span class="line">			fl.addFilter(filter1);</span><br><span class="line">			Scan scan = new Scan();</span><br><span class="line">			scan.setFilter(fl);</span><br><span class="line">			ResultScanner scanner = table.getScanner(scan);</span><br><span class="line">			list = new ArrayList&lt;Result&gt;();</span><br><span class="line">			for (Result rs : scanner) &#123;</span><br><span class="line">				list.add(rs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return list;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public List&lt;Result&gt; getRows(String tableName, String rowKeyLike, String cols[]) &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		List&lt;Result&gt; list = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			PrefixFilter filter = new PrefixFilter(rowKeyLike.getBytes());</span><br><span class="line"></span><br><span class="line">			Scan scan = new Scan();</span><br><span class="line">			for (int i = 0; i &lt; cols.length; i++) &#123;</span><br><span class="line">				scan.addColumn(&quot;cf&quot;.getBytes(), cols[i].getBytes());</span><br><span class="line">			&#125;</span><br><span class="line">			scan.setFilter(filter);</span><br><span class="line">			ResultScanner scanner = table.getScanner(scan);</span><br><span class="line">			list = new ArrayList&lt;Result&gt;();</span><br><span class="line">			for (Result rs : scanner) &#123;</span><br><span class="line">				list.add(rs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return list;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public List&lt;Result&gt; getRowsByOneKey(String tableName, String rowKeyLike, String cols[]) &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		List&lt;Result&gt; list = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			PrefixFilter filter = new PrefixFilter(rowKeyLike.getBytes());</span><br><span class="line"></span><br><span class="line">			Scan scan = new Scan();</span><br><span class="line">			for (int i = 0; i &lt; cols.length; i++) &#123;</span><br><span class="line">				scan.addColumn(&quot;cf&quot;.getBytes(), cols[i].getBytes());</span><br><span class="line">			&#125;</span><br><span class="line">			scan.setFilter(filter);</span><br><span class="line">			ResultScanner scanner = table.getScanner(scan);</span><br><span class="line">			list = new ArrayList&lt;Result&gt;();</span><br><span class="line">			for (Result rs : scanner) &#123;</span><br><span class="line">				list.add(rs);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return list;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 范围查询</span><br><span class="line">	 * </span><br><span class="line">	 * @param tableName</span><br><span class="line">	 * @param startRow</span><br><span class="line">	 * @param stopRow</span><br><span class="line">	 * @return</span><br><span class="line">	 */</span><br><span class="line">	public List&lt;Result&gt; getRows(String tableName, String startRow, String stopRow) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		List&lt;Result&gt; list = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			Scan scan = new Scan();</span><br><span class="line">			scan.setStartRow(startRow.getBytes());</span><br><span class="line">			scan.setStopRow(stopRow.getBytes());</span><br><span class="line">			ResultScanner scanner = table.getScanner(scan);</span><br><span class="line">			list = new ArrayList&lt;Result&gt;();</span><br><span class="line">			for (Result rsResult : scanner) &#123;</span><br><span class="line">				list.add(rsResult);</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return list;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void deleteRecords(String tableName, String rowKeyLike) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			PrefixFilter filter = new PrefixFilter(rowKeyLike.getBytes());</span><br><span class="line">			Scan scan = new Scan();</span><br><span class="line">			scan.setFilter(filter);</span><br><span class="line">			ResultScanner scanner = table.getScanner(scan);</span><br><span class="line">			List&lt;Delete&gt; list = new ArrayList&lt;Delete&gt;();</span><br><span class="line">			for (Result rs : scanner) &#123;</span><br><span class="line">				Delete del = new Delete(rs.getRow());</span><br><span class="line">				list.add(del);</span><br><span class="line">			&#125;</span><br><span class="line">			table.delete(list);</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void deleteCell(String tableName, String rowkey, String cf, String column) &#123;</span><br><span class="line">		HTableInterface table = null;</span><br><span class="line">		try &#123;</span><br><span class="line">			table = hTablePool.getTable(tableName);</span><br><span class="line">			Delete del = new Delete(rowkey.getBytes());</span><br><span class="line">			del.deleteColumn(cf.getBytes(), column.getBytes());</span><br><span class="line">			table.delete(del);</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; finally &#123;</span><br><span class="line">			try &#123;</span><br><span class="line">				table.close();</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void createTable(String tableName, String[] columnFamilys) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			// admin 对象</span><br><span class="line">			HBaseAdmin admin = new HBaseAdmin(conf);</span><br><span class="line">			if (admin.tableExists(tableName)) &#123;</span><br><span class="line">				System.err.println(&quot;此表，已存在！&quot;);</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				HTableDescriptor tableDesc = new HTableDescriptor(TableName.valueOf(tableName));</span><br><span class="line"></span><br><span class="line">				for (String columnFamily : columnFamilys) &#123;</span><br><span class="line">					tableDesc.addFamily(new HColumnDescriptor(columnFamily));</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">				admin.createTable(tableDesc);</span><br><span class="line">				System.err.println(&quot;建表成功!&quot;);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">			admin.close();// 关闭释放资源</span><br><span class="line">		&#125; catch (MasterNotRunningException e) &#123;</span><br><span class="line">			// TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; catch (ZooKeeperConnectionException e) &#123;</span><br><span class="line">			// TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			// TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 删除一个表</span><br><span class="line">	 * </span><br><span class="line">	 * @param tableName</span><br><span class="line">	 *            删除的表名</span><br><span class="line">	 */</span><br><span class="line">	public void deleteTable(String tableName) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			HBaseAdmin admin = new HBaseAdmin(conf);</span><br><span class="line">			if (admin.tableExists(tableName)) &#123;</span><br><span class="line">				admin.disableTable(tableName);// 禁用表</span><br><span class="line">				admin.deleteTable(tableName);// 删除表</span><br><span class="line">				System.err.println(&quot;删除表成功!&quot;);</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">				System.err.println(&quot;删除的表不存在！&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">			admin.close();</span><br><span class="line">		&#125; catch (MasterNotRunningException e) &#123;</span><br><span class="line">			// TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; catch (ZooKeeperConnectionException e) &#123;</span><br><span class="line">			// TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			// TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 查询表中所有行</span><br><span class="line">	 * </span><br><span class="line">	 * @param tablename</span><br><span class="line">	 */</span><br><span class="line">	public void scaner(String tablename) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			HTable table = new HTable(conf, tablename);</span><br><span class="line">			Scan s = new Scan();</span><br><span class="line">			// s.addColumn(family, qualifier)</span><br><span class="line">			// s.addColumn(family, qualifier)</span><br><span class="line">			ResultScanner rs = table.getScanner(s);</span><br><span class="line">			for (Result r : rs) &#123;</span><br><span class="line"></span><br><span class="line">				for (Cell cell : r.rawCells()) &#123;</span><br><span class="line">					System.out.println(&quot;RowName:&quot; + new String(CellUtil.cloneRow(cell)) + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;Timetamp:&quot; + cell.getTimestamp() + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;column Family:&quot; + new String(CellUtil.cloneFamily(cell)) + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;row Name:&quot; + new String(CellUtil.cloneQualifier(cell)) + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;value:&quot; + new String(CellUtil.cloneValue(cell)) + &quot; &quot;);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void scanerByColumn(String tablename) &#123;</span><br><span class="line"></span><br><span class="line">		try &#123;</span><br><span class="line">			HTable table = new HTable(conf, tablename);</span><br><span class="line">			Scan s = new Scan();</span><br><span class="line">			s.addColumn(&quot;cf&quot;.getBytes(), &quot;201504052237&quot;.getBytes());</span><br><span class="line">			s.addColumn(&quot;cf&quot;.getBytes(), &quot;201504052237&quot;.getBytes());</span><br><span class="line">			ResultScanner rs = table.getScanner(s);</span><br><span class="line">			for (Result r : rs) &#123;</span><br><span class="line"></span><br><span class="line">				for (Cell cell : r.rawCells()) &#123;</span><br><span class="line">					System.out.println(&quot;RowName:&quot; + new String(CellUtil.cloneRow(cell)) + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;Timetamp:&quot; + cell.getTimestamp() + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;column Family:&quot; + new String(CellUtil.cloneFamily(cell)) + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;row Name:&quot; + new String(CellUtil.cloneQualifier(cell)) + &quot; &quot;);</span><br><span class="line">					System.out.println(&quot;value:&quot; + new String(CellUtil.cloneValue(cell)) + &quot; &quot;);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">		// 创建表</span><br><span class="line">		// String tableName=&quot;test&quot;;</span><br><span class="line">		// String cfs[] = &#123;&quot;cf&quot;&#125;;</span><br><span class="line">		// dao.createTable(tableName,cfs);</span><br><span class="line"></span><br><span class="line">		// 存入一条数据</span><br><span class="line">		// Put put = new Put(&quot;bjsxt&quot;.getBytes());</span><br><span class="line">		// put.add(&quot;cf&quot;.getBytes(), &quot;name&quot;.getBytes(), &quot;cai10&quot;.getBytes()) ;</span><br><span class="line">		// dao.save(put, &quot;test&quot;) ;</span><br><span class="line"></span><br><span class="line">		// 插入多列数据</span><br><span class="line">		// Put put = new Put(&quot;bjsxt&quot;.getBytes());</span><br><span class="line">		// List&lt;Put&gt; list = new ArrayList&lt;Put&gt;();</span><br><span class="line">		// put.add(&quot;cf&quot;.getBytes(), &quot;addr&quot;.getBytes(), &quot;shanghai1&quot;.getBytes()) ;</span><br><span class="line">		// put.add(&quot;cf&quot;.getBytes(), &quot;age&quot;.getBytes(), &quot;30&quot;.getBytes()) ;</span><br><span class="line">		// put.add(&quot;cf&quot;.getBytes(), &quot;tel&quot;.getBytes(), &quot;13889891818&quot;.getBytes())</span><br><span class="line">		// ;</span><br><span class="line">		// list.add(put) ;</span><br><span class="line">		// dao.save(list, &quot;test&quot;);</span><br><span class="line"></span><br><span class="line">		// 插入单行数据</span><br><span class="line">		// dao.insert(&quot;test&quot;, &quot;testrow&quot;, &quot;cf&quot;, &quot;age&quot;, &quot;35&quot;) ;</span><br><span class="line">		// dao.insert(&quot;test&quot;, &quot;testrow&quot;, &quot;cf&quot;, &quot;cardid&quot;, &quot;12312312335&quot;) ;</span><br><span class="line">		// dao.insert(&quot;test&quot;, &quot;testrow&quot;, &quot;cf&quot;, &quot;tel&quot;, &quot;13512312345&quot;) ;</span><br><span class="line"></span><br><span class="line">		// List&lt;Result&gt; list = dao.getRows(&quot;test&quot;, &quot;testrow&quot;,new</span><br><span class="line">		// String[]&#123;&quot;age&quot;&#125;) ;</span><br><span class="line">		// for(Result rs : list)</span><br><span class="line">		// &#123;</span><br><span class="line">		// for(Cell cell:rs.rawCells())&#123;</span><br><span class="line">		// System.out.println(&quot;RowName:&quot;+new String(CellUtil.cloneRow(cell))+&quot;</span><br><span class="line">		// &quot;);</span><br><span class="line">		// System.out.println(&quot;Timetamp:&quot;+cell.getTimestamp()+&quot; &quot;);</span><br><span class="line">		// System.out.println(&quot;column Family:&quot;+new</span><br><span class="line">		// String(CellUtil.cloneFamily(cell))+&quot; &quot;);</span><br><span class="line">		// System.out.println(&quot;row Name:&quot;+new</span><br><span class="line">		// String(CellUtil.cloneQualifier(cell))+&quot; &quot;);</span><br><span class="line">		// System.out.println(&quot;value:&quot;+new String(CellUtil.cloneValue(cell))+&quot;</span><br><span class="line">		// &quot;);</span><br><span class="line">		// &#125;</span><br><span class="line">		// &#125;</span><br><span class="line"></span><br><span class="line">		// Result rs = dao.getOneRow(&quot;test&quot;, &quot;testrow&quot;);</span><br><span class="line">		// System.out.println(new String(rs.getValue(&quot;cf&quot;.getBytes(),</span><br><span class="line">		// &quot;age&quot;.getBytes())));</span><br><span class="line"></span><br><span class="line">		// Result rs = dao.getOneRowAndMultiColumn(&quot;cell_monitor_table&quot;,</span><br><span class="line">		// &quot;29448-513332015-04-05&quot;, new</span><br><span class="line">		// String[]&#123;&quot;201504052236&quot;,&quot;201504052237&quot;&#125;);</span><br><span class="line">		// for(Cell cell:rs.rawCells())&#123;</span><br><span class="line">		// System.out.println(&quot;RowName:&quot;+new String(CellUtil.cloneRow(cell))+&quot;</span><br><span class="line">		// &quot;);</span><br><span class="line">		// System.out.println(&quot;Timetamp:&quot;+cell.getTimestamp()+&quot; &quot;);</span><br><span class="line">		// System.out.println(&quot;column Family:&quot;+new</span><br><span class="line">		// String(CellUtil.cloneFamily(cell))+&quot; &quot;);</span><br><span class="line">		// System.out.println(&quot;row Name:&quot;+new</span><br><span class="line">		// String(CellUtil.cloneQualifier(cell))+&quot; &quot;);</span><br><span class="line">		// System.out.println(&quot;value:&quot;+new String(CellUtil.cloneValue(cell))+&quot;</span><br><span class="line">		// &quot;);</span><br><span class="line">		// &#125;</span><br><span class="line"></span><br><span class="line">		// dao.deleteTable(&quot;cell_monitor_table&quot;);</span><br><span class="line">		// 创建表</span><br><span class="line">		String tableName = &quot;cell_monitor_table&quot;;</span><br><span class="line">		String cfs[] = &#123; &quot;cf&quot; &#125;;</span><br><span class="line">		// dao.createTable(tableName,cfs);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public static void testRowFilter(String tableName) &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			HTable table = new HTable(conf, tableName);</span><br><span class="line">			Scan scan = new Scan();</span><br><span class="line">			scan.addColumn(Bytes.toBytes(&quot;column1&quot;), Bytes.toBytes(&quot;qqqq&quot;));</span><br><span class="line">			Filter filter1 = new RowFilter(CompareOp.LESS_OR_EQUAL, new BinaryComparator(Bytes.toBytes(&quot;laoxia157&quot;)));</span><br><span class="line">			scan.setFilter(filter1);</span><br><span class="line">			ResultScanner scanner1 = table.getScanner(scan);</span><br><span class="line">			for (Result res : scanner1) &#123;</span><br><span class="line">				System.out.println(res);</span><br><span class="line">			&#125;</span><br><span class="line">			scanner1.close();</span><br><span class="line"></span><br><span class="line">			//</span><br><span class="line">			// Filter filter2 = new RowFilter(CompareFilter.CompareOp.EQUAL,new</span><br><span class="line">			// RegexStringComparator(&quot;laoxia4\\d&#123;2&#125;&quot;));</span><br><span class="line">			// scan.setFilter(filter2);</span><br><span class="line">			// ResultScanner scanner2 = table.getScanner(scan);</span><br><span class="line">			// for (Result res : scanner2) &#123;</span><br><span class="line">			// System.out.println(res);</span><br><span class="line">			// &#125;</span><br><span class="line">			// scanner2.close();</span><br><span class="line"></span><br><span class="line">			Filter filter3 = new RowFilter(CompareOp.EQUAL, new SubstringComparator(&quot;laoxia407&quot;));</span><br><span class="line">			scan.setFilter(filter3);</span><br><span class="line">			ResultScanner scanner3 = table.getScanner(scan);</span><br><span class="line">			for (Result res : scanner3) &#123;</span><br><span class="line">				System.out.println(res);</span><br><span class="line">			&#125;</span><br><span class="line">			scanner3.close();</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			// TODO Auto-generated catch block</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Test</span><br><span class="line">	public void testTrasaction() &#123;</span><br><span class="line">		try &#123;</span><br><span class="line">			HTableInterface table = null;</span><br><span class="line">			table = hTablePool.getTable(&quot;t_test&quot;.getBytes());</span><br><span class="line">			// Put put1 =new Put(&quot;002&quot;.getBytes());</span><br><span class="line">			// put1.add(&quot;cf1&quot;.getBytes(), &quot;name&quot;.getBytes(), &quot;王五&quot;.getBytes());</span><br><span class="line">			// table.put(put1);</span><br><span class="line">			Put newput = new Put(&quot;001&quot;.getBytes());</span><br><span class="line">			newput.add(&quot;cf1&quot;.getBytes(), &quot;like&quot;.getBytes(), &quot;看书&quot;.getBytes());</span><br><span class="line"></span><br><span class="line">			boolean f = table.checkAndPut(&quot;001&quot;.getBytes(), &quot;cf1&quot;.getBytes(), &quot;age&quot;.getBytes(), &quot;24&quot;.getBytes(),</span><br><span class="line">					newput);</span><br><span class="line">			System.out.println(f);</span><br><span class="line"></span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="HBase-微博案例"><a href="#HBase-微博案例" class="headerlink" title="HBase 微博案例"></a>HBase 微博案例</h2><blockquote>
+<p>目的：怎么设计 HBase 表以及内部 RowKey 的设计</p>
+</blockquote>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">1. 添加、查看关注</span><br><span class="line">2. 粉丝列表</span><br><span class="line">3. 写微博</span><br><span class="line">4. 查看首页， 所有关注过的好友发布的最新微博</span><br><span class="line">5. 查看某个用户发布的所有微博</span><br><span class="line"></span><br><span class="line">eg:               关注列表 					粉丝列表</span><br><span class="line">张三001             李四				       王五</span><br><span class="line">李四002                                      张三，王五</span><br><span class="line">王五003  	           张三					  张三</span><br><span class="line"></span><br><span class="line">follow_fan</span><br><span class="line">rowkey  		 cf1(关注列表)                cf2(粉丝列表)</span><br><span class="line">001				 002=李四;					   003=王五;</span><br><span class="line">002              	                            001=张三;003=王五                      </span><br><span class="line">003              001=张三;					   001=张三</span><br><span class="line"></span><br><span class="line">tb_write_blog</span><br><span class="line">rowkey      					cf1</span><br><span class="line">uid_(Max-timestamp)             cf1:title;cf1:content;</span><br><span class="line"></span><br><span class="line">writed_blog_history_version</span><br></pre></td></tr></table></figure>
+
+<h2 id="Protobuf"><a href="#Protobuf" class="headerlink" title="Protobuf"></a>Protobuf</h2><blockquote>
+<p>Protocol Buffers 是<strong>一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化</strong>。</p>
+</blockquote>
+<h3 id="Protobuf-简介"><a href="#Protobuf-简介" class="headerlink" title="Protobuf 简介"></a>Protobuf 简介</h3><p>Google Protocol Buffer( 简称 Protobuf) 是 Google 公司内部的混合语言数据标准。</p>
+<p>目前已经正在使用的有超过 48,162 种报文格式定义和超过 12,183 个 .proto 文件。</p>
+<p>他们用于 RPC 系统和持续数据存储系统。</p>
+<p>Protocol Buffers 是<strong>一种轻便高效的结构化数据存储格式，可以用于结构化数据串行化，或者说序列化</strong>。</p>
+<p>它很适合做数据存储或 RPC 数据交换格式。</p>
+<p>可用于通讯协议、数据存储等领域的语言无关、平台无关、可扩展的序列化结构数据格式。</p>
+<p>目前提供了 C++、Java、Python 三种语言的 API。</p>
+<h3 id="安装-Google-Protocol-Buffer"><a href="#安装-Google-Protocol-Buffer" class="headerlink" title="安装 Google  Protocol Buffer"></a>安装 Google  Protocol Buffer</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum groupinstall Development tools -y</span><br><span class="line"></span><br><span class="line">tar -xzf protobuf-2.1.0.tar.gz </span><br><span class="line"><span class="meta">#</span> 配置</span><br><span class="line">.cofigure --prefix=/usr/local/protobuf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>编译并安装</span><br><span class="line">make &amp;&amp; make install </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>配置环境变量</span><br><span class="line">export PROTOBUF=/usr/local/protobuf</span><br></pre></td></tr></table></figure>
+
+<h3 id="protobuf-的使用"><a href="#protobuf-的使用" class="headerlink" title="protobuf 的使用"></a>protobuf 的使用</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 编辑 vi  Phone.proto 文件</span><br><span class="line">package com.szxy.hbase;</span><br><span class="line">message PhoneDetail&#123;</span><br><span class="line">	required string dnum=1;   // 被叫电话</span><br><span class="line">	required string type=2;  // 通话类型</span><br><span class="line">	required string length=3;  // 通话时长</span><br><span class="line">	required string datastr=4; // 通话时间</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 执行 </span><br><span class="line">protoc ./Phone --java_out=./</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 将生成的 java 文件拷贝到本地 Eclipse 上</span><br><span class="line"></span><br><span class="line">@Test</span><br><span class="line">	public void addPhoneRecord2() throws Exception&#123;</span><br><span class="line">		List&lt;Put&gt; puts = new ArrayList&lt;&gt;();</span><br><span class="line">		for(int i = 0;i &lt; 10;i++)&#123;</span><br><span class="line">			String phoneNum = generatePhoneNumber("189");</span><br><span class="line">			for(int j = 0;j &lt; 100;j++)&#123;</span><br><span class="line">				String dnum = generatePhoneNumber("138");</span><br><span class="line">				String length = r.nextInt(99)+""; // 通话时长</span><br><span class="line">				String type = r.nextInt(2)+""; // 1 是主叫，2 是被叫</span><br><span class="line">				String dataStr  = getDate("2019");  // 通话开始时间</span><br><span class="line">				String rowkey =</span><br><span class="line">                phoneNum+"_"+(Long.MAX_VALUE-sdf.parse(dataStr).getTime());</span><br><span class="line">				Builder builder</span><br><span class="line">                = Phone.PhoneDetail.getDefaultInstance().newBuilderForType();</span><br><span class="line">				builder.setDnum(dnum);</span><br><span class="line">				builder.setLength(length);</span><br><span class="line">				builder.setType(type);</span><br><span class="line">				builder.setDatastr(dataStr);</span><br><span class="line">				Put put </span><br><span class="line">				= new Put(rowkey.getBytes());</span><br><span class="line">			put.add("cf".getBytes(),"phoneDetail".getBytes(),builder.build().toByteArray());</span><br><span class="line">				puts.add(put);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		htable.put(puts);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line"><span class="meta">#</span> 编辑 vi  phoneDetail.proto 文件</span><br><span class="line">package com.szxy.hbase;</span><br><span class="line"></span><br><span class="line">message PhoneDetail</span><br><span class="line">&#123;</span><br><span class="line">    required string dnum=1;  </span><br><span class="line">    required string type=2; </span><br><span class="line">    required string length=3; </span><br><span class="line">    required string datastr=4;</span><br><span class="line">&#125; </span><br><span class="line">message dayPhoneDetail</span><br><span class="line">&#123;</span><br><span class="line">	repeated PhoneDetail  phoneDetail = 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">	 * 生成 10 个人一天的通话记录</span><br><span class="line">	 * 每行中 列中存储 100 条通话记录</span><br><span class="line">	 *</span><br><span class="line">	 */</span><br><span class="line">	@Test</span><br><span class="line">	public void addPhoneRecord3() throws Exception&#123;</span><br><span class="line">		List&lt;Put&gt; puts = new ArrayList&lt;&gt;();</span><br><span class="line">		for(int i = 0;i &lt; 10;i++)&#123;</span><br><span class="line">			String phoneNum = generatePhoneNumber("189");</span><br><span class="line">			String rowkey = phoneNum+"_"+(Long.MAX_VALUE-sdf.parse(getDate2("20190801")).getTime());</span><br><span class="line">			Phone.dayPhoneDetail.Builder dayPhoneDetail = Phone.dayPhoneDetail.newBuilder();</span><br><span class="line">			for(int j = 0;j &lt; 100;j++)&#123;</span><br><span class="line">				String dnum = generatePhoneNumber("138");</span><br><span class="line">				String length = r.nextInt(99)+""; // 通话时长</span><br><span class="line">				String type = r.nextInt(2)+""; // 1 是主叫，2 是被叫</span><br><span class="line">				String dataStr  = getDate("2019");  // 通话开始时间</span><br><span class="line">				PhoneDetail.Builder phoneDetail = Phone.PhoneDetail.newBuilder();</span><br><span class="line">				phoneDetail.setDnum(dnum);</span><br><span class="line">				phoneDetail.setLength(length);</span><br><span class="line">				phoneDetail.setType(type);</span><br><span class="line">				phoneDetail.setDatastr(dataStr);</span><br><span class="line">				dayPhoneDetail.addPhoneDetail(phoneDetail);</span><br><span class="line">			&#125;</span><br><span class="line">			Put put = new Put(rowkey.getBytes());</span><br><span class="line">			put.add("cf".getBytes(),"day".getBytes(),dayPhoneDetail.build().toByteArray());</span><br><span class="line">			puts.add(put);</span><br><span class="line">		&#125;</span><br><span class="line">		htable.put(puts);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 查看数据</span><br><span class="line">	 * @throws IOException</span><br><span class="line">	 */</span><br><span class="line">	@Test</span><br><span class="line">	public void getData() throws IOException&#123;</span><br><span class="line">		Get get = new Get("18962786962_9223370472247815807".getBytes());</span><br><span class="line">		Result result = htable.get(get);</span><br><span class="line">		Cell cell = result.getColumnLatestCell("cf".getBytes(), "day".getBytes());</span><br><span class="line">		dayPhoneDetail dayPhoneDetail = Phone.dayPhoneDetail.parseFrom(CellUtil.cloneValue(cell));</span><br><span class="line">		List&lt;PhoneDetail&gt; phoneDetailList = dayPhoneDetail.getPhoneDetailList();</span><br><span class="line">		int count = 0;</span><br><span class="line">		for (PhoneDetail pd : phoneDetailList) &#123;</span><br><span class="line">			System.out.println(pd.getDnum()+"\t"+pd.getType()+"\t"+pd.getLength()+"\t"+pd.getDatastr());</span><br><span class="line">			count ++;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println("count:"+count);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="HBase-优化"><a href="#HBase-优化" class="headerlink" title="HBase 优化"></a>HBase 优化</h2><h3 id="表设计"><a href="#表设计" class="headerlink" title="表设计"></a>表设计</h3><ul>
+<li><p><strong>Region 切分</strong></p>
+<p>在表设计时，预先估计表中的数据，并切分多个 region，防止数据过多，导致单个服务器过载。</p>
+<p>Region 是按照 Rowkey 来切分的</p>
+</li>
+<li><p><strong>Rowkey 设计</strong></p>
+<p>Rowkey 按照字典序排列（即 ASCII ）。Rowkey 的长度不要太长，符合业务需求即可。</p>
+</li>
+<li><p><strong>ColumnFamily 设计</strong></p>
+<p>列族控制在 1~2 之间，不要超过 3 个列族</p>
+</li>
+<li><p><strong>InMemory</strong></p>
+<p>HBase  中缓存分为写缓存和读缓存。通过 <code>HColumnDescriptor.setInMemory(true)</code> 将表放到RegionServer的缓存中，保证在读取的时候被cache命中。</p>
+</li>
+<li><p><strong><font color="red" size="3px">compact  &amp; split</font></strong></p>
+<p>在 HBase 中，数据在更新时首先写入 WAL 日志(HLog)和内存(MemStore)中，MemStore 中的数据是排序的，当 MemStore 累计到一定阈值时，就会创建一个新的 MemStore，并且将老的 MemStore 添加到 flush队列，由单独的线程 flush 到磁盘上，成为一个 StoreFile 。于此同时， 系统会在 zookeeper 中记录一个 redo point，表示这个时刻之前的变更已经持久化了(minor compact)。<br><strong>StoreFile 是只读的</strong>，一旦创建后就不可以再修改。因此 Hbase 的更新其实是不断追加的操作。当一个 Store中的 StoreFile 达到一定的阈值后，就会进行一次合并(major compact)，将对同一个 key 的修改合并到一起，形成一个大的 StoreFile，当 StoreFile 的大小达到一定阈值后，又会对 StoreFile进行分割(split)，等分为两个StoreFile。<br>由于对表的更新是不断追加的，处理读请求时，需要访问Store中全部的StoreFile和MemStore，将它们按照row key进行合并，由于StoreFile和MemStore都是经过排序的，并且StoreFile带有内存中索引，通常合并过程还是比较快的。<br>实际应用中，可以考虑必要时手动进行major compact，将同一个row key的修改进行合并形成一个大的StoreFile。同时，可以将StoreFile设置大些，减少split的发生。</p>
+<p>hbase为了防止小文件（被刷到磁盘的menstore）过多，以保证保证查询效率，hbase需要在必要的时候将这些小的store file合并成相对较大的store file，这个过程就称之为compaction。在hbase中，主要存在两种类型的compaction：minor  compaction和major compaction。<br>minor compaction:的是较小、很少文件的合并。<br>major compaction 的功能是将所有的store file合并成一个，触发major compaction的可能条件有：major_compact 命令、majorCompact() API、region server自动运行（相关参数：hbase.hregion.majoucompaction 默认为24 小时、hbase.hregion.majorcompaction.jetter 默认值为0.2 防止region server 在同一时间进行major compaction）。<br>hbase.hregion.majorcompaction.jetter参数的作用是：对参数hbase.hregion.majoucompaction 规定的值起到浮动的作用，假如两个参数都为默认值24和0,2，那么major compact最终使用的数值为：19.2~28.8 这个范围。</p>
+<p>1、关闭自动major compaction<br>2、手动编程major compaction<br>Timer类，contab<br>minor compaction的运行机制要复杂一些，它由一下几个参数共同决定：<br>hbase.hstore.compaction.min :默认值为 3，表示至少需要三个满足条件的store file时，minor compaction才会启动<br>hbase.hstore.compaction.max 默认值为10，表示一次minor compaction中最多选取10个store file<br>hbase.hstore.compaction.min.size 表示文件大小小于该值的store file 一定会加入到minor compaction的store file中<br>hbase.hstore.compaction.max.size 表示文件大小大于该值的store file 一定会被minor compaction排除<br>hbase.hstore.compaction.ratio 将store file 按照文件年龄排序（older to younger），minor compaction总是从older store file开始选择</p>
+</li>
+</ul>
+<h3 id="写表操作"><a href="#写表操作" class="headerlink" title="写表操作"></a>写表操作</h3><ol>
+<li><p><strong>多 Table 并发写</strong></p>
+<p>创建多个HTable客户端用于写操作，提高写数据的吞吐量，一个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> Configuration conf = HBaseConfiguration.create();</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> String table_log_name = “user_log”;</span><br><span class="line">wTableLog = <span class="keyword">new</span> HTable[tableN];</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; tableN; i++) &#123;</span><br><span class="line">    wTableLog[i] = <span class="keyword">new</span> HTable(conf, table_log_name);</span><br><span class="line">    wTableLog[i].setWriteBufferSize(<span class="number">5</span> * <span class="number">1024</span> * <span class="number">1024</span>); <span class="comment">//5MB</span></span><br><span class="line">    wTableLog[i].setAutoFlush(<span class="keyword">false</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>HTable 参数设置：</strong></p>
+<ul>
+<li><p>Auto Flush </p>
+<p>通过调用HTable.setAutoFlush(false)方法可以将HTable写客户端的自动flush关闭，这样可以批量写入数据到HBase，而不是有一条put就执行一次更新，只有当put填满客户端写缓存时，才实际向HBase服务端发起写请求。默认情况下auto flush是开启的。</p>
+</li>
+<li><p>Write Buffer</p>
+<p>通过调用HTable.setWriteBufferSize(writeBufferSize)方法可以设置HTable客户端的写buffer大小，如果新设置的buffer小于当前写buffer中的数据时，buffer将会被flush到服务端。其中，writeBufferSize的单位是byte字节数，可以根据实际写入数据量的多少来设置该值。</p>
+</li>
+<li><p>WAL  Flag</p>
+<p>在HBae中，客户端向集群中的RegionServer提交数据时（Put/Delete操作），首先会先写WAL（Write Ahead Log）日志（即HLog，一个RegionServer上的所有Region共享一个HLog），只有当WAL日志写成功后，再接着写MemStore，然后客户端被通知提交数据成功；如果写WAL日志失败，客户端则被通知提交失败。这样做的好处是可以做到RegionServer宕机后的数据恢复。</p>
+<p>因此，对于相对不太重要的数据，可以在Put/Delete操作时，通过调用Put.setWriteToWAL(false)或Delete.setWriteToWAL(false)函数，放弃写WAL日志，从而提高数据写入的性能。</p>
+<p><strong>值得注意的是：谨慎选择关闭WAL日志，因为这样的话，一旦RegionServer宕机，Put/Delete的数据将会无法根据WAL日志进行恢复。</strong></p>
+</li>
+</ul>
+</li>
+<li><p><strong>批量写</strong></p>
+<p>通过调用HTable.put(Put)方法可以将一个指定的row key记录写入HBase，同样HBase提供了另一个方法：通过调用HTable.put(List<put>)方法可以将指定的row key列表，批量写入多行记录，这样做的好处是批量执行，只需要一次网络I/O开销，这对于对数据实时性要求高，网络传输RTT高的情景下可能带来明显的性能提升。</put></p>
+</li>
+<li><p>多线程并发写</p>
+<p> 在客户端开启多个HTable写线程，每个写线程负责一个HTable对象的flush操作，这样结合定时flush和写buffer（writeBufferSize），可以既保证在数据量小的时候，数据可以在较短时间内被flush（如1秒内），同时又保证在数据量大的时候，写buffer一满就及时进行flush。下面给个具体的例子：</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; threadN; i++) &#123;</span><br><span class="line">    Thread th = <span class="keyword">new</span> Thread() &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    sleep(<span class="number">1000</span>); <span class="comment">//1 second</span></span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line"><span class="keyword">synchronized</span> (wTableLog[i]) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        wTableLog[i].flushCommits();</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">&#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    th.setDaemon(<span class="keyword">true</span>);</span><br><span class="line">    th.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<h3 id="读表操作"><a href="#读表操作" class="headerlink" title="读表操作"></a>读表操作</h3><ol>
+<li><p>多 HTable 并发读</p>
+<p>创建多个HTable客户端用于读操作，提高读数据的吞吐量，一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">static final Configuration conf = HBaseConfiguration.create();</span><br><span class="line">static final String table_log_name = “user_log”;</span><br><span class="line">rTableLog = new HTable[tableN];</span><br><span class="line">for (int i = 0; i &lt; tableN; i++) &#123;</span><br><span class="line">    rTableLog[i] = new HTable(conf, table_log_name);</span><br><span class="line">    rTableLog[i].setScannerCaching(50);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>HTable 参数设置</p>
+<ul>
+<li>Scanner Caching<br>hbase.client.scanner.caching配置项可以设置HBase scanner一次从服务端抓取的数据条数，默认情况下一次一条。通过将其设置成一个合理的值，可以减少scan过程中next()的时间开销，代价是scanner需要通过客户端的内存来维持这些被cache的行记录。<br>有三个地方可以进行配置：1）在HBase的conf配置文件中进行配置；2）通过调用HTable.setScannerCaching(int scannerCaching)进行配置；3）通过调用Scan.setCaching(int caching)进行配置。三者的优先级越来越高。</li>
+<li>Scan Attribute Selection<br>scan时指定需要的Column Family，可以减少网络传输数据量，否则默认scan操作会返回整行所有Column Family的数据。</li>
+<li>Close ResultScanner<br>通过scan取完数据后，记得要关闭ResultScanner，否则RegionServer可能会出现问题（对应的Server资源无法释放）。</li>
+</ul>
+</li>
+<li><p>批量读</p>
+<p>通过调用HTable.get(Get)方法可以根据一个指定的row key获取一行记录，同样HBase提供了另一个方法：通过调用HTable.get(List<get>)方法可以根据一个指定的row key列表，批量获取多行记录，这样做的好处是批量执行，只需要一次网络I/O开销，这对于对数据实时性要求高而且网络传输RTT高的情景下可能带来明显的性能提升。</get></p>
+</li>
+<li><p>多线程并发读</p>
+<p>在客户端开启多个HTable读线程，每个读线程负责通过HTable对象进行get操作。下面是一个多线程并发读取HBase，获取店铺一天内各分钟PV值的例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DataReaderServer</span> </span>&#123;</span><br><span class="line">     <span class="comment">//获取店铺一天内各分钟PV值的入口函数</span></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ConcurrentHashMap&lt;String, String&gt; <span class="title">getUnitMinutePV</span><span class="params">(<span class="keyword">long</span> uid, <span class="keyword">long</span> startStamp, <span class="keyword">long</span> endStamp)</span></span>&#123;</span><br><span class="line">         <span class="keyword">long</span> min = startStamp;</span><br><span class="line">         <span class="keyword">int</span> count = (<span class="keyword">int</span>)((endStamp - startStamp) / (<span class="number">60</span>*<span class="number">1000</span>));</span><br><span class="line">         List&lt;String&gt; lst = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">         <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt;= count; i++) &#123;</span><br><span class="line">            min = startStamp + i * <span class="number">60</span> * <span class="number">1000</span>;</span><br><span class="line">            lst.add(uid + <span class="string">"_"</span> + min);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> parallelBatchMinutePV(lst);</span><br><span class="line">     &#125;</span><br><span class="line">      <span class="comment">//多线程并发查询，获取分钟PV值</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> ConcurrentHashMap&lt;String, String&gt; <span class="title">parallelBatchMinutePV</span><span class="params">(List&lt;String&gt; lstKeys)</span></span>&#123;</span><br><span class="line">        ConcurrentHashMap&lt;String, String&gt; hashRet = <span class="keyword">new</span> ConcurrentHashMap&lt;String, String&gt;();</span><br><span class="line">        <span class="keyword">int</span> parallel = <span class="number">3</span>;</span><br><span class="line">        List&lt;List&lt;String&gt;&gt; lstBatchKeys  = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (lstKeys.size() &lt; parallel )&#123;</span><br><span class="line">            lstBatchKeys  = <span class="keyword">new</span> ArrayList&lt;List&lt;String&gt;&gt;(<span class="number">1</span>);</span><br><span class="line">            lstBatchKeys.add(lstKeys);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            lstBatchKeys  = <span class="keyword">new</span> ArrayList&lt;List&lt;String&gt;&gt;(parallel);</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; parallel; i++  )&#123;</span><br><span class="line">                List&lt;String&gt; lst = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">                lstBatchKeys.add(lst);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; lstKeys.size() ; i ++ )&#123;</span><br><span class="line">                lstBatchKeys.get(i%parallel).add(lstKeys.get(i));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        List&lt;Future&lt; ConcurrentHashMap&lt;String, String&gt; &gt;&gt; futures = <span class="keyword">new</span> ArrayList&lt;Future&lt; ConcurrentHashMap&lt;String, String&gt; &gt;&gt;(<span class="number">5</span>);</span><br><span class="line">        </span><br><span class="line">        ThreadFactoryBuilder builder = <span class="keyword">new</span> ThreadFactoryBuilder();</span><br><span class="line">        builder.setNameFormat(<span class="string">"ParallelBatchQuery"</span>);</span><br><span class="line">        ThreadFactory factory = builder.build();</span><br><span class="line">        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(lstBatchKeys.size(), factory);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(List&lt;String&gt; keys : lstBatchKeys)&#123;</span><br><span class="line">            Callable&lt; ConcurrentHashMap&lt;String, String&gt; &gt; callable = <span class="keyword">new</span> BatchMinutePVCallable(keys);</span><br><span class="line">            FutureTask&lt; ConcurrentHashMap&lt;String, String&gt; &gt; future = (FutureTask&lt; ConcurrentHashMap&lt;String, String&gt; &gt;) executor.submit(callable);</span><br><span class="line">            futures.add(future);</span><br><span class="line">        &#125;</span><br><span class="line">        executor.shutdown();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Wait for all the tasks to finish</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">          <span class="keyword">boolean</span> stillRunning = !executor.awaitTermination(</span><br><span class="line">              <span class="number">5000000</span>, TimeUnit.MILLISECONDS);</span><br><span class="line">          <span class="keyword">if</span> (stillRunning) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                executor.shutdownNow();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">              Thread.currentThread().interrupt();</span><br><span class="line">          &#125; <span class="keyword">catch</span> (Exception e1) &#123;</span><br><span class="line">            <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">            e1.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// Look for any exception</span></span><br><span class="line">        <span class="keyword">for</span> (Future f : futures) &#123;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">              <span class="keyword">if</span>(f.get() != <span class="keyword">null</span>)</span><br><span class="line">              &#123;</span><br><span class="line">                  hashRet.putAll((ConcurrentHashMap&lt;String, String&gt;)f.get());</span><br><span class="line">              &#125;</span><br><span class="line">          &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                 Thread.currentThread().interrupt();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e1) &#123;</span><br><span class="line">                <span class="comment">// TODO Auto-generated catch block</span></span><br><span class="line">                e1.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">          &#125; <span class="keyword">catch</span> (ExecutionException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> hashRet;</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="comment">//一个线程批量查询，获取分钟PV值</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">static</span> ConcurrentHashMap&lt;String, String&gt; <span class="title">getBatchMinutePV</span><span class="params">(List&lt;String&gt; lstKeys)</span></span>&#123;</span><br><span class="line">        ConcurrentHashMap&lt;String, String&gt; hashRet = <span class="keyword">null</span>;</span><br><span class="line">        List&lt;Get&gt; lstGet = <span class="keyword">new</span> ArrayList&lt;Get&gt;();</span><br><span class="line">        String[] splitValue = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">for</span> (String s : lstKeys) &#123;</span><br><span class="line">            splitValue = s.split(<span class="string">"_"</span>);</span><br><span class="line">            <span class="keyword">long</span> uid = Long.parseLong(splitValue[<span class="number">0</span>]);</span><br><span class="line">            <span class="keyword">long</span> min = Long.parseLong(splitValue[<span class="number">1</span>]);</span><br><span class="line">            <span class="keyword">byte</span>[] key = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">16</span>];</span><br><span class="line">            Bytes.putLong(key, <span class="number">0</span>, uid);</span><br><span class="line">            Bytes.putLong(key, <span class="number">8</span>, min);</span><br><span class="line">            Get g = <span class="keyword">new</span> Get(key);</span><br><span class="line">            g.addFamily(fp);</span><br><span class="line">            lstGet.add(g);</span><br><span class="line">        &#125;</span><br><span class="line">        Result[] res = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            res = tableMinutePV[rand.nextInt(tableN)].get(lstGet);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e1) &#123;</span><br><span class="line">            logger.error(<span class="string">"tableMinutePV exception, e="</span> + e1.getStackTrace());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (res != <span class="keyword">null</span> &amp;&amp; res.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            hashRet = <span class="keyword">new</span> ConcurrentHashMap&lt;String, String&gt;(res.length);</span><br><span class="line">            <span class="keyword">for</span> (Result re : res) &#123;</span><br><span class="line">                <span class="keyword">if</span> (re != <span class="keyword">null</span> &amp;&amp; !re.isEmpty()) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        <span class="keyword">byte</span>[] key = re.getRow();</span><br><span class="line">                        <span class="keyword">byte</span>[] value = re.getValue(fp, cp);</span><br><span class="line">                        <span class="keyword">if</span> (key != <span class="keyword">null</span> &amp;&amp; value != <span class="keyword">null</span>) &#123;</span><br><span class="line">                            hashRet.put(String.valueOf(Bytes.toLong(key,</span><br><span class="line">                                    Bytes.SIZEOF_LONG)), String.valueOf(Bytes</span><br><span class="line">                                    .toLong(value)));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e2) &#123;</span><br><span class="line">                        logger.error(e2.getStackTrace());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> hashRet;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//调用接口类，实现Callable接口</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BatchMinutePVCallable</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">ConcurrentHashMap</span>&lt;<span class="title">String</span>, <span class="title">String</span>&gt;&gt;</span>&#123;</span><br><span class="line">     <span class="keyword">private</span> List&lt;String&gt; keys;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> <span class="title">BatchMinutePVCallable</span><span class="params">(List&lt;String&gt; lstKeys )</span> </span>&#123;</span><br><span class="line">         <span class="keyword">this</span>.keys = lstKeys;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">     <span class="function"><span class="keyword">public</span> ConcurrentHashMap&lt;String, String&gt; <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">         <span class="keyword">return</span> DataReadServer.getBatchMinutePV(keys);</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>缓存查询</p>
+<p>对于频繁查询HBase的应用场景，可以考虑在应用程序中做缓存，当有新的查询请求时，首先在缓存中查找，如果存在则直接返回，不再查询HBase；否则对HBase发起读请求查询，然后在应用程序中将查询结果缓存起来。至于缓存的替换策略，可以考虑LRU等常用的策略。</p>
+</li>
+<li><p><font color="red">BlockCache</font></p>
+<p>HBase上Regionserver 的内存分为两个部分，一部分作为 Memstore，主要用来写；另外一部分作为BlockCache，主要用于读。</p>
+<p>写请求会先写入Memstore，Regionserver会给每个region提供一个Memstore，当Memstore满64MB以后，会启动 flush刷新到磁盘。当Memstore的总大小超过限制时（heapsize * hbase.regionserver.global.memstore.upperLimit * 0.9），会强行启动flush进程，从最大的Memstore开始flush直到低于限制。</p>
+<p>读请求先到Memstore中查数据，查不到就到BlockCache中查，再查不到就会到磁盘上读，并把读的结果放入BlockCache。由于BlockCache采用的是LRU策略，因此BlockCache达到上限(heapsize * hfile.block.cache.size * 0.85)后，会启动淘汰机制，淘汰掉最老的一批数据。</p>
+<p>一个Regionserver上有一个BlockCache和N个Memstore，它们的大小之和不能大于等于heapsize * 0.8，否则HBase不能启动。默认BlockCache为0.2，而Memstore为0.4。<strong>对于注重读响应时间的系统，可以将</strong> <strong>BlockCache设大些，比如设置BlockCache=0.4，Memstore=0.39，以加大缓存的命中率。</strong></p>
+</li>
+</ol>
+<h3 id="HTable-和-HTablePool使用注意事项"><a href="#HTable-和-HTablePool使用注意事项" class="headerlink" title="HTable 和 HTablePool使用注意事项"></a>HTable 和 HTablePool使用注意事项</h3><p>HTable和HTablePool都是HBase客户端API的一部分，可以使用它们对HBase表进行CRUD操作。下面结合在项目中的应用情况，对二者使用过程中的注意事项做一下概括总结。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Configuration conf = HBaseConfiguration.create();</span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span> (Connection connection = ConnectionFactory.createConnection(conf)) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> (Table table = connection.getTable(TableName.valueOf(tablename)) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// use table as needed, the table returned is lightweight</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="HTable"><a href="#HTable" class="headerlink" title="HTable"></a>HTable</h3><p><a href="http://hbase.apache.org/apidocs/org/apache/hadoop/hbase/client/HTable.html" target="_blank" rel="noopener">HTable</a>是HBase客户端与HBase服务端通讯的Java API对象，客户端可以通过HTable对象与服务端进行CRUD操作（增删改查）。它的创建很简单：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Configuration conf = HBaseConfiguration.create();</span><br><span class="line"></span><br><span class="line">HTable table = <span class="keyword">new</span> HTable(conf, <span class="string">"tablename"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//TODO CRUD Operation……</span></span><br></pre></td></tr></table></figure>
+
+<p>HTable使用时的一些注意事项：</p>
+<ol>
+<li><p>规避 HTable 对象的创建开销<br>因为客户端创建 HTable 对象后，需要进行一系列的操作：检查.META.表确认指定名称的HBase表是否存在，表是否有效等等，整个时间开销比较重，可能会耗时几秒钟之长，因此最好在程序启动时一次性创建完成需要的HTable对象，如果使用 Java API，一般来说是在构造函数中进行创建，程序启动后直接重用。</p>
+</li>
+<li><p>HTable 对象不是线程安全的<br>HTable 对象对于客户端读写数据来说不是线程安全的，因此多线程时，要为每个线程单独创建复用一个HTable 对象，不同对象间不要共享HTable对象使用，特别是在客户端auto flash被置为false时，由于存在本地write buffer，可能导致数据不一致。</p>
+</li>
+<li><p>HTable对象之间共享Configuration<br>HTable对象共享Configuration对象，这样的好处在于：</p>
+</li>
+</ol>
+<ul>
+<li>共享ZooKeeper的连接：每个客户端需要与ZooKeeper建立连接，查询用户的table regions位置，这些信息可以在连接建立后缓存起来共享使用；</li>
+<li>共享公共的资源：客户端需要通过ZooKeeper查找-ROOT-和.META.表，这个需要网络传输开销，客户端缓存这些公共资源后能够减少后续的网络传输开销，加快查找过程速度。</li>
+</ul>
+<p>因此，与以下这种方式相比：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HTable table1 = <span class="keyword">new</span> HTable(<span class="string">"table1"</span>);</span><br><span class="line"></span><br><span class="line">HTable table2 = <span class="keyword">new</span> HTable(<span class="string">"table2"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>下面的方式更有效些：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Configuration conf = HBaseConfiguration.create();</span><br><span class="line"></span><br><span class="line">HTable table1 = <span class="keyword">new</span> HTable(conf, <span class="string">"table1"</span>);</span><br><span class="line"></span><br><span class="line">HTable table2 = <span class="keyword">new</span> HTable(conf, <span class="string">"table2"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>备注：即使是高负载的多线程程序，也并没有发现因为共享Configuration而导致的性能问题；如果你的实际情况中不是如此，那么可以尝试不共享Configuration。</p>
+<h3 id="HTablePool"><a href="#HTablePool" class="headerlink" title="HTablePool"></a>HTablePool</h3><p><a href="http://hbase.apache.org/apidocs/org/apache/hadoop/hbase/client/HTablePool.html" target="_blank" rel="noopener">HTablePool</a>可以解决HTable存在的线程不安全问题，同时通过维护固定数量的HTable对象，能够在程序运行期间复用这些HTable资源对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Configuration conf = HBaseConfiguration.create();</span><br><span class="line"></span><br><span class="line">HTablePool pool = <span class="keyword">new</span> HTablePool(conf, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>HTablePool可以自动创建HTable对象，而且对客户端来说使用上是完全透明的，可以避免多线程间数据并发修改问题。</p>
+</li>
+<li><p>HTablePool中的HTable对象之间是公用Configuration连接的，能够可以减少网络开销。</p>
+</li>
+</ol>
+<p>HTablePool的使用很简单：每次进行操作前，通过HTablePool的getTable方法取得一个HTable对象，然后进行put/get/scan/delete等操作，最后通过 HTablePool 的 putTable 方法将HTable对象放回到HTablePool中。</p>
+<p>下面是个使用HTablePool的简单例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">public void createUser(String username, String firstName, String lastName, String email, String password, String roles) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">　　HTable table = rm.getTable(UserTable.NAME);</span><br><span class="line"></span><br><span class="line">　　Put put = new Put(Bytes.toBytes(username));</span><br><span class="line"></span><br><span class="line">　　put.add(UserTable.DATA_FAMILY, UserTable.FIRSTNAME,</span><br><span class="line"></span><br><span class="line">　　Bytes.toBytes(firstName));</span><br><span class="line"></span><br><span class="line">　　put.add(UserTable.DATA_FAMILY, UserTable.LASTNAME,</span><br><span class="line"></span><br><span class="line">　　　　Bytes.toBytes(lastName));</span><br><span class="line"></span><br><span class="line">　　put.add(UserTable.DATA_FAMILY, UserTable.EMAIL, Bytes.toBytes(email));</span><br><span class="line"></span><br><span class="line">　　put.add(UserTable.DATA_FAMILY, UserTable.CREDENTIALS,</span><br><span class="line"></span><br><span class="line">　　　　Bytes.toBytes(password));</span><br><span class="line"></span><br><span class="line">　　put.add(UserTable.DATA_FAMILY, UserTable.ROLES, Bytes.toBytes(roles));</span><br><span class="line"></span><br><span class="line">　　table.put(put);</span><br><span class="line"></span><br><span class="line">　　table.flushCommits();</span><br><span class="line"></span><br><span class="line">　　rm.putTable(table);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Hbase和DBMS比较：</p>
+<p>查询数据不灵活：</p>
+<ol>
+<li><p>不能使用column之间过滤查询</p>
+</li>
+<li><p>不支持全文索引。使用solr和hbase整合完成全文搜索。</p>
+<p>a) 使用MR批量读取hbase中的数据，在solr里面建立索引（no  store）之保存rowkey的值。</p>
+<p>b) 根据关键词从索引中搜索到rowkey（分页）</p>
+<p>c) 根据rowkey从hbase查询所有数据</p>
+</li>
+</ol>
+<h2 id="HBase-MapReduce-整合"><a href="#HBase-MapReduce-整合" class="headerlink" title="HBase-MapReduce 整合"></a>HBase-MapReduce 整合</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/12/20191012 Hive/" rel="next" title="20191012 Hive">
+                  <i class="fa fa-chevron-left"></i> 20191012 Hive
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/25/20191025 Zookeeper/" rel="prev" title="Zookeeper">
+                  Zookeeper <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-简介"><span class="nav-number">1.</span> <span class="nav-text">HBase 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop-生态系统"><span class="nav-number">1.1.</span> <span class="nav-text">Hadoop 生态系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-数据模型"><span class="nav-number">2.</span> <span class="nav-text">HBase 数据模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-架构"><span class="nav-number">3.</span> <span class="nav-text">HBase 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase-架构图"><span class="nav-number">3.1.</span> <span class="nav-text">HBase 架构图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase-架构中各角色作用"><span class="nav-number">3.2.</span> <span class="nav-text">HBase 架构中各角色作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-环境搭建"><span class="nav-number">4.</span> <span class="nav-text">HBase 环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase-伪分布式搭建"><span class="nav-number">4.1.</span> <span class="nav-text">HBase 伪分布式搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBase-完全分布式搭建"><span class="nav-number">4.2.</span> <span class="nav-text">HBase 完全分布式搭建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-API"><span class="nav-number">5.</span> <span class="nav-text">HBase-API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Demo"><span class="nav-number">5.1.</span> <span class="nav-text">Demo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具类"><span class="nav-number">5.2.</span> <span class="nav-text">工具类</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-微博案例"><span class="nav-number">6.</span> <span class="nav-text">HBase 微博案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">6.1.</span> <span class="nav-text">需求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Protobuf"><span class="nav-number">7.</span> <span class="nav-text">Protobuf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Protobuf-简介"><span class="nav-number">7.1.</span> <span class="nav-text">Protobuf 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装-Google-Protocol-Buffer"><span class="nav-number">7.2.</span> <span class="nav-text">安装 Google  Protocol Buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#protobuf-的使用"><span class="nav-number">7.3.</span> <span class="nav-text">protobuf 的使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-优化"><span class="nav-number">8.</span> <span class="nav-text">HBase 优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#表设计"><span class="nav-number">8.1.</span> <span class="nav-text">表设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写表操作"><span class="nav-number">8.2.</span> <span class="nav-text">写表操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#读表操作"><span class="nav-number">8.3.</span> <span class="nav-text">读表操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTable-和-HTablePool使用注意事项"><span class="nav-number">8.4.</span> <span class="nav-text">HTable 和 HTablePool使用注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTable"><span class="nav-number">8.5.</span> <span class="nav-text">HTable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTablePool"><span class="nav-number">8.6.</span> <span class="nav-text">HTablePool</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-MapReduce-整合"><span class="nav-number">9.</span> <span class="nav-text">HBase-MapReduce 整合</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

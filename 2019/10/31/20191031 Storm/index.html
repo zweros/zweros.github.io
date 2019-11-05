@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="[TOC] Storm 简介 Storm 是个实时的、分布式以及具备高容错(协调 )的计算系统   Storm 进程常驻内存 Storm 数据不经过磁盘，在内存中处理  官网对 Storm 的解释： Apache Storm is a free and open source distributed realtime computation system. Apache Storm makes i">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20191031 Storm">
+<meta property="og:url" content="http://zwer.xyz/2019/10/31/20191031 Storm/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="[TOC] Storm 简介 Storm 是个实时的、分布式以及具备高容错(协调 )的计算系统   Storm 进程常驻内存 Storm 数据不经过磁盘，在内存中处理  官网对 Storm 的解释： Apache Storm is a free and open source distributed realtime computation system. Apache Storm makes i">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://storm.apache.org/images/storm-flow.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191101105526.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191101113512.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191101113545.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191101200812.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191101204814.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102105206.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102110246.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102111847.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191101200812.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102151946.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102193615.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102213523.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102214534.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191102214910.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191103214301.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191104164508.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191104164628.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191104165303.png">
+<meta property="og:updated_time" content="2019-11-04T09:39:29.523Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20191031 Storm">
+<meta name="twitter:description" content="[TOC] Storm 简介 Storm 是个实时的、分布式以及具备高容错(协调 )的计算系统   Storm 进程常驻内存 Storm 数据不经过磁盘，在内存中处理  官网对 Storm 的解释： Apache Storm is a free and open source distributed realtime computation system. Apache Storm makes i">
+<meta name="twitter:image" content="http://storm.apache.org/images/storm-flow.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/10/31/20191031 Storm/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20191031 Storm | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/10/31/20191031 Storm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20191031 Storm
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-31 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-31T00:00:00+08:00">2019-10-31</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-11-04 17:39:29" itemprop="dateModified" datetime="2019-11-04T17:39:29+08:00">2019-11-04</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>[TOC]</p>
+<h2 id="Storm-简介"><a href="#Storm-简介" class="headerlink" title="Storm 简介"></a>Storm 简介</h2><blockquote>
+<p>Storm 是个实时的、分布式以及具备高容错(协调 )的计算系统</p>
+</blockquote>
+<ul>
+<li>Storm 进程常驻内存</li>
+<li>Storm 数据不经过磁盘，在内存中处理</li>
+</ul>
+<p>官网对 Storm 的解释：</p>
+<p>Apache Storm is a free and open source distributed realtime computation system. Apache Storm makes it easy to reliably process unbounded streams of data, doing for realtime processing what Hadoop did for batch processing. Apache Storm is simple, can be used with any programming language, and is a lot of fun to use!</p>
+<p>Apache Storm has many use cases: realtime analytics, online machine learning, continuous computation, distributed RPC, ETL, and more. Apache Storm is fast: a benchmark clocked it at over <strong>a million tuples processed per second per node</strong>. It is scalable, fault-tolerant, guarantees your data will be processed, and is easy to set up and operate.</p>
+<p>Apache Storm integrates with the queueing and database technologies you already use. An Apache Storm topology consumes streams of data and processes those streams in arbitrarily complex ways, repartitioning the streams between each stage of the computation however needed. Read more in the tutorial.</p>
+<p>官网地址: <a href="http://storm.apache.org/" target="_blank" rel="noopener">http://storm.apache.org/</a></p>
+<h3 id="Storm-与-MapReduce-的区别"><a href="#Storm-与-MapReduce-的区别" class="headerlink" title="Storm 与 MapReduce 的区别"></a>Storm 与 MapReduce 的区别</h3><table>
+<thead>
+<tr>
+<th align="left">计算框架</th>
+<th align="left">Storm</th>
+<th>MapReduce</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">概念</td>
+<td align="left">分布式实时流式计算</td>
+<td>批处理离线计算</td>
+</tr>
+<tr>
+<td align="left">处理方式</td>
+<td align="left">realtime processing</td>
+<td>batch processing</td>
+</tr>
+<tr>
+<td align="left">处理数据量的级别</td>
+<td align="left">MB 、KB</td>
+<td>TB级 PB级</td>
+</tr>
+<tr>
+<td align="left">单位时间处理数据量</td>
+<td align="left">小</td>
+<td>大</td>
+</tr>
+<tr>
+<td align="left">速度</td>
+<td align="left">快</td>
+<td>慢</td>
+</tr>
+<tr>
+<td align="left">模型</td>
+<td align="left">DAG 、Spout、Bolt 模型</td>
+<td>Map+Reduce  模式</td>
+</tr>
+<tr>
+<td align="left">生命周期</td>
+<td align="left">常驻运行</td>
+<td>反复启停</td>
+</tr>
+</tbody></table>
+<p>分布式承载数据的方式： 1、切片 2、径向全量     -&gt;  ？？？</p>
+<h3 id="Storm-计算模型"><a href="#Storm-计算模型" class="headerlink" title="Storm 计算模型"></a>Storm 计算模型</h3><p><img src="http://storm.apache.org/images/storm-flow.png" alt></p>
+<ul>
+<li><p>整个图是 DAG（Directed Acyclic Graph）有向无环图</p>
+</li>
+<li><p>水龙头： 表示数据源 spout</p>
+</li>
+<li><p>小水滴： 表示一次数据量的大小 tuple</p>
+</li>
+<li><p>大水滴： 表示一个计算单元 bolt</p>
+</li>
+<li><p>闪电： 表示计算速度快，就像闪电一样</p>
+</li>
+</ul>
+<h3 id="Storm-应用场景"><a href="#Storm-应用场景" class="headerlink" title="Storm 应用场景"></a>Storm 应用场景</h3><ul>
+<li>阿里巴巴的 JStorm 项目- 双 11 大屏幕</li>
+<li>腾讯的 QQ 同时在线人数图</li>
+</ul>
+<h2 id="Storm-特点"><a href="#Storm-特点" class="headerlink" title="Storm 特点"></a>Storm 特点</h2><ul>
+<li><p>架构<br>Nimbus<br>Supervisor<br>Worker</p>
+</li>
+<li><p>编程模型<br>DAG （Topology）<br>Spout<br>Bolt</p>
+</li>
+<li><p>数据传输<br>ZMQ（twitter早期产品）-ZeroMQ 开源的消息传递框架，并不是一个MessageQueue</p>
+<p>Netty-Netty 是基于 NIO 的网络框架，更加高效。</p>
+</li>
+</ul>
+<p>之所以Storm 0.9版本之后使用Netty，是因为ZMQ的license和Storm的license不兼容。</p>
+<ul>
+<li><p>高可靠性<br>异常处理<br>消息可靠性保障机制(ACK)</p>
+</li>
+<li><p>可维护性<br>StormUI 图形化监控接口</p>
+<p><img src="http://img.zwer.xyz/blog/20191101105526.png" alt></p>
+</li>
+</ul>
+<h2 id="Storm-计算模型详述"><a href="#Storm-计算模型详述" class="headerlink" title="Storm 计算模型详述"></a>Storm 计算模型详述</h2><p>spout 将一个个 tuple 通过流的方式， 发送给一个或多个 blot 处理</p>
+<p><img src="http://img.zwer.xyz/blog/20191101113512.png" alt></p>
+<ul>
+<li>Topology – DAG 有向无环图的实现<br>对于Storm实时计算逻辑的封装<br>即，由一系列通过数据流相互关联的 Spout、Bolt 所组成的拓扑结构<br>生命周期：此拓扑只要启动就会一直在集群中运行，直到手动将其kill，否则不会终止<pre><code>（区别于MapReduce当中的 Job，MR当中的Job在计算执行完成就会终止）</code></pre></li>
+<li>Tuple – 元组<br>Stream 中最小数据组成单元</li>
+<li>Stream – 数据流<br>从Spout中源源不断传递数据给Bolt、以及上一个Bolt传递数据给下一个Bolt，所形成的这些数据通道即叫做Stream<br>Stream声明时需给其指定一个Id（默认为Default）<br>实际开发场景中，多使用单一数据流，此时不需要单独指定StreamId</li>
+</ul>
+<p><img src="http://img.zwer.xyz/blog/20191101113545.png" alt></p>
+<ul>
+<li>Spout – 数据源<br>拓扑中数据流的来源。一般会从指定外部的数据源读取元组（Tuple）发送到拓扑（Topology）中<br>一个 Spout 可以发送多个数据流（Stream）<br>可先通过 OutputFieldsDeclarer 中的 declare 方法声明定义的不同数据流，发送数据时通过SpoutOutputCollector 中的 emit 方法指定数据流Id（streamId）参数将数据发送出去<br>Spout中最核心的方法是 nextTuple，该方法会被Storm线程不断调用、主动从数据源拉取数据，再通过emit方法将数据生成元组（Tuple）发送给之后的Bolt计算</li>
+<li>Bolt – 数据流处理组件<ul>
+<li>拓扑中数据处理均有 <code>Bolt</code> 完成。对于简单的任务或者数据流转换，单个 <code>Bolt</code> 可以简单实现；更加复杂场景往往需要多个 <code>Bolt</code> 分多个步骤完成</li>
+<li>一个 <code>Bolt</code> 可以发送多个数据流（Stream）<br>可先通过 <code>OutputFieldsDeclarer</code> 中的 <code>declare</code> 方法声明定义的不同数据流，发送数据时通过<code>SpoutOutputCollector</code> 中的 <code>emit</code> 方法指定数据流  Id（streamId）参数将数据发送出去</li>
+<li>Bolt 中最核心的方法是 <code>execute</code> 方法，该方法负责接收到一个元组（Tuple）数据、真正实现核心的业务逻辑</li>
+</ul>
+</li>
+<li>Stream Grouping – 数据流分组（即数据分发策略）</li>
+</ul>
+<h2 id="Storm-案例"><a href="#Storm-案例" class="headerlink" title="Storm 案例"></a>Storm 案例</h2><h3 id="Storm-数据累加"><a href="#Storm-数据累加" class="headerlink" title="Storm 数据累加"></a>Storm 数据累加</h3><ul>
+<li><p>WsSpout.java: 将消息发送给 Blot</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsSpout</span> <span class="keyword">extends</span> <span class="title">BaseRichSpout</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">	Map conf;</span><br><span class="line">	TopologyContext context;</span><br><span class="line">	SpoutOutputCollector collector;</span><br><span class="line">	<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 初始化</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">open</span><span class="params">(Map conf, TopologyContext context</span></span></span><br><span class="line"><span class="function"><span class="params">                     , SpoutOutputCollector collector)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.conf = conf;</span><br><span class="line">		<span class="keyword">this</span>.context = context;</span><br><span class="line">		<span class="keyword">this</span>.collector = collector;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 获取和发送消息</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">nextTuple</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		i++;</span><br><span class="line">		List val = <span class="keyword">new</span> Values(i);</span><br><span class="line">		<span class="keyword">this</span>.collector.emit(val);</span><br><span class="line">		System.err.println(<span class="string">"spout----------:"</span> + i);</span><br><span class="line">		Utils.sleep(<span class="number">1000</span>); <span class="comment">// 休眠一秒</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 声明字段名称</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">declareOutputFields</span><span class="params">(OutputFieldsDeclarer declarer)</span> </span>&#123;</span><br><span class="line">		declarer.declare(<span class="keyword">new</span> Fields(<span class="string">"nums"</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WsBlot.java: 接收消息并处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WsBlot</span> <span class="keyword">extends</span> <span class="title">BaseRichBolt</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	Map stormConf;</span><br><span class="line">	TopologyContext context;</span><br><span class="line">	OutputCollector collector;</span><br><span class="line">	<span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(Map stormConf, TopologyContext context, OutputCollector collector)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.stormConf = stormConf;</span><br><span class="line">		<span class="keyword">this</span>.context = context;</span><br><span class="line">		<span class="keyword">this</span>.collector = collector;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Tuple input)</span> </span>&#123;</span><br><span class="line">		Integer num = input.getIntegerByField(<span class="string">"nums"</span>);</span><br><span class="line">		sum += num;</span><br><span class="line">		System.err.println(<span class="string">"nums--------:"</span>+sum);</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">declareOutputFields</span><span class="params">(OutputFieldsDeclarer declarer)</span> </span>&#123;</span><br><span class="line">		declarer.declare(<span class="keyword">new</span> Fields(<span class="string">"nums"</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MainTest.java: 测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainTest</span> </span>&#123;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 测试</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> args 命令行参数</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 创建拓扑构建者对象</span></span><br><span class="line">		TopologyBuilder builder = <span class="keyword">new</span> TopologyBuilder();</span><br><span class="line">		<span class="comment">// 设置 spout</span></span><br><span class="line">		builder.setSpout(<span class="string">"wsspout"</span>, <span class="keyword">new</span> WsSpout());</span><br><span class="line">		<span class="comment">// 设置 blot</span></span><br><span class="line">		builder.setBolt(<span class="string">"wsbolt"</span>, <span class="keyword">new</span> WsBlot()).shuffleGrouping(<span class="string">"wsspout"</span>);</span><br><span class="line">		<span class="comment">// 创建本地集群</span></span><br><span class="line">		LocalCluster locCluster = <span class="keyword">new</span> LocalCluster();</span><br><span class="line">		<span class="comment">// 提交拓扑</span></span><br><span class="line">		locCluster.submitTopology(<span class="string">"ws"</span>, <span class="keyword">new</span> Config(), builder.createTopology());</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Storm-Word-Count"><a href="#Storm-Word-Count" class="headerlink" title="Storm Word Count"></a>Storm Word Count</h3><ul>
+<li><p>WcSpout.java: 发送消息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WcSpout</span> <span class="keyword">extends</span> <span class="title">BaseRichSpout</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	SpoutOutputCollector collector;</span><br><span class="line"></span><br><span class="line">	String[] artile = &#123; <span class="string">"WelCome to Bejing"</span>, <span class="string">"WelCome to AnHui"</span>, <span class="string">"WelCome to Lujiang"</span> &#125;;</span><br><span class="line"></span><br><span class="line">	Random random = <span class="keyword">new</span> Random();</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">open</span><span class="params">(Map conf, TopologyContext context, SpoutOutputCollector collector)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.collector = collector;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">nextTuple</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		List val = <span class="keyword">new</span> Values(artile[<span class="keyword">this</span>.random.nextInt(artile.length)]);</span><br><span class="line">		<span class="keyword">this</span>.collector.emit(val);</span><br><span class="line">		System.err.println(<span class="string">"line--------:"</span>+val.get(<span class="number">0</span>));</span><br><span class="line">		Utils.sleep(<span class="number">2000</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">declareOutputFields</span><span class="params">(OutputFieldsDeclarer declarer)</span> </span>&#123;</span><br><span class="line">		declarer.declare(<span class="keyword">new</span> Fields(<span class="string">"line"</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WcBolt1.java: 对一行数据进行切分，分别发送给下一个 bolt</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WcBolt1</span> <span class="keyword">extends</span> <span class="title">BaseRichBolt</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	OutputCollector collector;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(Map stormConf, TopologyContext context, OutputCollector collector)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.collector = collector;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Tuple input)</span> </span>&#123;</span><br><span class="line">		String line = input.getString(<span class="number">0</span>);</span><br><span class="line">		String[] words = line.split(<span class="string">" "</span>);</span><br><span class="line">		<span class="keyword">for</span> (String wd : words) &#123;</span><br><span class="line">			List val = <span class="keyword">new</span> Values(wd);</span><br><span class="line">			<span class="keyword">this</span>.collector.emit(val);</span><br><span class="line">			<span class="comment">//System.err.println("wcbolt1.......:"+wd);</span></span><br><span class="line">		&#125;</span><br><span class="line">		Utils.sleep(<span class="number">200</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">declareOutputFields</span><span class="params">(OutputFieldsDeclarer declarer)</span> </span>&#123;</span><br><span class="line">		declarer.declare(<span class="keyword">new</span> Fields(<span class="string">"wd"</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WcBolt2.java:统计单词的次数，并放入 Map 集合中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WcBolt2</span> <span class="keyword">extends</span> <span class="title">BaseRichBolt</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	OutputCollector collector;</span><br><span class="line"></span><br><span class="line">	Map&lt;String, Integer&gt; wordCount =<span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">prepare</span><span class="params">(Map stormConf, TopologyContext context, OutputCollector collector)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.collector = collector;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Tuple input)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// Welcome</span></span><br><span class="line">		String wd = input.getStringByField(<span class="string">"wd"</span>);</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">this</span>.wordCount.containsKey(wd)) &#123;</span><br><span class="line">			<span class="keyword">int</span> count = <span class="keyword">this</span>.wordCount.get(wd);</span><br><span class="line">			<span class="keyword">this</span>.wordCount.put(wd, ++count);</span><br><span class="line"></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">this</span>.wordCount.put(wd, <span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		System.err.println(<span class="keyword">this</span>.wordCount);</span><br><span class="line">		Utils.sleep(<span class="number">500</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">declareOutputFields</span><span class="params">(OutputFieldsDeclarer declarer)</span> </span>&#123;</span><br><span class="line">		declarer.declare(<span class="keyword">new</span> Fields(<span class="string">"w"</span>));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>WordCountMainTest.java: 测试类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountMainTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		TopologyBuilder builder = <span class="keyword">new</span> TopologyBuilder();</span><br><span class="line">		builder.setSpout(<span class="string">"wcspout"</span>, <span class="keyword">new</span> WcSpout());</span><br><span class="line">		builder.setBolt(<span class="string">"wcbolt1"</span>, <span class="keyword">new</span> WcBolt1()).shuffleGrouping(<span class="string">"wcspout"</span>);</span><br><span class="line">		<span class="comment">// fieldGrouping: 数据分发策略</span></span><br><span class="line">		builder.setBolt(<span class="string">"wcbolt2"</span>, <span class="keyword">new</span> WcBolt2(),<span class="number">3</span>).fieldsGrouping(<span class="string">"wcbolt1"</span>, <span class="keyword">new</span> Fields(<span class="string">"wd"</span>));</span><br><span class="line">		<span class="comment">// builder.setBolt("wcbolt2", new WcBolt2()).shuffleGrouping("wcbolt1");</span></span><br><span class="line">		LocalCluster cluster = <span class="keyword">new</span> LocalCluster();</span><br><span class="line">		cluster.submitTopology(<span class="string">"wordcount"</span>, <span class="keyword">new</span> Config(), builder.createTopology());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="Storm-数据分发策略"><a href="#Storm-数据分发策略" class="headerlink" title="Storm 数据分发策略*"></a>Storm 数据分发策略*</h2><ol>
+<li><p><strong>Shuffle Grouping*</strong><br>随机分组，随机派发stream里面的tuple，保证每个bolt task接收到的tuple数目大致相同。<br>轮询，平均分配 </p>
+</li>
+<li><p><strong>Fields Grouping*</strong><br>按字段分组，比如，按”user-id”这个字段来分组，那么具有同样”user-id”的 tuple 会被分到相同的Bolt里的一个task， 而不同的”user-id”则可能会被分配到不同的task。 </p>
+</li>
+<li><p><strong>All Grouping*</strong><br>广播发送，对于每一个tuple，所有的bolts都会收到 </p>
+</li>
+<li><p><strong>Global Grouping</strong><br>全局分组，把tuple分配给task id最低的task 。</p>
+</li>
+<li><p><strong>None Grouping</strong><br>不分组，这个分组的意思是说stream不关心到底怎样分组。目前这种分组和Shuffle grouping是一样的效果。 有一点不同的是storm会把使用none grouping的这个bolt放到这个bolt的订阅者同一个线程里面去执行（未来Storm如果可能的话会这样设计）。 </p>
+</li>
+<li><p><strong>Direct Grouping</strong><br>指向型分组， 这是一种比较特别的分组方法，用这种分组意味着消息（tuple）的发送者指定由消息接收者的哪个task处理这个消息。只有被声明为 Direct Stream 的消息流可以声明这种分组方法。而且这种消息tuple必须使用 emitDirect 方法来发射。消息处理者可以通过 TopologyContext 来获取处理它的消息的task的id (OutputCollector.emit方法也会返回task的id)  </p>
+</li>
+<li><p><strong>Local or shuffle grouping</strong><br>本地或随机分组。如果目标bolt有一个或者多个task与源bolt的task在同一个工作进程中，tuple将会被随机发送给这些同进程中的tasks。否则，和普通的Shuffle Grouping行为一致</p>
+</li>
+<li><p><strong>customGrouping</strong><br>自定义，相当于mapreduce那里自己去实现一个partition一样。</p>
+</li>
+</ol>
+<h2 id="Storm-架构设计"><a href="#Storm-架构设计" class="headerlink" title="Storm 架构设计*"></a>Storm 架构设计*</h2><p><img src="http://img.zwer.xyz/blog/20191101200812.png" alt></p>
+<h3 id="角色作用"><a href="#角色作用" class="headerlink" title="角色作用"></a>角色作用</h3><ul>
+<li><code>Nimbus</code><ul>
+<li>资源调度</li>
+<li>任务分配</li>
+<li>接收 jar 包</li>
+</ul>
+</li>
+<li><code>Supervisor</code><ul>
+<li>接收<code>nimbus</code>分配的任务</li>
+<li>启动、停止自己管理的 worker 进程（当前 supervisor 上 worker 数量由配置文件设定）</li>
+</ul>
+</li>
+<li><code>Worker</code><ul>
+<li>运行具体处理运算组件的进程（每个Worker对应执行一个Topology的子集）</li>
+<li>worker 任务类型，即 spout 任务、bolt 任务两种</li>
+<li>启动 executor<pre><code>（executor即worker JVM进程中的一个java线程，一般默认每个executor负责执行一个task任务）</code></pre></li>
+</ul>
+</li>
+<li><code>Zookeeper</code><ul>
+<li>负责角色的健康检查</li>
+</ul>
+</li>
+</ul>
+<h3 id="Storm-架构与-Hadoop-架构比较"><a href="#Storm-架构与-Hadoop-架构比较" class="headerlink" title="Storm 架构与 Hadoop 架构比较"></a>Storm 架构与 Hadoop 架构比较</h3><table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">Hadoop</th>
+<th align="center">Storm</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">主节点</td>
+<td align="center">ResourceManager</td>
+<td align="center">Nimbus</td>
+</tr>
+<tr>
+<td align="center">从节点</td>
+<td align="center">NodeManager</td>
+<td align="center">Supervisor</td>
+</tr>
+<tr>
+<td align="center">应用程序</td>
+<td align="center">Job</td>
+<td align="center">Topology</td>
+</tr>
+<tr>
+<td align="center">工作进程</td>
+<td align="center">Child</td>
+<td align="center">Worker</td>
+</tr>
+<tr>
+<td align="center">计算模型</td>
+<td align="center">Map/Reduce(split,map,shuffle,reduce)</td>
+<td align="center">Spout/Bolt</td>
+</tr>
+</tbody></table>
+<h3 id="Storm-任务提交流程"><a href="#Storm-任务提交流程" class="headerlink" title="Storm 任务提交流程"></a>Storm 任务提交流程</h3><p><img src="http://img.zwer.xyz/blog/20191101204814.png" alt></p>
+<h2 id="Storm-并发机制"><a href="#Storm-并发机制" class="headerlink" title="Storm 并发机制*"></a>Storm 并发机制*</h2><h3 id="Worker-Executor-Task-之间的联系"><a href="#Worker-Executor-Task-之间的联系" class="headerlink" title="Worker Executor Task 之间的联系"></a>Worker Executor Task 之间的联系</h3><ul>
+<li><strong>Work Process</strong>  进程<br>一个 Topology 拓扑会包含一个或多个 Worker（每个Worker进程只能从属于一个特定的Topology）</li>
+</ul>
+<p>这些Worker进程会并行跑在集群中不同的服务器上，即一个Topology拓扑其实是由并行运行在Storm集群中</p>
+<p>  多台服务器上的进程所组成</p>
+<ul>
+<li><p><strong>Executor （Threads）</strong> 线程</p>
+<p>Executor 是由 Worker 进程中生成的一个线程</p>
+<p>每个 Worker 进程中会运行拓扑当中的一个或多个 Executor 线程</p>
+<p>一个 Executor 线程中可以执行一个或多个 Task 任务（默认每个Executor只执行一个Task任务），但是这些</p>
+<p>Task 任务都是对应着同一个组件（Spout、Bolt）。</p>
+</li>
+<li><p><strong>Task</strong> 任务</p>
+<p>实际执行数据处理的最小单元，每个 task 即为一个 Spout 或者一个 Bolt</p>
+<p><font color="red">Task 数量在整个 Topology 生命周期中保持不变，Executor 数量可以变化或手动调整</font></p>
+<p>默认情况下，Task 数量和 Executor 是相同的，即每个 Executor 线程中默认运行一个 Task 任务</p>
+</li>
+</ul>
+<p><img src="http://img.zwer.xyz/blog/20191102105206.png" alt></p>
+<h3 id="调整-Worker-Executor-Task-的数量"><a href="#调整-Worker-Executor-Task-的数量" class="headerlink" title="调整 Worker Executor Task 的数量"></a>调整 Worker Executor Task 的数量</h3><ul>
+<li><p><strong>设置 Worker 进程数</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Config.setNumWorkers(<span class="keyword">int</span> workers)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>设置 Executor 线程数</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TopologyBuilder.setSpout(String id, IRichSpout spout, Number parallelism_hint)</span><br><span class="line">TopologyBuilder.setBolt(String id, IRichBolt bolt, Number parallelism_hint)</span><br><span class="line"></span><br><span class="line"><span class="comment">//：其中， parallelism_hint即为executor线程数</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>设置 Task 数量</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ComponentConfigurationDeclarer.setNumTasks(Number val)</span><br></pre></td></tr></table></figure>
+
+<p>例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Config conf = <span class="keyword">new</span> Config() ;</span><br><span class="line">conf.setNumWorkers(<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">TopologyBuilder topologyBuilder = <span class="keyword">new</span> TopologyBuilder();</span><br><span class="line">topologyBuilder.setSpout(<span class="string">"spout"</span>, <span class="keyword">new</span> MySpout(), <span class="number">1</span>);</span><br><span class="line">topologyBuilder.setBolt(<span class="string">"green-bolt"</span>, <span class="keyword">new</span> GreenBolt(), <span class="number">2</span>)</span><br><span class="line">    .setNumTasks(<span class="number">4</span>)</span><br><span class="line">    .shuffleGrouping(<span class="string">"blue-spout);</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.zwer.xyz/blog/20191102110246.png" alt></p>
+</li>
+</ul>
+<h3 id="rebalance-再平衡"><a href="#rebalance-再平衡" class="headerlink" title="rebalance 再平衡"></a>rebalance 再平衡</h3><blockquote>
+<p>动态调整 Topology 拓扑的 Worker 进程数量、以及 Executor 线程数量</p>
+</blockquote>
+<p>支持两种调整方式：<br>1、通过 Storm UI<br>2、通过 Storm CLI</p>
+<p>通过 Storm CLI 动态调整：</p>
+<p>例：storm rebalance mytopology -n 5 -e blue-spout=3 -e yellow-bolt=10</p>
+<p>将mytopology拓扑worker进程数量调整为5个</p>
+<p>“ blue-spout ” 所使用的线程数量调整为3个</p>
+<p>“ yellow-bolt ”所使用的线程数量调整为10个</p>
+<h2 id="Storm-通信机制"><a href="#Storm-通信机制" class="headerlink" title="Storm 通信机制"></a>Storm 通信机制</h2><h3 id="Worker-进程间的数据通信"><a href="#Worker-进程间的数据通信" class="headerlink" title="Worker 进程间的数据通信"></a>Worker 进程间的数据通信</h3><ul>
+<li>ZMQ<br>ZeroMQ 开源的消息传递框架，并不是一个MessageQueue</li>
+<li>Netty<br>Netty是基于 NIO 的网络框架，更加高效。（之所以Storm 0.9版本之后使用 Netty，是因为ZMQ的license和Storm的license不兼容。）</li>
+</ul>
+<h3 id="Worker内部的数据通信"><a href="#Worker内部的数据通信" class="headerlink" title="Worker内部的数据通信*"></a>Worker内部的数据通信*</h3><p>Disruptor 实现了“队列”的功能。可以理解为一种事件监听或者消息处理机制，即在队列当中一边由生产者放入消息数据，另一边消费者并行取出消息数据处理。</p>
+<p><img src="http://img.zwer.xyz/blog/20191102111847.png" alt></p>
+<h2 id="Storm-安装"><a href="#Storm-安装" class="headerlink" title="Storm 安装"></a>Storm 安装</h2><h3 id="伪分布式"><a href="#伪分布式" class="headerlink" title="伪分布式"></a>伪分布式</h3><ul>
+<li><p><strong>系统环境</strong></p>
+<ul>
+<li>Java  环境</li>
+</ul>
+</li>
+<li><p><strong>搭建</strong></p>
+<p>伪分布式搭建在节点 node01(192.168.170.101)上</p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>上传 storm 软件压缩包到 Linux 服务器上</span><br><span class="line">tar xf apache-storm-0.10.0.tar.gz -C /opt/sxt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 配置 storm 环境变量</span><br><span class="line">export STORM_HOME=/opt/sxt/apache-storm-0.10.0</span><br><span class="line">export PATH=$PATH:$STORM_HOME/bin</span><br><span class="line"><span class="meta">#</span> cd $STROM_HOME 根目录</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 首先启动  dev-zookeeper</span><br><span class="line">storm dev-zookeeper &gt;&gt; ./logs/dev-zookeeper.out 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 再启动 nimbus </span><br><span class="line">storm nimbus &gt;&gt; ./logs/nimbus.out 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 再启动  spervisor</span><br><span class="line">storm supervisor &gt;&gt; ./logs/supervisor.out 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 最后启动 ui，注意：使用  jps 命令查看 ui 进程的名称为 core</span><br><span class="line">storm ui  &gt;&gt; ./logs/ui.out 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 使用 jps 命令</span><br><span class="line">[root@node01 apache-storm-0.10.0]# jps</span><br><span class="line">4661 nimbus</span><br><span class="line">3932 DFSZKFailoverController</span><br><span class="line">4998 Jps</span><br><span class="line">4895 core</span><br><span class="line">4563 dev_zookeeper</span><br><span class="line">4805 supervisor</span><br><span class="line">3790 JournalNode</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 打开 node01:8080 端口</span><br><span class="line">http://node01:8080</span><br></pre></td></tr></table></figure>
+
+<p>小技巧： 通过 <code>storm  或者 storm help</code> 查看命令的如何使用。 <code>storm help 参数</code>查看具体命令的使用</p>
+</li>
+<li><p><strong>部署伪分布式任务</strong></p>
+<p>在部署之前，确保 storm 中的必要的角色（zk、nimbus、supervisor）都已经启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 将 IDE 中的项目打包成 jar 文件，并上传到 Linux 服务器上</span><br><span class="line"><span class="meta">#</span> 运行 jar 包</span><br><span class="line">storm jar jar的位置 类的全限定路径名 [参数]</span><br><span class="line">若未给定参数，则在本地运行。若给定参数，则将提交给集群运行</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="完全分布式"><a href="#完全分布式" class="headerlink" title="完全分布式"></a>完全分布式</h3><ul>
+<li><p><strong>节点分布</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">host/role</th>
+<th align="center">192.168.170.102/node02</th>
+<th align="center">192.168.170.103/node03</th>
+<th align="center">192.168.170.104/node04</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">nimbus</td>
+<td align="center">*</td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center">supervisor</td>
+<td align="center"></td>
+<td align="center">*</td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td align="center">worker</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>系统环境</strong></p>
+<ul>
+<li>安装 Java 环境 ，并保证 JDK 版本在 1.6 以上</li>
+<li>安装 Python 环境，并保存 Python 在 2.6.6 以上即可</li>
+</ul>
+</li>
+<li><p><strong>Storm 完全分布式搭建</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 上传 storm软件压缩包 到 node02 节点 上</span><br><span class="line"><span class="meta">#</span> 解压</span><br><span class="line">tar zxvf  apache-storm-0.10.0.tar.gz -C /opt/sxt</span><br><span class="line"><span class="meta">#</span> 配置 storm 环境变量</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 进入 $STROM_HOME 根目录下</span><br><span class="line"><span class="meta">#</span> cd conf </span><br><span class="line"><span class="meta">#</span> 编辑 storm.yaml 文件，内容如下：</span><br><span class="line">storm.zookeeper.servers:</span><br><span class="line">     - "node02"</span><br><span class="line">     - "node03"</span><br><span class="line">     - "node04"</span><br><span class="line"> </span><br><span class="line">nimbus.host: "node02"</span><br><span class="line"></span><br><span class="line">storm.local.dir: "/tmp/storm"</span><br><span class="line"></span><br><span class="line">supervisor.slots.ports:</span><br><span class="line">    - 6700</span><br><span class="line">    - 6701</span><br><span class="line">    - 6702</span><br><span class="line">    - 6703</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 分发到 node03、node04 节点上</span><br><span class="line">scp -r apache-storm-0.10.0/ root@node03:`pwd`</span><br><span class="line">scp -r apache-storm-0.10.0/ root@node04:`pwd</span><br><span class="line"><span class="meta">#</span>-------------------------------------------------------</span><br><span class="line"><span class="meta">#</span> 以下操作都是在  $STROM_HOME 根目录下执行的</span><br><span class="line"><span class="meta">#</span> 在 node02、node03、node04 节点上创建 logs 目录</span><br><span class="line">mkdir logs</span><br><span class="line"><span class="meta">#</span> 在 node02 启动</span><br><span class="line">storm nimbus &gt;&gt; ./logs/nimbus.out 2&gt;&amp;1 &amp;</span><br><span class="line">storm ui &gt;&gt; ./logs/ui.out 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>  node03、node04 启动</span><br><span class="line">storm supervisor &gt;&gt; supervisor.out 2&gt;&amp;1 &amp;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 访问 http://node02:8080 </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 上传任务 jar </span><br><span class="line">storm jar jar的路径 主类的全限定路径名  任务名</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="Storm-容错保护机制"><a href="#Storm-容错保护机制" class="headerlink" title="Storm 容错保护机制"></a>Storm 容错保护机制</h2><p>  <img src="http://img.zwer.xyz/blog/20191101200812.png" alt></p>
+<h3 id="集群节点宕机"><a href="#集群节点宕机" class="headerlink" title="集群节点宕机"></a>集群节点宕机</h3><ul>
+<li><p>Nimbus服务器<br>单点故障？</p>
+<p>当 Nimbus 出现了宕机，并不会直接影响 Storm 的运行，因为 Nimbus 并不是直接与 Supervisor 进行交互，而是与 Zookeeper 协调者之间进行交互，即 Zookeeper 将 Nimbus 与 Supervisor 的直接关系，转为间接关系。但有一个情况下，Supervisor 中某个节点宕机了，Zookeeper 会该 Supervisor 消息传递给 Nimbus，这时 Nimbus 必须宕机后恢复重启，继续工作。</p>
+</li>
+<li><p>非 Nimbus 服务器<br>故障时，该节点上所有 Task 任务都会超时，Nimbus 会将这些 Task 任务重新分配到其他服务器上运行</p>
+</li>
+</ul>
+<h3 id="进程挂掉"><a href="#进程挂掉" class="headerlink" title="进程挂掉"></a>进程挂掉</h3><ul>
+<li><strong>Worker</strong><br>挂掉时，Supervisor会重新启动这个进程。如果启动过程中仍然一直失败，并且无法向Nimbus发送心跳，Nimbus会将该Worker重新分配到其他服务器上</li>
+<li><strong>Supervisor</strong><br>无状态（所有的状态信息都存放在Zookeeper中来管理）<br>快速失败（每当遇到任何异常情况，都会自动毁灭）</li>
+<li><strong>Nimbus</strong><br>无状态（所有的状态信息都存放在Zookeeper中来管理）<br>快速失败（每当遇到任何异常情况，都会自动毁灭）</li>
+</ul>
+<h3 id="消息的完整性"><a href="#消息的完整性" class="headerlink" title="消息的完整性"></a>消息的完整性</h3><blockquote>
+<p>从Spout中发出的Tuple，以及基于他所产生Tuple（例如上个例子当中Spout发出的句子，以及句子当中单词的tuple等）由这些消息就构成了一棵tuple树。当这棵tuple树发送完成，并且树当中每一条消息都被正确处理，就表明spout发送消息被“完整处理”，即消息的完整性</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191102151946.png" alt></p>
+<ul>
+<li><p><strong>ack 机制 –消息完整性的实现机制</strong></p>
+<ol>
+<li>Storm的拓扑当中特殊的一些任务 </li>
+<li>负责跟踪每个Spout发出的Tuple的DAG（有向无环图）</li>
+</ol>
+<p>注意：ack 无法保证数据不被重复计算，但是可以保证数据至少被正确处理一次。</p>
+<p>在实际的使用中，由于处理的整体数据量大，出现个别消息不完整，是可以容忍的。</p>
+</li>
+<li><p><strong>事务</strong></p>
+<p> 无,后续</p>
+</li>
+</ul>
+<h2 id="DRPC-同步实时分析"><a href="#DRPC-同步实时分析" class="headerlink" title="DRPC -同步实时分析"></a>DRPC -同步实时分析</h2><blockquote>
+<p>Distributed Remote Procedure Call</p>
+<p>DRPC 是通过一个 DRPC 服务端(DRPC server)来实现分布式 RPC 功能的。<br>DRPC Server 负责接收 RPC 请求，并将该请求发送到 Storm中运行的 Topology，等待接收 Topology 发送的处理结果，并将该结果返回给发送请求的客户端。<br>（其实，从客户端的角度来说，DPRC 与普通的 RPC 调用并没有什么区别。）</p>
+</blockquote>
+<h3 id="DRPC设计目的："><a href="#DRPC设计目的：" class="headerlink" title="DRPC设计目的："></a>DRPC设计目的：</h3><p>为了充分利用 Storm 的计算能力实现==高密度的并行实时计算==，Storm 接收若干个数据流输入，数据在 Topology 当中运行完成，然后通过 DRPC 将结果进行输出。</p>
+<h3 id="DRPC架构图"><a href="#DRPC架构图" class="headerlink" title="DRPC架构图"></a>DRPC架构图</h3><p>客户端通过向 DRPC 服务器发送待执行函数的名称以及该函数的参数来获取处理结果。实现该函数的拓扑使用一个 DRPCSpout 从 DRPC 服务器中接收一个函数调用流。DRPC 服务器会为每个函数调用都标记了一个唯一的 id。随后拓扑会执行函数来计算结果，并在拓扑的最后使用一个名为 ReturnResults 的 bolt 连接到 DRPC 服务器，根据函数调用的 id 来将函数调用的结果返回。</p>
+<p><img src="http://img.zwer.xyz/blog/20191102193615.png" alt></p>
+<h3 id="DRPC-实现"><a href="#DRPC-实现" class="headerlink" title="DRPC 实现"></a>DRPC 实现</h3><ol>
+<li>通过 LinearDRPCTopologyBuilder （该方法也过期，不建议使用）<br>该方法会自动为我们设定 Spout、将结果返回给 DRPC Server 等，我们只需要将 Topology 实现</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * This topology is a basic example of doing distributed RPC on top of Storm. It</span></span><br><span class="line"><span class="comment"> * implements a function that appends a "!" to any string you send the DRPC</span></span><br><span class="line"><span class="comment"> * function.</span></span><br><span class="line"><span class="comment"> * &lt;p/&gt;</span></span><br><span class="line"><span class="comment"> * See https://github.com/nathanmarz/storm/wiki/Distributed-RPC for more</span></span><br><span class="line"><span class="comment"> * information on doing distributed RPC on top of Storm.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BasicDRPCTopology</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ExclaimBolt</span> <span class="keyword">extends</span> <span class="title">BaseBasicBolt</span> </span>&#123;</span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Tuple tuple, BasicOutputCollector collector)</span> </span>&#123;</span><br><span class="line">			String input = tuple.getString(<span class="number">1</span>);</span><br><span class="line">			collector.emit(<span class="keyword">new</span> Values(tuple.getValue(<span class="number">0</span>), input + <span class="string">"!"</span>));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">declareOutputFields</span><span class="params">(OutputFieldsDeclarer declarer)</span> </span>&#123;</span><br><span class="line">			declarer.declare(<span class="keyword">new</span> Fields(<span class="string">"id"</span>, <span class="string">"result"</span>));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		LinearDRPCTopologyBuilder builder = <span class="keyword">new</span> LinearDRPCTopologyBuilder(<span class="string">"exclamation"</span>);</span><br><span class="line">		builder.addBolt(<span class="keyword">new</span> ExclaimBolt(), <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">		Config conf = <span class="keyword">new</span> Config();</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (args == <span class="keyword">null</span> || args.length == <span class="number">0</span>) &#123;</span><br><span class="line">			LocalDRPC drpc = <span class="keyword">new</span> LocalDRPC();</span><br><span class="line">			LocalCluster cluster = <span class="keyword">new</span> LocalCluster();</span><br><span class="line"></span><br><span class="line">			cluster.submitTopology(<span class="string">"drpc-demo"</span>, conf, builder.createLocalTopology(drpc));</span><br><span class="line"></span><br><span class="line">			<span class="keyword">for</span> (String word : <span class="keyword">new</span> String[] &#123; <span class="string">"hello"</span>, <span class="string">"goodbye"</span> &#125;) &#123;</span><br><span class="line">				System.err.println(<span class="string">"Result for \""</span> + word + <span class="string">"\": "</span> + drpc.execute(<span class="string">"exclamation"</span>, word));</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			cluster.shutdown();</span><br><span class="line">			drpc.shutdown();</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			conf.setNumWorkers(<span class="number">3</span>);</span><br><span class="line">			StormSubmitter.submitTopologyWithProgressBar(args[<span class="number">0</span>], conf, builder.createRemoteTopology());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>直接通过普通的拓扑构造方法 TopologyBuilder 来创建 DRPC 拓扑，需要手动设定好开始的 DRPCSpout 以及结束的 ReturnResults</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ManualDRPC</span> </span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">ExclamationBolt</span> <span class="keyword">extends</span> <span class="title">BaseBasicBolt</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">declareOutputFields</span><span class="params">(OutputFieldsDeclarer declarer)</span> </span>&#123;</span><br><span class="line">			declarer.declare(<span class="keyword">new</span> Fields(<span class="string">"result"</span>, <span class="string">"return-info"</span>));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">execute</span><span class="params">(Tuple tuple, BasicOutputCollector collector)</span> </span>&#123;</span><br><span class="line">			String arg = tuple.getString(<span class="number">0</span>);</span><br><span class="line">			Object retInfo = tuple.getValue(<span class="number">1</span>);</span><br><span class="line">			collector.emit(<span class="keyword">new</span> Values(arg + <span class="string">"!!!"</span>, retInfo));</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		TopologyBuilder builder = <span class="keyword">new</span> TopologyBuilder();</span><br><span class="line">		LocalDRPC drpc = <span class="keyword">new</span> LocalDRPC();</span><br><span class="line"></span><br><span class="line">		DRPCSpout spout = <span class="keyword">new</span> DRPCSpout(<span class="string">"exclamation"</span>, drpc);</span><br><span class="line">		builder.setSpout(<span class="string">"drpc"</span>, spout);</span><br><span class="line">		builder.setBolt(<span class="string">"exclaim"</span>, <span class="keyword">new</span> ExclamationBolt(), <span class="number">3</span>).shuffleGrouping(<span class="string">"drpc"</span>);</span><br><span class="line">		builder.setBolt(<span class="string">"return"</span>, <span class="keyword">new</span> ReturnResults(), <span class="number">3</span>).shuffleGrouping(<span class="string">"exclaim"</span>);</span><br><span class="line"></span><br><span class="line">		LocalCluster cluster = <span class="keyword">new</span> LocalCluster();</span><br><span class="line">		Config conf = <span class="keyword">new</span> Config();</span><br><span class="line">		cluster.submitTopology(<span class="string">"exclaim"</span>, conf, builder.createTopology());</span><br><span class="line"></span><br><span class="line">		System.err.println(drpc.execute(<span class="string">"exclamation"</span>, <span class="string">"aaa"</span>));</span><br><span class="line">		System.err.println(drpc.execute(<span class="string">"exclamation"</span>, <span class="string">"bbb"</span>));</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="DRPC-远程模式"><a href="#DRPC-远程模式" class="headerlink" title="DRPC 远程模式"></a>DRPC 远程模式</h3><ul>
+<li><p>节点分布</p>
+<table>
+<thead>
+<tr>
+<th>host/role</th>
+<th>node02</th>
+<th>node03</th>
+<th>node04</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nimbus</td>
+<td>*</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>supervisor</td>
+<td></td>
+<td>*</td>
+<td>*</td>
+</tr>
+<tr>
+<td>drpc</td>
+<td>*</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+</li>
+<li><p>在 storm 完全分布式的基础上，修改 storm.yarm 文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">cd $STORM_HOME/conf/</span><br><span class="line"></span><br><span class="line">修改配置文件conf/storm.yaml</span><br><span class="line">drpc.servers:</span><br><span class="line">    - "node1“</span><br><span class="line"></span><br><span class="line">启动DRPC Server</span><br><span class="line">bin/storm drpc &amp;</span><br><span class="line"></span><br><span class="line">通过StormSubmitter.submitTopology提交拓扑</span><br><span class="line">StormSubmitter</span><br><span class="line">.submitTopologyWithProgressBar(args[0], conf, builder.createRemoteTopology());</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>DRPC 客户端代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyDRPCclient</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> args</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line"></span><br><span class="line">		DRPCClient client = <span class="keyword">new</span> DRPCClient(<span class="string">"node02"</span>, <span class="number">3772</span>);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			String result = client.execute(<span class="string">"exclamation"</span>, <span class="string">"11,22"</span>);</span><br><span class="line">			</span><br><span class="line">			System.out.println(result);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (TException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (DRPCExecutionException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="kafka"><a href="#kafka" class="headerlink" title="kafka*"></a>kafka*</h2><blockquote>
+<p>Kafka 是一个分布式的消息队列系统 (Message Queue)。</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191102213523.png" alt></p>
+<p>kafka 集群有多个 Broker 服务器组成，每个类型的消息被定义为 topic。</p>
+<p>同一 topic 内部的消息按照一定的 key 和算法被分区 (partition) 存储在不同的 Broker上。</p>
+<p>消息生产者 producer 和消费者 consumer 可以在多个 Broker上生产/消费 topic</p>
+<h3 id="Topics-and-Logs："><a href="#Topics-and-Logs：" class="headerlink" title="Topics and Logs："></a>Topics and Logs：</h3><p>Topic 即为每条发布到 Kafka 集群的消息都有一个类别，topic 在 Kafka 中可以由多个消费者订阅、消费。</p>
+<p>每个 topic 包含一个或多个partition（分区），partition 数量可以在创建 topic 时指定，每个分区日志中记录了该分区的数据以及索引信息。如下图：</p>
+<p><img src="http://img.zwer.xyz/blog/20191102214534.png" alt></p>
+<p><font color="red">Kafka 只保证一个分区内的消息有序，不能保证一个主题的不同分区之间的消息有序。</font></p>
+<p>如果你想要保证所有的消息都绝对有序可以只为一个主题分配一个分区。</p>
+<p>分区会给每个消息记录分配一个顺序 ID 号（偏移量）， 能够唯一地标识该分区中的每个记录。</p>
+<p>Kafka 集群保留所有发布的记录，不管这个记录有没有被消费过，Kafka 提供相应策略通过配置从而对旧数据处理。</p>
+<p><img src="http://img.zwer.xyz/blog/20191102214910.png" alt></p>
+<p>实际上，每个消费者唯一保存的元数据信息就是消费者当前消费日志的位移位置。位移位置是由消费者控制，即、消费者可以通过修改偏移量读取任何位置的数据。</p>
+<h3 id="角色"><a href="#角色" class="headerlink" title="角色"></a>角色</h3><ul>
+<li><p>Distribution – 分布式</p>
+</li>
+<li><p>Producers – 生产者</p>
+<p>指定 topic 来发送消息到 Kafka Broker</p>
+</li>
+<li><p>Consumers – 消费者</p>
+<p>根据 topic 消费相应的消息</p>
+</li>
+</ul>
+<h3 id="Kafka集群部署"><a href="#Kafka集群部署" class="headerlink" title="Kafka集群部署"></a>Kafka集群部署</h3><ul>
+<li><p><strong>集群规划</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">node02/192.168.170.102</th>
+<th align="center">node03/192.168.170.103</th>
+<th align="center">node04 /192.168.170.104</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">zookeeper</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+</tr>
+<tr>
+<td align="center">kafka</td>
+<td align="center">*</td>
+<td align="center">*</td>
+<td align="center">*</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><strong>安装与配置</strong></p>
+  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 在 node02 节点上</span><br><span class="line"><span class="meta">#</span> 上传 kakfa 软件安装包到 Linux 服务器上</span><br><span class="line"><span class="meta">#</span> 解压到指定目录下 /opt/sxt</span><br><span class="line">tar xf  kafka_2.10-0.9.0.1.tgz  -C /opt/sxt</span><br><span class="line"><span class="meta">#</span> 配置环境变量</span><br><span class="line">export KAFKA_HOME=/opt/sxt/kafka_2.10-0.9.0.1</span><br><span class="line"><span class="meta">#</span> 进入 $KAFKA_HOME/config 下</span><br><span class="line"><span class="meta">#</span> 修改 vi  server.properties 文件</span><br><span class="line"><span class="meta">#</span> root directory for all kafka znodes.</span><br><span class="line">zookeeper.connect=node02:2181,node03:2181,node04:2181</span><br><span class="line"><span class="meta">#</span> 分发，进入 /opt/sxt 目录下</span><br><span class="line"> scp -r kafka_2.10-0.9.0.1/ node03:`pwd`</span><br><span class="line"> scp -r kafka_2.10-0.9.0.1/ node04:`pwd`</span><br><span class="line"><span class="meta">#</span> 在 node03、node04 节点上修改 server.proerties</span><br><span class="line"><span class="meta">#</span> The id of the broker. This must be set to a unique integer for each broker.</span><br><span class="line">broker.id=1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 进入 $KAFKA_HOME</span><br><span class="line">bin/kafka-server-start.sh config/server.properties # 阻塞当前窗口</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 新打开一个 shell 窗口，node02</span><br><span class="line"><span class="meta">#</span> 创建 topic</span><br><span class="line">kafka-topics.sh --zookeeper node02:2181,node03:2181,node04:2181 --create --replication-factor 2 --partition 3 --topic test</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看创建好的 topic </span><br><span class="line">kafka-topics.sh --zookeeper node02:2181,node03:2181,node04:2181 --list</span><br><span class="line">（参数说明：</span><br><span class="line">--replication-factor：指定每个分区的复制因子个数，默认1个</span><br><span class="line">--partitions：指定当前创建的kafka分区数量，默认为1个</span><br><span class="line">--topic：指定新建topic的名称）</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 查看 “test” topic 的描述</span><br><span class="line">kafka-topics.sh --zookeeper node02:2181,node03:2181,node04:2181 --describe test</span><br><span class="line">Topic:test	PartitionCount:3	ReplicationFactor:2	Configs:</span><br><span class="line">	Topic: test	Partition: 0	Leader: 0	Replicas: 0,2	Isr: 0,2</span><br><span class="line">	Topic: test	Partition: 1	Leader: 1	Replicas: 1,0	Isr: 1,0</span><br><span class="line">	Topic: test	Partition: 2	Leader: 2	Replicas: 2,1	Isr: 2,1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 创建生产者</span><br><span class="line">kafka-console-producer.sh --broker-list node02:9092,node03:9092,node04:9092 --topic test</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 创建消费者</span><br><span class="line">kafka-console-consumer.sh --zookeeper node02:2181,node03:2181,node04:2181 --from-beginning --topic test</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h3 id="kafka-与-flume-整合"><a href="#kafka-与-flume-整合" class="headerlink" title="kafka 与 flume 整合"></a>kafka 与 flume 整合</h3><ul>
+<li><p><strong>安装 flume</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">解压jar包</span><br><span class="line">mv conf/flume-env.sh.template flume-env.sh</span><br><span class="line">vi flume-env.sh java环境变量</span><br><span class="line">./bin flume-ng version</span><br><span class="line">/conf/下 创建配置文件fk.conf内容如下：</span><br><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Describe/configure the source</span><br><span class="line">a1.sources.r1.type = avro</span><br><span class="line">a1.sources.r1.bind = node01</span><br><span class="line">a1.sources.r1.port = 41414</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Describe the sink</span><br><span class="line">a1.sinks.k1.type = org.apache.flume.sink.kafka.KafkaSink</span><br><span class="line">a1.sinks.k1.topic = testflume</span><br><span class="line">a1.sinks.k1.brokerList = node02:9092,node03:9092,node04:9092</span><br><span class="line">a1.sinks.k1.requiredAcks = 1</span><br><span class="line">a1.sinks.k1.batchSize = 20</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Use a channel which buffers events in memory</span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 1000000</span><br><span class="line">a1.channels.c1.transactionCapacity = 10000</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Bind the source and sink to the channel</span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动</strong>  </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 启动zk集群</span><br><span class="line">A、启动Kafka集群。</span><br><span class="line">kafka-server-start.sh config/server.properties</span><br><span class="line"></span><br><span class="line">B、配置Flume集群，并启动Flume集群。 # 注意在存在 kafka.conf 的目录中启动</span><br><span class="line">flume-ng agent -n a1 -c conf -f kafka.conf -Dflume.root.logger=DEBUG,console</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 创建 topic testflume 消费者 </span><br><span class="line">kafka-console-consumer.sh --zookeeper node02:2181,node03:2181,node04:2181 --from-beginning --topic testflume</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 创建 topic LogError 消费者</span><br><span class="line">kafka-console-consumer.sh --zookeeper node02:2181,node03:2181,node04:2181 --from-beginnin --topic LogError</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Java 发送 RPC 到 Flume </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Flume官网案例</span></span><br><span class="line"><span class="comment"> * http://flume.apache.org/FlumeDeveloperGuide.html </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> root</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RpcClientDemo</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		MyRpcClientFacade client = <span class="keyword">new</span> MyRpcClientFacade();</span><br><span class="line">		<span class="comment">// Initialize client with the remote Flume agent's host and port</span></span><br><span class="line">		client.init(<span class="string">"node01"</span>, <span class="number">41414</span>);</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Send 10 events to the remote Flume agent. That agent should be</span></span><br><span class="line">		<span class="comment">// configured to listen with an AvroSource.</span></span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">100</span>; i &lt; <span class="number">110</span>; i++) &#123;</span><br><span class="line">			String sampleData = <span class="string">"Hello Flume! ERROR"</span> + i;</span><br><span class="line">			client.sendDataToFlume(sampleData);</span><br><span class="line">			System.out.println(<span class="string">"发送数据："</span> + sampleData);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		client.cleanUp();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyRpcClientFacade</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> RpcClient client;</span><br><span class="line">	<span class="keyword">private</span> String hostname;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> port;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">(String hostname, <span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// Setup the RPC connection</span></span><br><span class="line">		<span class="keyword">this</span>.hostname = hostname;</span><br><span class="line">		<span class="keyword">this</span>.port = port;</span><br><span class="line">		<span class="keyword">this</span>.client = RpcClientFactory.getDefaultInstance(hostname, port);</span><br><span class="line">		<span class="comment">// Use the following method to create a thrift client (instead of the</span></span><br><span class="line">		<span class="comment">// above line):</span></span><br><span class="line">		<span class="comment">// this.client = RpcClientFactory.getThriftInstance(hostname, port);</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sendDataToFlume</span><span class="params">(String data)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// Create a Flume Event object that encapsulates the sample data</span></span><br><span class="line">		Event event = EventBuilder.withBody(data, Charset.forName(<span class="string">"UTF-8"</span>));</span><br><span class="line"></span><br><span class="line">		<span class="comment">// Send the event</span></span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			client.append(event);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (EventDeliveryException e) &#123;</span><br><span class="line">			<span class="comment">// clean up and recreate the client</span></span><br><span class="line">			client.close();</span><br><span class="line">			client = <span class="keyword">null</span>;</span><br><span class="line">			client = RpcClientFactory.getDefaultInstance(hostname, port);</span><br><span class="line">			<span class="comment">// Use the following method to create a thrift client (instead of</span></span><br><span class="line">			<span class="comment">// the above line):</span></span><br><span class="line">			<span class="comment">// this.client = RpcClientFactory.getThriftInstance(hostname, port);</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">cleanUp</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="comment">// Close the RPC connection</span></span><br><span class="line">		client.close();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="flume-与-Storm-整合"><a href="#flume-与-Storm-整合" class="headerlink" title="flume 与 Storm 整合"></a>flume 与 Storm 整合</h3><p><a href="http://storm.apache.org/about/integrates.html" target="_blank" rel="noopener">http://storm.apache.org/about/integrates.html</a></p>
+<h3 id="Flume-、Storm-、Kafka-整合架构"><a href="#Flume-、Storm-、Kafka-整合架构" class="headerlink" title="Flume 、Storm 、Kafka 整合架构"></a>Flume 、Storm 、Kafka 整合架构</h3><p><img src="http://img.zwer.xyz/blog/20191103214301.png" alt></p>
+<h2 id="项目案例"><a href="#项目案例" class="headerlink" title="项目案例"></a>项目案例</h2><h3 id="模拟电信项目"><a href="#模拟电信项目" class="headerlink" title="模拟电信项目"></a>模拟电信项目</h3><p>过</p>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><ul>
+<li><p>事务性拓扑（Transactional Topologies）</p>
+</li>
+<li><p>保证消息（tuple）被且仅被处理一次</p>
+</li>
+</ul>
+<h3 id="Design1"><a href="#Design1" class="headerlink" title="Design1"></a>Design1</h3><p>强顺序流（强有序）</p>
+<img src="http://img.zwer.xyz/blog/20191104164508.png" style="zoom:50%;">
+
+<p>引入事务（transaction）的概念，每个transaction（即每个tuple）关联一个transaction id。<br>Transaction id 从 1开始，每个 tuple 会按照顺序+1。<br>在处理 tuple 时，将处理成功的 tuple 结果以及 transaction id 同时写入数据库中进行存储。</p>
+<p>两种情况：<br>1、当前transaction id与数据库中的transaction id不一致<br>2、两个transaction id相同</p>
+<p>缺点：<br>一次只能处理一个tuple，无法实现分布式计算</p>
+<h3 id="Design2"><a href="#Design2" class="headerlink" title="Design2"></a>Design2</h3><p>强顺序的Batch流 </p>
+<p><img src="http://img.zwer.xyz/blog/20191104164628.png" alt></p>
+<p>事务（transaction）以 batch 为单位，即把一批 tuple 称为一个 batch，每次处理一个 batch。<br>每个 batch（一批 tuple）关联一个 transaction id<br>每个 batch 内部可以并行计算</p>
+<p>缺点：空余占用资源</p>
+<p><img src="http://img.zwer.xyz/blog/20191104165303.png" alt></p>
+<h3 id="Design3"><a href="#Design3" class="headerlink" title="Design3"></a>Design3</h3><ul>
+<li><p><strong>Storm’s design</strong></p>
+<p>将 Topology 拆分为两个阶段：</p>
+<ol>
+<li>Processing phase<pre><code>允许并行处理多个 batch</code></pre></li>
+<li>Commit phase<pre><code>保证batch的强有序，一次只能处理一个batch</code></pre></li>
+</ol>
+</li>
+<li><p><strong>Design details</strong></p>
+<ul>
+<li><p>Manages state - 状态管理<br>Storm 通过 Zookeeper 存储所有 transaction 相关信息（包含了：当前transaction id 以及batch的元数据信息）</p>
+</li>
+<li><p>Coordinates the transactions - 协调事务<br>Storm 会管理决定 transaction 应该处理什么阶段（processing、committing）</p>
+</li>
+<li><p>Fault detection - 故障检测<br>Storm 内部通过 Acker 机制保障消息被正常处理（用户不需要手动去维护）</p>
+</li>
+<li><p>First class batch processing API<br>Storm 提供 batch bolt 接口</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="三种事务"><a href="#三种事务" class="headerlink" title="三种事务"></a>三种事务</h3><p>1、普通事务</p>
+<p>2、Partitioned Transaction - 分区事务</p>
+<p>3、Opaque Transaction - 不透明分区事务</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/28/20191028 CDH/" rel="next" title="20191028 CDH">
+                  <i class="fa fa-chevron-left"></i> 20191028 CDH
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-简介"><span class="nav-number">1.</span> <span class="nav-text">Storm 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Storm-与-MapReduce-的区别"><span class="nav-number">1.1.</span> <span class="nav-text">Storm 与 MapReduce 的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Storm-计算模型"><span class="nav-number">1.2.</span> <span class="nav-text">Storm 计算模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Storm-应用场景"><span class="nav-number">1.3.</span> <span class="nav-text">Storm 应用场景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-特点"><span class="nav-number">2.</span> <span class="nav-text">Storm 特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-计算模型详述"><span class="nav-number">3.</span> <span class="nav-text">Storm 计算模型详述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-案例"><span class="nav-number">4.</span> <span class="nav-text">Storm 案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Storm-数据累加"><span class="nav-number">4.1.</span> <span class="nav-text">Storm 数据累加</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Storm-Word-Count"><span class="nav-number">4.2.</span> <span class="nav-text">Storm Word Count</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-数据分发策略"><span class="nav-number">5.</span> <span class="nav-text">Storm 数据分发策略*</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-架构设计"><span class="nav-number">6.</span> <span class="nav-text">Storm 架构设计*</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#角色作用"><span class="nav-number">6.1.</span> <span class="nav-text">角色作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Storm-架构与-Hadoop-架构比较"><span class="nav-number">6.2.</span> <span class="nav-text">Storm 架构与 Hadoop 架构比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Storm-任务提交流程"><span class="nav-number">6.3.</span> <span class="nav-text">Storm 任务提交流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-并发机制"><span class="nav-number">7.</span> <span class="nav-text">Storm 并发机制*</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker-Executor-Task-之间的联系"><span class="nav-number">7.1.</span> <span class="nav-text">Worker Executor Task 之间的联系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调整-Worker-Executor-Task-的数量"><span class="nav-number">7.2.</span> <span class="nav-text">调整 Worker Executor Task 的数量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rebalance-再平衡"><span class="nav-number">7.3.</span> <span class="nav-text">rebalance 再平衡</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-通信机制"><span class="nav-number">8.</span> <span class="nav-text">Storm 通信机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker-进程间的数据通信"><span class="nav-number">8.1.</span> <span class="nav-text">Worker 进程间的数据通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker内部的数据通信"><span class="nav-number">8.2.</span> <span class="nav-text">Worker内部的数据通信*</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-安装"><span class="nav-number">9.</span> <span class="nav-text">Storm 安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#伪分布式"><span class="nav-number">9.1.</span> <span class="nav-text">伪分布式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#完全分布式"><span class="nav-number">9.2.</span> <span class="nav-text">完全分布式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Storm-容错保护机制"><span class="nav-number">10.</span> <span class="nav-text">Storm 容错保护机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#集群节点宕机"><span class="nav-number">10.1.</span> <span class="nav-text">集群节点宕机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进程挂掉"><span class="nav-number">10.2.</span> <span class="nav-text">进程挂掉</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消息的完整性"><span class="nav-number">10.3.</span> <span class="nav-text">消息的完整性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DRPC-同步实时分析"><span class="nav-number">11.</span> <span class="nav-text">DRPC -同步实时分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DRPC设计目的："><span class="nav-number">11.1.</span> <span class="nav-text">DRPC设计目的：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DRPC架构图"><span class="nav-number">11.2.</span> <span class="nav-text">DRPC架构图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DRPC-实现"><span class="nav-number">11.3.</span> <span class="nav-text">DRPC 实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DRPC-远程模式"><span class="nav-number">11.4.</span> <span class="nav-text">DRPC 远程模式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kafka"><span class="nav-number">12.</span> <span class="nav-text">kafka*</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Topics-and-Logs："><span class="nav-number">12.1.</span> <span class="nav-text">Topics and Logs：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#角色"><span class="nav-number">12.2.</span> <span class="nav-text">角色</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kafka集群部署"><span class="nav-number">12.3.</span> <span class="nav-text">Kafka集群部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kafka-与-flume-整合"><span class="nav-number">12.4.</span> <span class="nav-text">kafka 与 flume 整合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#flume-与-Storm-整合"><span class="nav-number">12.5.</span> <span class="nav-text">flume 与 Storm 整合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume-、Storm-、Kafka-整合架构"><span class="nav-number">12.6.</span> <span class="nav-text">Flume 、Storm 、Kafka 整合架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#项目案例"><span class="nav-number">13.</span> <span class="nav-text">项目案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟电信项目"><span class="nav-number">13.1.</span> <span class="nav-text">模拟电信项目</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#事务"><span class="nav-number">14.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Design1"><span class="nav-number">14.1.</span> <span class="nav-text">Design1</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Design2"><span class="nav-number">14.2.</span> <span class="nav-text">Design2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Design3"><span class="nav-number">14.3.</span> <span class="nav-text">Design3</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三种事务"><span class="nav-number">14.4.</span> <span class="nav-text">三种事务</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

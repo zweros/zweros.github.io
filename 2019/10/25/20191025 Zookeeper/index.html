@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="[TOC] paxos 小岛的故事组成：  议员： 管理小岛 议员记事本： 记录处理的草案的编号，初始当前编号为 0。 草案 (提议)： 由单个议员发起草案，草案的编号必须大于议员记事本上记录的编号，否则不予处理 法令： 由单个议员发起，需要有半数以上议员们同意，才可生效  过程： ​    比方说，该小岛有三个议员，开始的时候，三个议员a、b、c手中记事本记录草案的编号都是 0 。议员 a 提出">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper">
+<meta property="og:url" content="http://zwer.xyz/2019/10/25/20191025 Zookeeper/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="[TOC] paxos 小岛的故事组成：  议员： 管理小岛 议员记事本： 记录处理的草案的编号，初始当前编号为 0。 草案 (提议)： 由单个议员发起草案，草案的编号必须大于议员记事本上记录的编号，否则不予处理 法令： 由单个议员发起，需要有半数以上议员们同意，才可生效  过程： ​    比方说，该小岛有三个议员，开始的时候，三个议员a、b、c手中记事本记录草案的编号都是 0 。议员 a 提出">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025215429.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025212148.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025215327.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025215641.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025220242.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025220536.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025221442.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025222248.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191025222727.png">
+<meta property="og:updated_time" content="2019-10-27T01:46:08.007Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zookeeper">
+<meta name="twitter:description" content="[TOC] paxos 小岛的故事组成：  议员： 管理小岛 议员记事本： 记录处理的草案的编号，初始当前编号为 0。 草案 (提议)： 由单个议员发起草案，草案的编号必须大于议员记事本上记录的编号，否则不予处理 法令： 由单个议员发起，需要有半数以上议员们同意，才可生效  过程： ​    比方说，该小岛有三个议员，开始的时候，三个议员a、b、c手中记事本记录草案的编号都是 0 。议员 a 提出">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20191025215429.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/10/25/20191025 Zookeeper/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Zookeeper | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/10/25/20191025 Zookeeper/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Zookeeper
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-25 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-25T00:00:00+08:00">2019-10-25</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-10-27 09:46:08" itemprop="dateModified" datetime="2019-10-27T09:46:08+08:00">2019-10-27</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>[TOC]</p>
+<h2 id="paxos-小岛的故事"><a href="#paxos-小岛的故事" class="headerlink" title="paxos 小岛的故事"></a>paxos 小岛的故事</h2><p><strong>组成：</strong></p>
+<ul>
+<li>议员： 管理小岛</li>
+<li>议员记事本： 记录处理的草案的编号，初始当前编号为 0。</li>
+<li>草案 (提议)： 由单个议员发起草案，草案的编号必须大于议员记事本上记录的编号，否则不予处理</li>
+<li>法令： 由单个议员发起，需要有半数以上议员们同意，才可生效</li>
+</ul>
+<p><strong>过程：</strong></p>
+<p>​    比方说，该小岛有三个议员，开始的时候，三个议员a、b、c手中记事本记录草案的编号都是 0 。议员 a 提出草案工业用电 2 元/度 ，提出的草案编号为 1，议员 a 自己的记事本的当前编号设置为 1 ，将该草案告诉其他议员 b、c。议员 b、c 接收到该提议后，首先查看自己记事本的当前编号为 0 ，可以处理该草案，处理（赞成或反对）结束后将自己记事本的当前编号设置为 1 ，最后若赞成草案的票数大于半数，则该草案通过，否则不通过。</p>
+<p><strong>对应关系：</strong></p>
+<ul>
+<li>小岛(Island)——ZK Server Cluster </li>
+<li>议员(Senator)——ZK Serverabout:reader?url=<a href="https://www.douban.com/note/208430424/" target="_blank" rel="noopener">https://www.douban.com/note/208430424/</a> </li>
+<li>提议(Proposal)——ZNode Change(Create/Delete/SetData…) </li>
+<li>提议编号(PID)——Zxid(ZooKeeper Transaction Id) </li>
+<li>正式法令——所有ZNode及其数据</li>
+</ul>
+<h2 id="Zookeeper-简介"><a href="#Zookeeper-简介" class="headerlink" title="Zookeeper 简介"></a>Zookeeper 简介</h2><blockquote>
+<p>Zookeeper 是Google的Chubby一个开源的实现，是Hadoop的分布式协调服务包含一个简单的原语集，分布式应用程序可以基于它实现</p>
+</blockquote>
+<p>特点：</p>
+<p><img src="http://img.zwer.xyz/blog/20191025215429.png" alt></p>
+<h3 id="Zookeeper-集群"><a href="#Zookeeper-集群" class="headerlink" title="Zookeeper 集群"></a>Zookeeper 集群</h3><blockquote>
+<p>zookeeper 集群的数量是单数的</p>
+</blockquote>
+<p><img src="http://img.zwer.xyz/blog/20191025212148.png" alt></p>
+<p><img src="http://img.zwer.xyz/blog/20191025215327.png" alt></p>
+<h3 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">目录结构</span><br><span class="line">    层次的，目录型结构，便于管理逻辑关系</span><br><span class="line">    节点znode而非文件file</span><br><span class="line">znode信息</span><br><span class="line">    包含最大1MB的数据信息</span><br><span class="line">    记录了zxid等元数据信息</span><br><span class="line">节点类型</span><br><span class="line">    znode有两种类型，瞬时的（ephemeral）和持久的（persistent）</span><br><span class="line">    znode支持序列SEQUENTIAL：leader</span><br><span class="line">    短暂znode的客户端会话结束时，zookeeper会将该短暂znode删除，短暂znode不可以有子节点</span><br><span class="line">    持久znode不依赖于客户端会话，只有当客户端明确要删除该持久znode时才会被删除</span><br><span class="line">    znode的类型在创建时确定并且之后不能再修改</span><br><span class="line">    有序znode节点被分配唯一单调递增的整数。</span><br><span class="line">            比如：客户端创建有序znode，路径为/task/task-，则zookeeper为其分配序号1，并追加到znode节点：</span><br><span class="line">    /task/task-1。有序znode节点唯一，同时也可根据该序号查看znode创建顺序。</span><br><span class="line">    znode有四种形式的目录节点</span><br><span class="line">    PERSISTENT</span><br><span class="line">    EPHEMERAL</span><br><span class="line">    PERSISTENT_SEQUENTIAL</span><br><span class="line">    EPHEMERAL_SEQUENTIAL</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.zwer.xyz/blog/20191025215641.png" alt></p>
+<h3 id="事件监听"><a href="#事件监听" class="headerlink" title="事件监听"></a>事件监听</h3><ul>
+<li><p><strong>基于客户端轮询机制</strong></p>
+<p>缺陷：客户端轮询指定节点下的数据，通过网络轮询，代价很大</p>
+<p><img src="http://img.zwer.xyz/blog/20191025220242.png" alt></p>
+</li>
+<li><p><strong>基于事件监听机制</strong></p>
+<p>客户端向 ZooKeeper 注册需要接收通知的 znode，通过对 znode 设置监视点（watch）来接收通知。</p>
+<p>监视点是一个<strong>单次触发</strong>的操作，意即监视点会触发一个通知。</p>
+<p>为了接收多个通知，客户端必须在每次通知后设置一个新的监视点。</p>
+</li>
+</ul>
+<p><img src="http://img.zwer.xyz/blog/20191025220536.png" alt></p>
+<ul>
+<li><strong>事件监听 Watcher</strong><br>  Watcher 在 ZooKeeper 是一个核心功能，Watcher 可以监控目录节点的数据变化以及子目录的变化，一旦这些状态发生变化，服务器就会通知所有设置在这个目录节点上的Watcher，从而每个客户端都很快知道它所关注的目录节点的状态发生变化，而做出相应的反应</li>
+</ul>
+<p>可以设置观察的操作：<code>exists</code>,<code>getChildren</code>,<code>getData</code><br>    可以触发观察的操作：<code>create</code>,<code>delete</code>,<code>setData</code></p>
+<pre><code>回调client方法业务核心代码在哪里？ `client`</code></pre><h3 id="节点模式-原子广播"><a href="#节点模式-原子广播" class="headerlink" title="节点模式-原子广播"></a>节点模式-原子广播</h3><p>Zookeeper的核心是<strong>原子广播</strong>，这个机制保证了各个server之间的同步。实现这个机制的协议叫做Zab协议。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Zab协议有两种模式：</span><br><span class="line">恢复模式</span><br><span class="line">广播模式</span><br><span class="line">当服务启动或者在领导者崩溃后，Zab就进入了恢复模式，</span><br><span class="line">当领导者被选举出来，且大多数server的完成了和leader的状态同步以后，恢复模式就结束了。</span><br><span class="line">状态同步保证了leader和server具有相同的系统状态</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>恢复模式</th>
+<th>广播模式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>无主，无服务</td>
+<td>主从模式</td>
+</tr>
+<tr>
+<td>选举leader</td>
+<td>leader维护事物的唯一和有序性</td>
+</tr>
+<tr>
+<td></td>
+<td>队列机制</td>
+</tr>
+</tbody></table>
+<p>下面详细介绍广播模式和恢复模式</p>
+<ul>
+<li><p><strong>广播模式</strong></p>
+<p>广播模式需要保证 proposal 被按顺序处理，因此zk采用了递增的事务id号(zxid)来保证。</p>
+<p>所有的提议 (proposal) 都在被提出的时候加上了 zxid。</p>
+<p>实现中 zxid 是一个 64 为的数字，它高32位是 epoch 用来标识 leader 关系是否改变，每次一个leader被选出来，它都会有一个新的epoch，低32位是个递增计数。</p>
+<p>两阶段提交：</p>
+<p><img src="http://img.zwer.xyz/blog/20191025221442.png" alt></p>
+</li>
+<li><p><strong>恢复模式-选举</strong></p>
+<p>1，判定（zxid，myid）；2，投票传递</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zxid   &lt;从paxos 到 zookeeper&gt;</span><br><span class="line">myid</span><br><span class="line"></span><br><span class="line">首先选举zxid最大的，如果zxid相同，则选举myid最大的</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<p>  <strong>Leader 选举</strong></p>
+<p>  选举过程耗时在 200ms 之内，一般情况下zookeeper恢复服务时间间隔不超过 200ms</p>
+<p>  server Si (myid,zxid)</p>
+<p>  <img src="http://img.zwer.xyz/blog/20191025222248.png" alt></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>  <img src="http://img.zwer.xyz/blog/20191025222727.png" alt></p>
+<h2 id="Zookeeper-安装与配置"><a href="#Zookeeper-安装与配置" class="headerlink" title="Zookeeper 安装与配置"></a>Zookeeper 安装与配置</h2><ul>
+<li><p>安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">1.3节点 java 安装 </span><br><span class="line"></span><br><span class="line">2.所有集群节点创建目录: mkdir opt/sxt  </span><br><span class="line"></span><br><span class="line">3.zk压缩包解压在其他路径下:：</span><br><span class="line">	#	tar xf zookeeper-3.4.6.tar.gz -C /opt/sxt/</span><br><span class="line">	</span><br><span class="line">4.进入conf目录，拷贝zoo_sample.cfg zoo.cfg 并配置</span><br><span class="line">   dataDir，集群节点。</span><br><span class="line">5.单节点配置环境变量、并分发 ZOOKEEPER_PREFIX，共享模式读取profile </span><br><span class="line">6. 共享创建 /var/sxt/zk目录，进入各自目录 分别输出1,2，3 至文件 myid</span><br><span class="line">	echo 1 &gt; /var/sxt/zk/myid</span><br><span class="line">	...</span><br><span class="line">7. 共享启动zkServer.sh start 集群</span><br><span class="line">8.启动客户端 help命令查看</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>配置</p>
+<p>  在conf目录下创建一个配置文件 zoo.cfg，</p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tickTime=2000  </span><br><span class="line">dataDir=/Users/zdandljb/zookeeper/data</span><br><span class="line">dataLogDir=/Users/zdandljb/zookeeper/dataLog</span><br><span class="line">clientPort=2181</span><br><span class="line">initLimit=5</span><br><span class="line">syncLimit=2</span><br><span class="line">server.1=server1:2888:3888</span><br><span class="line">server.2=server2:2888:3888</span><br><span class="line">server.3=server3:2888:3888  observer（表示对应节点不参与投票）</span><br></pre></td></tr></table></figure>
+
+<p>  创建myid文件</p>
+<p>  tickTime：发送心跳的间隔时间，单位：毫秒<br>  dataDir：zookeeper保存数据的目录。<br>  clientPort：客户端连接 Zookeeper 服务器的端口，Zookeeper  会监听这个端口，接受客户端的访问请求。<br>  initLimit： 这个配置项是用来配置 Zookeeper 接受客户端（这里所说的客户端不是用户连接Zookeeper服务器的客户端，而是 Zookeeper 服务器集群中连接到 Leader的Follower 服务器）初始化连接时最长能忍受多少个心跳时间间隔数。当已经超过 5 个心跳的时间（也就是 tickTime）长度后 Zookeeper 服务器还没有收到客户端的返回信息，那么表明这个客户端连接失败。总的时间长度就是 5<em>2000=10秒<br>  syncLimit：这个配置项标识  Leader 与 Follower 之间发送消息，请求和应答时间长度，最长不能超过多少个tickTime 的时间长度，总的时间长度就是 2</em>2000=4 秒<br>  server.A=B：C：D：其 中 A 是一个数字，表示这个是第几号服务器；B 是这个服务器的ip地址；C 表示的是这个服务器与集群中的Leader服务器交换信息的端口；D表示的是万一集群中的 Leader 服务器挂了，需要一个端口来重新进行选举，选出一个新的Leader，而这个端口就是用来执行选举时服务器相互通信的端口。如果是伪集群的配置方式，由于B都是一样，所以不同的Zookeeper实例通信端口号不能一样，所以要给它们分配不同的端口号。</p>
+</li>
+</ul>
+<h2 id="Zookeeper-操作"><a href="#Zookeeper-操作" class="headerlink" title="Zookeeper 操作"></a>Zookeeper 操作</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><ul>
+<li><p><code>ls</code> 命令</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>ls 命令获取路径下的节点信息(所有子节点),注意路径为绝对路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>作用</td>
+<td><code>ls  /zookeeper</code></td>
+</tr>
+</tbody></table>
+</li>
+<li><p><code>create</code> 命令</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>创建 zookeeper 下的节点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>create /path null</code></td>
+<td>创建 zookeeper 下的空节点</td>
+</tr>
+<tr>
+<td><code>create -s /path data</code></td>
+<td>创建 zookeeper 下的持续节点</td>
+</tr>
+<tr>
+<td><code>craete -e  /path data</code></td>
+<td>创建 zookeeper 下的瞬时节点后<br>即与 zookeeper 断开连接后，创建的瞬时节点会自动移除。</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><code>get</code> 命令</p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>获取 zookeeper 下节点中的信息</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>get  /path</code></td>
+<td>获取指定的节点信息</td>
+</tr>
+</tbody></table>
+</li>
+<li><p><code>delete 命令</code></p>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>删除 Zookeeper 中节点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>delete /path</code></td>
+<td>删除 <code>/path</code> 节点，注意 <code>/path</code> 下面必须没有子节点，不然不能删除</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h2 id="Zookeeper-API-使用"><a href="#Zookeeper-API-使用" class="headerlink" title="Zookeeper API  使用"></a>Zookeeper API  使用</h2><p>使用  RMI （Remote Method Innvocation），远程调用方法。</p>
+<p>使用 zookeeper 作为注册中心</p>
+<h3 id="RMI-案例"><a href="#RMI-案例" class="headerlink" title="RMI 案例"></a>RMI 案例</h3><h4 id="服务提供端"><a href="#服务提供端" class="headerlink" title="服务提供端"></a>服务提供端</h4><ul>
+<li><p><strong>ServiceProvider.java</strong>：连接 zk，发布服务到 zk 上</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceProvider</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(ServiceProvider.class);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 用于等待 SyncConnected 事件触发后继续执行当前线程</span></span><br><span class="line">    <span class="keyword">private</span> CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 发布 RMI 服务并注册 RMI 地址到 ZooKeeper 中</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">publish</span><span class="params">(Remote remote, String host, <span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">        String url = publishService(remote, host, port); <span class="comment">// 发布 RMI 服务并返回 RMI 地址</span></span><br><span class="line">        <span class="keyword">if</span> (url != <span class="keyword">null</span>) &#123;</span><br><span class="line">            ZooKeeper zk = connectServer(); <span class="comment">// 连接 ZooKeeper 服务器并获取 ZooKeeper 对象</span></span><br><span class="line">            <span class="keyword">if</span> (zk != <span class="keyword">null</span>) &#123;</span><br><span class="line">                createNode(zk, url); <span class="comment">// 创建 ZNode 并将 RMI 地址放入 ZNode 上</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 发布 RMI 服务</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">publishService</span><span class="params">(Remote remote, String host, <span class="keyword">int</span> port)</span> </span>&#123;</span><br><span class="line">        String url = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// rmi://localhost:1099/demo.zookeeper.remoting.server.HelloServiceImpl</span></span><br><span class="line">            url = String.format(<span class="string">"rmi://%s:%d/%s"</span>, host, port, remote.getClass().getName());</span><br><span class="line">            LocateRegistry.createRegistry(port);</span><br><span class="line">            Naming.rebind(url, remote);</span><br><span class="line">            LOGGER.debug(<span class="string">"publish rmi service (url: &#123;&#125;)"</span>, url);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (RemoteException | MalformedURLException e) &#123;</span><br><span class="line">            LOGGER.error(<span class="string">""</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> url;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 连接 ZooKeeper 服务器</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ZooKeeper <span class="title">connectServer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ZooKeeper zk = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            zk = <span class="keyword">new</span> ZooKeeper(Constant.ZK_CONNECTION_STRING, Constant.ZK_SESSION_TIMEOUT, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (event.getState() == Event.KeeperState.SyncConnected) &#123;</span><br><span class="line">                        latch.countDown(); <span class="comment">// 唤醒当前正在执行的线程</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            latch.await(); <span class="comment">// 使当前线程处于等待状态</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException | InterruptedException e) &#123;</span><br><span class="line">            LOGGER.error(<span class="string">""</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> zk;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 创建 ZNode</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">createNode</span><span class="params">(ZooKeeper zk, String url)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">byte</span>[] data = url.getBytes();</span><br><span class="line">            <span class="comment">// /registry/provider</span></span><br><span class="line">            <span class="comment">// /registry/provider000000003</span></span><br><span class="line">            String path = zk.create(Constant.ZK_PROVIDER_PATH, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL); <span class="comment">// 创建一个临时性且有序的 ZNode</span></span><br><span class="line">            LOGGER.debug(<span class="string">"create zookeeper node (&#123;&#125; =&gt; &#123;&#125;)"</span>, path, url);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (KeeperException | InterruptedException e) &#123;</span><br><span class="line">            LOGGER.error(<span class="string">""</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>HelloServiceImpl.java</strong>：服务具体实现类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloServiceImpl</span> <span class="keyword">extends</span> <span class="title">UnicastRemoteObject</span> <span class="keyword">implements</span> <span class="title">HelloService</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="title">HelloServiceImpl</span><span class="params">()</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">(String name)</span> <span class="keyword">throws</span> RemoteException </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> String.format(<span class="string">"Hello %s"</span>, name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Server.java</strong> ：服务提供者 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String host = <span class="string">"localhost"</span>;</span><br><span class="line">        <span class="keyword">int</span> port = Integer.parseInt(<span class="string">"11117"</span>);</span><br><span class="line">        ServiceProvider provider = <span class="keyword">new</span> ServiceProvider();</span><br><span class="line"> </span><br><span class="line">        HelloService helloService = <span class="keyword">new</span> HelloServiceImpl();</span><br><span class="line">        provider.publish(helloService, host, port);</span><br><span class="line"> </span><br><span class="line">        Thread.sleep(Long.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="服务消费端"><a href="#服务消费端" class="headerlink" title="服务消费端"></a>服务消费端</h4><ul>
+<li><p><strong>ServiceConsumer.java</strong>:连接 zk ，获取服务列表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceConsumer</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(ServiceConsumer.class);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 用于等待 SyncConnected 事件触发后继续执行当前线程</span></span><br><span class="line">    <span class="keyword">private</span> CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 定义一个 volatile 成员变量，用于保存最新的 RMI 地址（考虑到该变量或许会被其它线程所修改，一旦修改后，该变量的值会影响到所有线程）</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> List&lt;String&gt; urlList = <span class="keyword">new</span> ArrayList&lt;&gt;(); </span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 构造器</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ServiceConsumer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ZooKeeper zk = connectServer(); <span class="comment">// 连接 ZooKeeper 服务器并获取 ZooKeeper 对象</span></span><br><span class="line">        <span class="keyword">if</span> (zk != <span class="keyword">null</span>) &#123;</span><br><span class="line">            watchNode(zk); <span class="comment">// 观察 /registry 节点的所有子节点并更新 urlList 成员变量</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 查找 RMI 服务</span></span><br><span class="line">    <span class="keyword">public</span> &lt;T extends Remote&gt; <span class="function">T <span class="title">lookup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        T service = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">int</span> size = urlList.size();</span><br><span class="line">        <span class="keyword">if</span> (size &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            String url;</span><br><span class="line">            <span class="keyword">if</span> (size == <span class="number">1</span>) &#123;</span><br><span class="line">                url = urlList.get(<span class="number">0</span>); <span class="comment">// 若 urlList 中只有一个元素，则直接获取该元素</span></span><br><span class="line">                LOGGER.debug(<span class="string">"using only url: &#123;&#125;"</span>, url);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                url = urlList.get(ThreadLocalRandom.current().nextInt(size)); <span class="comment">// 若 urlList 中存在多个元素，则随机获取一个元素</span></span><br><span class="line">                LOGGER.debug(<span class="string">"using random url: &#123;&#125;"</span>, url);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(url);</span><br><span class="line">            service = lookupService(url); <span class="comment">// 从 JNDI 中查找 RMI 服务</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> service;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 连接 ZooKeeper 服务器</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ZooKeeper <span class="title">connectServer</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ZooKeeper zk = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            zk = <span class="keyword">new</span> ZooKeeper(Constant.ZK_CONNECTION_STRING, Constant.ZK_SESSION_TIMEOUT, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (event.getState() == Event.KeeperState.SyncConnected) &#123;</span><br><span class="line">                        latch.countDown(); <span class="comment">// 唤醒当前正在执行的线程</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            latch.await(); <span class="comment">// 使当前线程处于等待状态</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException | InterruptedException e) &#123;</span><br><span class="line">            LOGGER.error(<span class="string">""</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> zk;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 观察 /registry 节点下所有子节点是否有变化</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">watchNode</span><span class="params">(<span class="keyword">final</span> ZooKeeper zk)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            List&lt;String&gt; nodeList = zk.getChildren(Constant.ZK_REGISTRY_PATH, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (event.getType() == Event.EventType.NodeChildrenChanged) &#123;</span><br><span class="line">                        watchNode(zk); <span class="comment">// 若子节点有变化，则重新调用该方法（为了获取最新子节点中的数据）</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            List&lt;String&gt; dataList = <span class="keyword">new</span> ArrayList&lt;&gt;(); <span class="comment">// 用于存放 /registry 所有子节点中的数据</span></span><br><span class="line">            <span class="keyword">for</span> (String node : nodeList) &#123;     <span class="comment">//   /registry/provider00000000003</span></span><br><span class="line">                <span class="keyword">byte</span>[] data = zk.getData(Constant.ZK_REGISTRY_PATH + <span class="string">"/"</span> + node, <span class="keyword">false</span>, <span class="keyword">null</span>); <span class="comment">// 获取 /registry 的子节点中的数据</span></span><br><span class="line">                dataList.add(<span class="keyword">new</span> String(data));</span><br><span class="line">            &#125;</span><br><span class="line">            LOGGER.debug(<span class="string">"node data: &#123;&#125;"</span>, dataList);</span><br><span class="line">            urlList = dataList; <span class="comment">// 更新最新的 RMI 地址</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (KeeperException | InterruptedException e) &#123;</span><br><span class="line">            LOGGER.error(<span class="string">""</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="comment">// 在 JNDI 中查找 RMI 远程服务对象</span></span><br><span class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">    <span class="keyword">private</span> &lt;T&gt; <span class="function">T <span class="title">lookupService</span><span class="params">(String url)</span> </span>&#123;</span><br><span class="line">        T remote = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            remote = (T) Naming.lookup(url);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NotBoundException | MalformedURLException | RemoteException e) &#123;</span><br><span class="line">            <span class="keyword">if</span> (e <span class="keyword">instanceof</span> ConnectException) &#123;</span><br><span class="line">                <span class="comment">// 若连接中断，则使用 urlList 中第一个 RMI 地址来查找（这是一种简单的重试方式，确保不会抛出异常）</span></span><br><span class="line">                LOGGER.error(<span class="string">"ConnectException -&gt; url: &#123;&#125;"</span>, url);</span><br><span class="line">                <span class="keyword">if</span> (urlList.size() != <span class="number">0</span>) &#123;</span><br><span class="line">                    url = urlList.get(<span class="number">0</span>);</span><br><span class="line">                    <span class="keyword">return</span> lookupService(url);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            LOGGER.error(<span class="string">""</span>, e);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> remote;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>RmiClient.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ServiceConsumer consumer = <span class="keyword">new</span> ServiceConsumer();</span><br><span class="line">        <span class="comment">// zookeeper测试</span></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            HelloService helloService = consumer.lookup();</span><br><span class="line">            String result = helloService.sayHello(<span class="string">"Jack"</span>);</span><br><span class="line">            System.out.println(result);</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h4 id="共有"><a href="#共有" class="headerlink" title="共有"></a>共有</h4><ul>
+<li><p><strong>HelloService.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">HelloService</span> <span class="keyword">extends</span> <span class="title">Remote</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    <span class="function">String <span class="title">sayHello</span><span class="params">(String name)</span> <span class="keyword">throws</span> RemoteException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Constant.java</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Constant</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	String ZK_CONNECTION_STRING = <span class="string">"node02:2181,node03:2181,node04:2181"</span>;</span><br><span class="line">	<span class="keyword">int</span> ZK_SESSION_TIMEOUT = <span class="number">5000</span>;</span><br><span class="line">	String ZK_REGISTRY_PATH = <span class="string">"/registry"</span>;</span><br><span class="line">	String ZK_PROVIDER_PATH = ZK_REGISTRY_PATH + <span class="string">"/provider"</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="Socket-案例"><a href="#Socket-案例" class="headerlink" title="Socket 案例"></a>Socket 案例</h3><p>Socket 服务端向 zk 注册服务，Socket 客户端从 zk 获取服务列表，从而连接服务器</p>
+<ul>
+<li><p>Server.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Server</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">private</span> String zkHost = <span class="string">"node02:2181,node03:2181,node04:2181"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> SESSION_OUT = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)&#123;</span><br><span class="line">            Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        String host = <span class="string">"localhost"</span>;</span><br><span class="line">                        <span class="comment">/*Random random = new Random();</span></span><br><span class="line"><span class="comment">                        String num = String.format("2%4d",random.nextInt(9999));*/</span></span><br><span class="line">                        <span class="keyword">int</span> port = (<span class="keyword">int</span>)((Math.random()*<span class="number">9</span>+<span class="number">1</span>)*<span class="number">10000</span>);</span><br><span class="line">                        String address = host + <span class="string">":"</span> + String.valueOf(port);</span><br><span class="line">                        <span class="comment">// 创建对象</span></span><br><span class="line">                        Server s = <span class="keyword">new</span> Server();</span><br><span class="line">                        <span class="comment">// 连接 zk 集群</span></span><br><span class="line">                        s.connectZk();</span><br><span class="line">                        <span class="comment">// 开启服务端</span></span><br><span class="line">                        ServerSocket server = <span class="keyword">new</span> ServerSocket(port);</span><br><span class="line">                        <span class="comment">// 注册服务</span></span><br><span class="line">                        s.registryService(address);</span><br><span class="line">                        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                            Socket client = server.accept();</span><br><span class="line">                            handleReq(client);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            t.start();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 连接 zk 集群</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">connectZk</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        zk = <span class="keyword">new</span> ZooKeeper(zkHost, SESSION_OUT, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">                <span class="keyword">if</span> (event.getState() == Event.KeeperState.SyncConnected) &#123;</span><br><span class="line">                    latch.countDown();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        latch.await();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册服务</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> address</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">registryService</span><span class="params">(String address)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String path = <span class="string">"/myRegistry/service"</span>;</span><br><span class="line">        zk.create(path,address.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL_SEQUENTIAL);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理客户端请求</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> client</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">handleReq</span><span class="params">(Socket client)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        OutputStream os = client.getOutputStream();</span><br><span class="line">        OutputStreamWriter osw = <span class="keyword">new</span> OutputStreamWriter(os, <span class="string">"utf-8"</span>);</span><br><span class="line">        BufferedWriter writer = <span class="keyword">new</span> BufferedWriter(osw);</span><br><span class="line">        writer.write(<span class="string">"Hello Client"</span>);</span><br><span class="line">        writer.newLine();</span><br><span class="line">        writer.flush();</span><br><span class="line">        client.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Client.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ZooKeeper zk = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">private</span> String zkHost = <span class="string">"node02:2181,node03:2181,node04:2181"</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> SESSION_OUT = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> List&lt;String&gt; urlList = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Socket client = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Client c = <span class="keyword">new</span> Client();</span><br><span class="line">        <span class="comment">// 连接 zk 集群</span></span><br><span class="line">        c.connectZk();</span><br><span class="line">        <span class="comment">// 获取注册服务列表</span></span><br><span class="line">        c.getRegistryList();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="comment">// 连接服务器</span></span><br><span class="line">            c.connectServer();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *  连接 zk 集群</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">connectZk</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            zk = <span class="keyword">new</span> ZooKeeper(zkHost, SESSION_OUT, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (event.getState() == Event.KeeperState.SyncConnected) &#123;</span><br><span class="line">                        latch.countDown();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            latch.await();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取服务列表</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">getRegistryList</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; nodeList = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            nodeList = zk.getChildren(<span class="string">"/myRegistry"</span>, <span class="keyword">new</span> Watcher() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">process</span><span class="params">(WatchedEvent event)</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">if</span> (event.getType() == Event.EventType.NodeChildrenChanged) &#123;</span><br><span class="line">                        System.out.println(<span class="string">"节点发生变化。。。"</span>);</span><br><span class="line">                        getRegistryList(); <span class="comment">// 调用自身方法</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            urlList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">            <span class="keyword">for</span> (String node : nodeList) &#123;</span><br><span class="line">                <span class="keyword">byte</span>[] data = zk.getData(<span class="string">"/myRegistry/"</span> + node, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">                String url = <span class="keyword">new</span> String(data);</span><br><span class="line">                urlList.add(url);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 连接服务器</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">connectServer</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        String url = <span class="keyword">null</span>;</span><br><span class="line">        String host = <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.urlList.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"没有可用的服务器...."</span>);</span><br><span class="line">            Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>.urlList.size() == <span class="number">1</span>) &#123;</span><br><span class="line">            url = <span class="keyword">this</span>.urlList.get(<span class="number">0</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            Random random = <span class="keyword">new</span> Random();</span><br><span class="line">            url = <span class="keyword">this</span>.urlList.get(random.nextInt(urlList.size()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        host = url.substring(<span class="number">0</span>, url.indexOf(<span class="string">":"</span>));</span><br><span class="line">        <span class="keyword">int</span> port = Integer.valueOf(url.substring(url.indexOf(<span class="string">":"</span>) + <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">        client = <span class="keyword">new</span> Socket(host, port);</span><br><span class="line">        InputStream is = client.getInputStream();</span><br><span class="line">        InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(is, <span class="string">"utf-8"</span>);</span><br><span class="line">        BufferedReader reader = <span class="keyword">new</span> BufferedReader(isr);</span><br><span class="line">        String line = reader.readLine();</span><br><span class="line">        System.out.println(host + <span class="string">":"</span> + port + <span class="string">"  服务器响应消息: "</span> + line);</span><br><span class="line">        Thread.sleep(<span class="number">2000</span>);</span><br><span class="line"></span><br><span class="line">        client.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/16/20191016 HBase/" rel="next" title="">
+                  <i class="fa fa-chevron-left"></i> 
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/26/20191026 elasticSearch/" rel="prev" title="20191026 elasticSearch">
+                  20191026 elasticSearch <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#paxos-小岛的故事"><span class="nav-number">1.</span> <span class="nav-text">paxos 小岛的故事</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-简介"><span class="nav-number">2.</span> <span class="nav-text">Zookeeper 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zookeeper-集群"><span class="nav-number">2.1.</span> <span class="nav-text">Zookeeper 集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据模型"><span class="nav-number">2.2.</span> <span class="nav-text">数据模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事件监听"><span class="nav-number">2.3.</span> <span class="nav-text">事件监听</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#节点模式-原子广播"><span class="nav-number">2.4.</span> <span class="nav-text">节点模式-原子广播</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">2.5.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-安装与配置"><span class="nav-number">3.</span> <span class="nav-text">Zookeeper 安装与配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-操作"><span class="nav-number">4.</span> <span class="nav-text">Zookeeper 操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常用命令"><span class="nav-number">4.1.</span> <span class="nav-text">常用命令</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Zookeeper-API-使用"><span class="nav-number">5.</span> <span class="nav-text">Zookeeper API  使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RMI-案例"><span class="nav-number">5.1.</span> <span class="nav-text">RMI 案例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#服务提供端"><span class="nav-number">5.1.1.</span> <span class="nav-text">服务提供端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务消费端"><span class="nav-number">5.1.2.</span> <span class="nav-text">服务消费端</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#共有"><span class="nav-number">5.1.3.</span> <span class="nav-text">共有</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Socket-案例"><span class="nav-number">5.2.</span> <span class="nav-text">Socket 案例</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

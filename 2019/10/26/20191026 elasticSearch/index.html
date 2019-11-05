@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="[TOC] Lucene数据分类 结构化（关系型数据库），全文检索表：字段数量，字段类型  非结构化： 文本文档，图片，视频，音乐…  半结构化： json，html，xml   Lucene 简介Lucene 是 Apache 软件基金会的一个项目，是一个开发源码的全文检索引擎工具包，是一个全文检索引擎的一个架构。提供了完成的查询引擎和检索引擎，部分文本分析引擎。 倒排索引通俗解释，我们通常都是">
+<meta name="keywords" content="zwer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="20191026 elasticSearch">
+<meta property="og:url" content="http://zwer.xyz/2019/10/26/20191026 elasticSearch/index.html">
+<meta property="og:site_name" content="zwer 的博客空间">
+<meta property="og:description" content="[TOC] Lucene数据分类 结构化（关系型数据库），全文检索表：字段数量，字段类型  非结构化： 文本文档，图片，视频，音乐…  半结构化： json，html，xml   Lucene 简介Lucene 是 Apache 软件基金会的一个项目，是一个开发源码的全文检索引擎工具包，是一个全文检索引擎的一个架构。提供了完成的查询引擎和检索引擎，部分文本分析引擎。 倒排索引通俗解释，我们通常都是">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191027103435.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191027104508.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191027104742.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191027123338.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191027201056.png">
+<meta property="og:image" content="http://img.zwer.xyz/blog/20191027201401.png">
+<meta property="og:updated_time" content="2019-11-04T14:11:56.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="20191026 elasticSearch">
+<meta name="twitter:description" content="[TOC] Lucene数据分类 结构化（关系型数据库），全文检索表：字段数量，字段类型  非结构化： 文本文档，图片，视频，音乐…  半结构化： json，html，xml   Lucene 简介Lucene 是 Apache 软件基金会的一个项目，是一个开发源码的全文检索引擎工具包，是一个全文检索引擎的一个架构。提供了完成的查询引擎和检索引擎，部分文本分析引擎。 倒排索引通俗解释，我们通常都是">
+<meta name="twitter:image" content="http://img.zwer.xyz/blog/20191027103435.png">
+  <link rel="canonical" href="http://zwer.xyz/2019/10/26/20191026 elasticSearch/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>20191026 elasticSearch | zwer 的博客空间</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zwer 的博客空间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">上善若水 自强不息</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://zwer.xyz/2019/10/26/20191026 elasticSearch/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zwer">
+      <meta itemprop="description" content="记录学习的日常">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zwer 的博客空间">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">20191026 elasticSearch
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-26 00:00:00" itemprop="dateCreated datePublished" datetime="2019-10-26T00:00:00+08:00">2019-10-26</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2019-11-04 22:11:56" itemprop="dateModified" datetime="2019-11-04T22:11:56+08:00">2019-11-04</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>[TOC]</p>
+<h2 id="Lucene"><a href="#Lucene" class="headerlink" title="Lucene"></a>Lucene</h2><h3 id="数据分类"><a href="#数据分类" class="headerlink" title="数据分类"></a>数据分类</h3><ul>
+<li><p>结构化（关系型数据库），全文检索<br>表：字段数量，字段类型</p>
+</li>
+<li><p>非结构化：</p>
+<p>文本文档，图片，视频，音乐…</p>
+</li>
+<li><p>半结构化：</p>
+<p>json，html，xml</p>
+</li>
+</ul>
+<h3 id="Lucene-简介"><a href="#Lucene-简介" class="headerlink" title="Lucene 简介"></a>Lucene 简介</h3><p>Lucene 是 Apache 软件基金会的一个项目，是一个开发源码的全文检索引擎工具包，是一个全文检索引擎的一个架构。提供了完成的查询引擎和检索引擎，部分文本分析引擎。</p>
+<h3 id="倒排索引"><a href="#倒排索引" class="headerlink" title="倒排索引"></a>倒排索引</h3><p>通俗解释，我们通常都是通过查找文件位置及文件名，再查找文件的内容。倒排索引可以理解为通过文件内容来查找文件位置及文件名的。</p>
+<p>倒排索引是一种索引方法，被用来存储在全文搜索下某个单词在一个文档或者一组文档中的存储位置的映射。它是文档检索系统中最常用的数据结构。通过倒排索引，可以根据单词快速获取包含这个单词的文档列表。</p>
+<p>倒排索引也是 lucence 的索引核心。</p>
+<p>举例：有两个文档 doc，id 分别为 1,2 。doc-id-1中的 content 是“我是中国人”，doc-id-2 中的 content 是 “中国是全球人口最多的国家，中国人也最多”。紧接着为这两个文档建立倒排索引。先读取 doc 文档，使用分词器对 content 中的内容 content 进行分词，产生的结果放入索引 index 表中。以“中国”这个词为例，中国（1:1）{2}，（2:2）{0,15}。（1:1）{2}表示的意思是中国这个词出现在 id 为 1 的 doc 文档中，且出现的次数为 1，偏移量为 2 。（2:2）{0,15}  表示的意思是中国这个词出现在 id 为 2 的doc 文档猴子那个，且出现的次数为 2，偏移量有0,15 。</p>
+<img src="http://img.zwer.xyz/blog/20191027103435.png" style="zoom: 67%;">
+
+
+
+<p>每个域可以设置三个类型：是否保存，是否索引，是否分词 </p>
+<p><img src="http://img.zwer.xyz/blog/20191027104508.png" alt></p>
+<p>从 Hbase 中按行取出数据，建立 doc 文档，经过分析（分词，过滤）后，建立倒排索引。</p>
+<p>参考： <a href="https://www.cnblogs.com/one--way/p/5708456.html" target="_blank" rel="noopener">https://www.cnblogs.com/one--way/p/5708456.html</a></p>
+<h3 id="Lucene-架构"><a href="#Lucene-架构" class="headerlink" title="Lucene 架构"></a>Lucene 架构</h3><ul>
+<li><p>横向扩展： 加机器</p>
+<p>​    Lucene 集群之间的单机的计算速度，彼此应该相差不大 。</p>
+</li>
+<li><p>纵向扩展：主从模式</p>
+<p>​    主节点-负责计算</p>
+<p>​    从节点-1. 备机  2. 分担主节点读请求的压力</p>
+</li>
+</ul>
+<p>下面采用 3 个机器，作为  Lucene 的计算集群。</p>
+<p>​        根据 doc 的 id 做 hash 取模，分配到 Lucene 计算集群中，doc  处理完毕后，会在本地生成 index 索引文件，各个机器上 index 索引文件最终汇聚到 master 节点。</p>
+<p><img src="http://img.zwer.xyz/blog/20191027104742.png" alt></p>
+<h2 id="ElasticSearch-分布式安装"><a href="#ElasticSearch-分布式安装" class="headerlink" title="ElasticSearch 分布式安装"></a>ElasticSearch 分布式安装</h2><blockquote>
+<p>零配置，开箱即用<br>没有繁琐的安装配置<br>Java 版本要求：最低 1.7<br>下载地址：<a href="https://www.elastic.co/downloads/" target="_blank" rel="noopener">https://www.elastic.co/downloads/</a></p>
+</blockquote>
+<p>启动</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/elasticsearch-2.2.0</span><br><span class="line">./bin/elasticsearch</span><br><span class="line">bin/elasticsearch -d(后台运行)</span><br></pre></td></tr></table></figure>
+
+<h3 id="基础环境"><a href="#基础环境" class="headerlink" title="基础环境"></a>基础环境</h3><p>安装 JDK ，并配置环境变量</p>
+<h3 id="安装工作"><a href="#安装工作" class="headerlink" title="安装工作"></a>安装工作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">共享模式下：</span><br><span class="line">useradd sxt</span><br><span class="line">echo sxt | passwd --stdin sxt</span><br><span class="line"></span><br><span class="line">su sxt</span><br><span class="line">root 用户创建 /opt/sxt/es(普通用户无法创建)</span><br><span class="line">mkdir -p /opt/sxt/es (注意：此时的目录权限属于root)</span><br><span class="line">在父级目录 sxt 下执行： chown sxt:sxt es</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">单节点模式下root用户：</span><br><span class="line">安装解压程序</span><br><span class="line">ftp拷贝至根目录下，或者software目录下（备用，可选）</span><br><span class="line"></span><br><span class="line">切换回sxt用户（共享模式，可以看到software内容）</span><br><span class="line"></span><br><span class="line">单节点模式：</span><br><span class="line"></span><br><span class="line">使用sxt用户解压es2.2.1zip包至es目录，保证es文件属于用户sxt：</span><br><span class="line"></span><br><span class="line">unzip elasticsearch-2.2.1.zip -d /opt/sxt/es</span><br><span class="line"></span><br><span class="line">进入es/conf, 修改elastic配置文件：</span><br><span class="line">修改：</span><br><span class="line">---------------cluster-------------------------</span><br><span class="line"></span><br><span class="line">cluster.name: bjsxt-es</span><br><span class="line">----------------node-------------------------------</span><br><span class="line">node.name: node06 (分发后各节点修改)</span><br><span class="line"></span><br><span class="line">----------------network--------------------------------</span><br><span class="line">network.host: 192.168.133.6 (分发后修改)</span><br><span class="line"></span><br><span class="line">http.port:9200 (放开)</span><br><span class="line"></span><br><span class="line">末尾增加防脑裂：</span><br><span class="line">discovery.zen.ping.multicast.enabled: false </span><br><span class="line">discovery.zen.ping.unicast.hosts: ["192.168.133.6","192.168.133.7", "192.168.133.8"]</span><br><span class="line">discovery.zen.ping_timeout: 120s</span><br><span class="line">client.transport.ping_timeout: 60s</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">增加图形可视化插件：</span><br><span class="line"></span><br><span class="line">[root@node06 software]# cp -abr plugins/ /opt/sxt/es/elasticsearch-2.2.1/</span><br><span class="line"></span><br><span class="line">分发其他节点：</span><br><span class="line">scp -r ./elasticsearch-2.2.1/ sxt@node07:`pwd`</span><br><span class="line">scp -r ./elasticsearch-2.2.1/ sxt@node08:`pwd`</span><br><span class="line"></span><br><span class="line">修改配置文件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">进入bin目录，启动脚本：</span><br><span class="line">[root@node06 bin]# ./elasticsearch</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--- 访问</span><br><span class="line">http://node04:9200/_plugin/head/</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://img.zwer.xyz/blog/20191027123338.png" alt></p>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><p>ElasticSearch 是不可以以 root 身份启动的，若以 root 身份启动后，启动会报错。然后删除 elasticSearch 安装目录下的 logs 文件夹及其子文件，切换到 elasticSearch 用户，重新启动。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@node04 bin]# ./elasticsearch</span><br><span class="line">Exception in thread <span class="string">"main"</span> java.lang.RuntimeException: don<span class="string">'t run elasticsearch as root.</span></span><br><span class="line"><span class="string">	at org.elasticsearch.bootstrap.Bootstrap.initializeNatives(Bootstrap.java:93)</span></span><br><span class="line"><span class="string">	at org.elasticsearch.bootstrap.Bootstrap.setup(Bootstrap.java:144)</span></span><br><span class="line"><span class="string">	at org.elasticsearch.bootstrap.Bootstrap.init(Bootstrap.java:285)</span></span><br><span class="line"><span class="string">	at org.elasticsearch.bootstrap.Elasticsearch.main(Elasticsearch.java:35)</span></span><br><span class="line"><span class="string">Refer to the log for complete error details.</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="中文分词器"><a href="#中文分词器" class="headerlink" title="中文分词器"></a>中文分词器</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 下载 elasticsearch 对应版本的中文分词器</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 上传到 Linux 服务器上，并修改  plugin-descriptor.properties  文件</span><br><span class="line"><span class="meta">#</span> 将 es 的版本修改为当前安装 es  版本</span><br><span class="line">elasticsearch.version=2.2.1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 重新启动 es</span><br></pre></td></tr></table></figure>
+
+<h2 id="REST"><a href="#REST" class="headerlink" title="REST"></a>REST</h2><blockquote>
+<p>REST 英文解释为: Representational State Transfer,  中文解释为： 表面层状态转移<br>一种软件架构风格，而不是标准，只是提供了一组设计原则和约束条件。</p>
+</blockquote>
+<ul>
+<li><p>它主要用于客户端和服务器交互类的软件。</p>
+</li>
+<li><p>基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。</p>
+</li>
+</ul>
+<h3 id="REST-简介"><a href="#REST-简介" class="headerlink" title="REST 简介"></a>REST 简介</h3><p><img src="http://img.zwer.xyz/blog/20191027201056.png" alt></p>
+<h3 id="REST-操作"><a href="#REST-操作" class="headerlink" title="REST 操作"></a>REST 操作</h3><p>REST的操作分为以下几种:</p>
+<ul>
+<li>GET：获取对象的当前状态；</li>
+<li>PUT：改变对象的状态；</li>
+<li>POST：创建对象；</li>
+<li>DELETE：删除对象；</li>
+<li>HEAD：获取头信息。</li>
+</ul>
+<h3 id="ES-内置的-REST-接口"><a href="#ES-内置的-REST-接口" class="headerlink" title="ES 内置的 REST 接口"></a>ES 内置的 REST 接口</h3><p><img src="http://img.zwer.xyz/blog/20191027201401.png" alt></p>
+<h2 id="curl-命令"><a href="#curl-命令" class="headerlink" title="curl 命令"></a>curl 命令</h2><p>简单认为是可以在命令行下访问url的一个工具<br>curl是利用URL语法在命令行方式下工作的开源文件传输工具，使用curl可以简单实现常见的get/post请求。</p>
+<h3 id="curl-使用"><a href="#curl-使用" class="headerlink" title="curl 使用"></a>curl 使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">curl  </span><br><span class="line">-X  指定http请求的方法   HEAD  GET POST  PUT DELETE</span><br><span class="line">-d   指定要传输的数据</span><br></pre></td></tr></table></figure>
+
+<h3 id="ES-操作"><a href="#ES-操作" class="headerlink" title="ES 操作"></a>ES 操作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">file</span><br><span class="line">segment（段，多个document组成）</span><br><span class="line">document（一条记录，一个对象实例）</span><br><span class="line">field（对象的属性）</span><br><span class="line">term（项，分词之后的词条）</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> yes</span><br><span class="line">curl -XPUT http://192.168.133.6:9200/bjsxt/</span><br><span class="line"><span class="meta">#</span> yes </span><br><span class="line">curl -XDELETE http://192.168.133.6:9200/test2/</span><br><span class="line">curl -XDELETE http://192.168.133.6:9200/test3/</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>document：yes </span><br><span class="line">curl -XPOST http://192.168.133.6:9200/bjsxt/employee -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "bin",</span><br><span class="line"> "age" : 33,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line">curl -XPOST http://node02:9200/szxy/employee -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "bin",</span><br><span class="line"> "age" : 33,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line">curl -XPOST http://node02:9200/szxy/employee -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "gob bin",</span><br><span class="line"> "age" : 43,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line">curl -XPOST http://192.168.133.6:9200/bjsxt/employee/2 -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "bin",</span><br><span class="line"> "age" : 45,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>add field yes</span><br><span class="line"></span><br><span class="line">curl -XPOST http://192.168.133.6:9200/bjsxt/employee -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "pablo2",</span><br><span class="line"> "age" : 33,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ],</span><br><span class="line"> "sex": "man"</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">curl -XPOST http://node02:9200/szxy/employee/1 -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "pablo2",</span><br><span class="line"> "age" : 35,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ],</span><br><span class="line"> "sex": "man"</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">----------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>put：yes</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">curl -XPUT http://node02:9200/szxy/employee/1 -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "pablo2",</span><br><span class="line"> "last_name" : "pang",</span><br><span class="line"> "age" : 42,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line">curl -XPUT http://node02:9200/szxy/employee -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "god bin",</span><br><span class="line"> "last_name" : "bin",</span><br><span class="line"> "age" : 45,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">curl -XPUT http://node02:9200/szxy/employee/2 -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "god bin",</span><br><span class="line"> "last_name" : "bin",</span><br><span class="line"> "age" : 45,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line">curl -XPUT http://192.168.133.6:9200/bjsxt/employee/1 -d '</span><br><span class="line">&#123;</span><br><span class="line"> "first_name" : "god bin",</span><br><span class="line"> "last_name" : "pang",</span><br><span class="line"> "age" : 40,</span><br><span class="line"> "about" : "I love to go rock climbing",</span><br><span class="line"> "interests": [ "sports", "music" ]</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>根据document的id来获取数据：(without pretty)</span><br><span class="line">curl -XGET http://node02:9200/bjsxt/employee/1?pretty</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>根据field来查询数据：</span><br><span class="line">curl -XGET http://node02:9200/szxy/employee/_search?q=first_name="bin"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>根据field来查询数据：match</span><br><span class="line">curl -XGET http://node02:9200/szxy/employee/_search?pretty -d '</span><br><span class="line">&#123;</span><br><span class="line"> "query":</span><br><span class="line">  &#123;"match":</span><br><span class="line">   &#123;"first_name":"bin"&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>对多个field发起查询：multi_match</span><br><span class="line">curl -XGET http://node02:9200/szxy/employee/_search?pretty -d '</span><br><span class="line">&#123;</span><br><span class="line"> "query":</span><br><span class="line">  &#123;"multi_match":</span><br><span class="line">   &#123;</span><br><span class="line">    "query":"bin",</span><br><span class="line">    "fields":["last_name","first_name"],</span><br><span class="line">    "operator":"and"</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>多个term对多个field发起查询:bool（boolean） </span><br><span class="line"><span class="meta">#</span> 组合查询，must，must_not,should </span><br><span class="line"><span class="meta">#</span>  must + must : 交集</span><br><span class="line"><span class="meta">#</span>  must +must_not ：差集</span><br><span class="line"><span class="meta">#</span>  should+should  : 并集</span><br><span class="line"></span><br><span class="line">curl -XGET http://node02:9200/szxy/employee/_search?pretty -d '</span><br><span class="line">&#123;</span><br><span class="line"> "query":</span><br><span class="line">  &#123;"bool" :</span><br><span class="line">   &#123;</span><br><span class="line">    "must" : </span><br><span class="line">     &#123;"match":</span><br><span class="line">      &#123;"first_name":"bin"&#125;</span><br><span class="line">     &#125;,</span><br><span class="line">    "must" : </span><br><span class="line">     &#123;"match":</span><br><span class="line">      &#123;"age":33&#125;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line">curl -XGET http://192.168.133.6:9200/bjsxt/employee/_search?pretty -d '</span><br><span class="line">&#123;</span><br><span class="line"> "query":</span><br><span class="line">  &#123;"bool" :</span><br><span class="line">   &#123;</span><br><span class="line">    "must" : </span><br><span class="line">     &#123;"match":</span><br><span class="line">      &#123;"first_name":"bin"&#125;</span><br><span class="line">     &#125;,</span><br><span class="line">    "must_not" : </span><br><span class="line">     &#123;"match":</span><br><span class="line">      &#123;"age":33&#125;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">curl -XGET http://192.168.133.6:9200/bjsxt/employee/_search?pretty -d '</span><br><span class="line">&#123;</span><br><span class="line"> "query":</span><br><span class="line">  &#123;"bool" :</span><br><span class="line">   &#123;</span><br><span class="line">    "must_not" : </span><br><span class="line">     &#123;"match":</span><br><span class="line">      &#123;"first_name":"bin"&#125;</span><br><span class="line">     &#125;,</span><br><span class="line">    "must_not" : </span><br><span class="line">     &#123;"match":</span><br><span class="line">      &#123;"age":33&#125;</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>#查询first_name=bin的，或者年龄在20岁到33岁之间的</span><br><span class="line"></span><br><span class="line">curl -XGET http://192.168.133.6:9200/bjsxt/employee/_search -d '</span><br><span class="line">&#123;</span><br><span class="line"> "query":</span><br><span class="line">  &#123;"bool" :</span><br><span class="line">   &#123;</span><br><span class="line">   "must" :</span><br><span class="line">    &#123;"term" : </span><br><span class="line">     &#123; "first_name" : "bin" &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   ,</span><br><span class="line">   "must_not" : </span><br><span class="line">    &#123;"range":</span><br><span class="line">     &#123;"age" : &#123; "from" : 20, "to" : 33 &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>修改配置</span><br><span class="line">curl -XPUT 'http://192.168.133.6:9200/test2/' -d'&#123;"settings":&#123;"number_of_replicas":2&#125;&#125;'</span><br><span class="line"></span><br><span class="line">curl -XPUT 'http://192.168.133.6:9200/test3/' -d'&#123;"settings":&#123;"number_of_shards":3,"number_of_replicas":3&#125;&#125;'</span><br><span class="line"></span><br><span class="line">curl -XPUT 'http://192.168.133.6:9200/test4/' -d'&#123;"settings":&#123;"number_of_shards":6,"number_of_replicas":4&#125;&#125;'</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">curl -XPOST http://192.168.9.11:9200/bjsxt/person/_mapping -d'</span><br><span class="line">&#123;</span><br><span class="line">    "person": &#123;</span><br><span class="line">        "properties": &#123;</span><br><span class="line">            "content": &#123;</span><br><span class="line">                "type": "string",</span><br><span class="line">                "store": "no",</span><br><span class="line">                "term_vector": "with_positions_offsets",</span><br><span class="line">                "analyzer": "ik_max_word",</span><br><span class="line">                "search_analyzer": "ik_max_word",</span><br><span class="line">                "include_in_all": "true",</span><br><span class="line">                "boost": 8</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;'</span><br></pre></td></tr></table></figure>
+
+<h2 id="ES-API操作"><a href="#ES-API操作" class="headerlink" title="ES API操作"></a>ES API操作</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestES</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	Client client;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Before</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">conn</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line"></span><br><span class="line">		Settings settings = Settings.settingsBuilder()</span><br><span class="line">		        .put(<span class="string">"cluster.name"</span>, <span class="string">"es-cluster"</span>).build();</span><br><span class="line">		client = TransportClient.builder().settings(settings).build()</span><br><span class="line">		        .addTransportAddress(<span class="keyword">new</span> InetSocketTransportAddress(InetAddress.getByName(<span class="string">"node02"</span>), <span class="number">9300</span>))</span><br><span class="line">		        .addTransportAddress(<span class="keyword">new</span> InetSocketTransportAddress(InetAddress.getByName(<span class="string">"node03"</span>), <span class="number">9300</span>))</span><br><span class="line">		        .addTransportAddress(<span class="keyword">new</span> InetSocketTransportAddress(InetAddress.getByName(<span class="string">"node04"</span>), <span class="number">9300</span>));</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@After</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span></span>&#123;</span><br><span class="line">		client.close();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test01</span><span class="params">()</span></span>&#123;</span><br><span class="line">		</span><br><span class="line">		IndicesExistsResponse resp = client.admin().indices().prepareExists(<span class="string">"javatest"</span>).execute().actionGet();</span><br><span class="line">		<span class="keyword">if</span>(resp.isExists())&#123;</span><br><span class="line">			System.err.println(<span class="string">"index is exist..."</span>);</span><br><span class="line">			client.admin().indices().prepareDelete(<span class="string">"javatest"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		Map&lt;String, Object&gt; sets = <span class="keyword">new</span> HashMap&lt;String,Object&gt;();</span><br><span class="line">		sets.put(<span class="string">"number_of_replicas"</span>, <span class="number">2</span>);</span><br><span class="line">		client.admin().indices().prepareCreate(<span class="string">"javatest"</span>).setSettings(sets).execute().actionGet();</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test02</span><span class="params">()</span></span>&#123;</span><br><span class="line">		</span><br><span class="line">		Map&lt;String, Object&gt; data = <span class="keyword">new</span> HashMap&lt;String,Object&gt;();</span><br><span class="line">		data.put(<span class="string">"name"</span>, <span class="string">"bjsxt"</span>);</span><br><span class="line">		data.put(<span class="string">"content"</span>, <span class="string">"hadoop"</span>);</span><br><span class="line">		data.put(<span class="string">"size"</span>, <span class="number">10086</span>);</span><br><span class="line">		</span><br><span class="line">		IndexResponse resp = client.prepareIndex(<span class="string">"javatest"</span>,<span class="string">"testfiled"</span>).setSource(data).execute().actionGet();</span><br><span class="line">		System.out.println(resp.getId());</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test03</span><span class="params">()</span></span>&#123;</span><br><span class="line">		</span><br><span class="line">		QueryBuilder q =  <span class="keyword">new</span> MatchQueryBuilder(<span class="string">"content"</span>, <span class="string">"hadoop"</span>);</span><br><span class="line">		SearchResponse resp = client.prepareSearch(<span class="string">"javatest"</span>)</span><br><span class="line">									.setTypes(<span class="string">"testfiled"</span>)</span><br><span class="line">									.addHighlightedField(<span class="string">"content"</span>)</span><br><span class="line">									.setHighlighterPreTags(<span class="string">"&lt;font color=red&gt;"</span>)</span><br><span class="line">									.setHighlighterPostTags(<span class="string">"&lt;/font&gt;"</span>)</span><br><span class="line">									.setQuery(q)</span><br><span class="line">									.setFrom(<span class="number">1</span>)</span><br><span class="line">									.setSize(<span class="number">2</span>)</span><br><span class="line">									.execute()</span><br><span class="line">									.actionGet();</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		SearchHits hits = resp.getHits();</span><br><span class="line">		System.out.println(hits.getTotalHits());</span><br><span class="line">		<span class="keyword">for</span> (SearchHit hit : hits) &#123;</span><br><span class="line">			System.out.println(hit.getSourceAsString());</span><br><span class="line">			System.out.println(hit.getSource().get(<span class="string">"name"</span>));</span><br><span class="line">			System.out.println(hit.getHighlightFields().get(<span class="string">"content"</span>).getFragments()[<span class="number">0</span>]);</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/25/20191025 Zookeeper/" rel="next" title="Zookeeper">
+                  <i class="fa fa-chevron-left"></i> Zookeeper
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/28/20191028 CDH/" rel="prev" title="20191028 CDH">
+                  20191028 CDH <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lucene"><span class="nav-number">1.</span> <span class="nav-text">Lucene</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分类"><span class="nav-number">1.1.</span> <span class="nav-text">数据分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lucene-简介"><span class="nav-number">1.2.</span> <span class="nav-text">Lucene 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#倒排索引"><span class="nav-number">1.3.</span> <span class="nav-text">倒排索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Lucene-架构"><span class="nav-number">1.4.</span> <span class="nav-text">Lucene 架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ElasticSearch-分布式安装"><span class="nav-number">2.</span> <span class="nav-text">ElasticSearch 分布式安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础环境"><span class="nav-number">2.1.</span> <span class="nav-text">基础环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装工作"><span class="nav-number">2.2.</span> <span class="nav-text">安装工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意"><span class="nav-number">2.3.</span> <span class="nav-text">注意</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中文分词器"><span class="nav-number">2.4.</span> <span class="nav-text">中文分词器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#REST"><span class="nav-number">3.</span> <span class="nav-text">REST</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#REST-简介"><span class="nav-number">3.1.</span> <span class="nav-text">REST 简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#REST-操作"><span class="nav-number">3.2.</span> <span class="nav-text">REST 操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES-内置的-REST-接口"><span class="nav-number">3.3.</span> <span class="nav-text">ES 内置的 REST 接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#curl-命令"><span class="nav-number">4.</span> <span class="nav-text">curl 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#curl-使用"><span class="nav-number">4.1.</span> <span class="nav-text">curl 使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES-操作"><span class="nav-number">4.2.</span> <span class="nav-text">ES 操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ES-API操作"><span class="nav-number">5.</span> <span class="nav-text">ES API操作</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zwer</p>
+  <div class="site-description" itemprop="description">记录学习的日常</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zwer</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
